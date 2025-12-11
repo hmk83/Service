@@ -9,6 +9,22 @@ const Presentation = () => {
   const touchEndX = useRef(0);
 
   // Slide Index (Total 16)
+  // 0: Cover
+  // 1: Goals
+  // 2: 2025 Plan
+  // 3: Additional Dev
+  // 4: Bug Report 1
+  // 5: Bug Report 2
+  // 6: 2026 Bridge
+  // 7: 2026 Plan 1 (Profile)
+  // 8: 2026 Plan 2 (Platform)
+  // 9: 2026 Plan 3 (App)
+  // 10: Convergence (Technology Fusion)
+  // 11: 2026 Plan 4 (Healthcare)
+  // 12: Meme Strategy
+  // 13: 2026 Roadmap
+  // 14: Effects
+  // 15: Ending
   const totalSlides = 16;
 
   const nextSlide = () => {
@@ -129,7 +145,7 @@ const Presentation = () => {
 
   // --- Slides Content ---
 
-  // 0. Cover (Updated: 2025 -> 2026 Slide Animation)
+  // 0. Cover
   const CoverSlide = () => (
     <SlideContainer>
       <div className="text-center space-y-6 max-w-6xl z-10 flex flex-col justify-center h-full">
@@ -143,17 +159,14 @@ const Presentation = () => {
 
         {/* Dynamic Year Animation Container */}
         <div className="relative h-32 md:h-40 w-full flex justify-center items-center overflow-visible">
-           {/* 2025: Centers then moves Left */}
            <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-white animate-slide-left-2025" style={{ left: '50%', transform: 'translateX(-50%)' }}>
              <span className="text-slate-500">2025</span>
            </div>
            
-           {/* Hyphen: Fades in */}
            <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-slate-600 opacity-0 animate-fade-in-delay">
              -
            </div>
 
-           {/* 2026: Enters from Right */}
            <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-cyan-400 opacity-0 animate-slide-in-2026" style={{ right: '50%', transform: 'translateX(50%)' }}>
              2026
            </div>
@@ -178,12 +191,12 @@ const Presentation = () => {
             0% { left: 50%; transform: translateX(-50%); opacity: 0; }
             20% { left: 50%; transform: translateX(-50%); opacity: 1; }
             50% { left: 50%; transform: translateX(-50%); }
-            100% { left: 35%; transform: translateX(-100%); color: #64748b; } /* Ends left and dimmed */
+            100% { left: 35%; transform: translateX(-100%); color: #64748b; }
           }
           @keyframes slide-in-2026 {
             0% { right: 0; transform: translateX(100%); opacity: 0; }
             50% { right: 0; transform: translateX(100%); opacity: 0; }
-            100% { right: 35%; transform: translateX(100%); opacity: 1; } /* Ends right */
+            100% { right: 35%; transform: translateX(100%); opacity: 1; }
           }
           @keyframes fade-in-delay {
             0%, 60% { opacity: 0; }
@@ -261,10 +274,10 @@ const Presentation = () => {
     );
   };
 
-  // 3. Additional Development Slide
+  // 3. Additional Development Slide (Updated Items)
   const AdditionalDevSlide = () => {
     const items = [
-      "저작권 계정 권한 도입", "시니어 스마트드럼 개발", "컬러오선 개발", 
+      "저작권 계정 권한 도입", "컬러오선 개발", 
       "ZOOM 영상 송출 연동", "어드민 해외 연락처 등록", "홈페이지 FOOTER 수정",
       "드럼게임고고 컬러 변경", "스마트드럼 드럼 퀘스트", "시니어 인지놀이 메뉴",
       "시니어 콘서트 메뉴", "시니어 로그인 이력 확인", "ADMIN 최적화 작업", "ADMIN 도메인 이전"
@@ -383,14 +396,21 @@ const Presentation = () => {
         <div className="flex items-center gap-3 mb-8"><div className="px-3 py-1 bg-indigo-600/80 rounded text-white font-bold text-sm tracking-wider">2026 PLAN</div><div className="h-px flex-1 bg-slate-800"></div></div>
         <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-stretch h-auto lg:h-[50vh]">
            <div className="flex-1 flex flex-col justify-center space-y-6"><div><div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20">{icon}</div><h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">{title}</h2><p className="text-xl text-indigo-300 font-light mt-1">{subtitle}</p><p className="text-base text-slate-400 leading-relaxed mt-4 font-light">{desc}</p></div>{points && (<ul className="space-y-2 mt-2">{points.map((p, i) => (<li key={i} className="flex items-center gap-3 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>{p}</li>))}</ul>)}</div>
-           <div className="flex-1 w-full h-64 lg:h-auto"><ImagePlaceholder src={imgSrc} className="w-full h-full rounded-2xl border border-slate-700/50 shadow-2xl" /></div>
+           <div className="flex-1 w-full h-64 lg:h-auto">
+             <ImagePlaceholder 
+               src={imgSrc} 
+               className="w-full h-full rounded-2xl border border-slate-700/50 shadow-2xl" 
+               enableZoom={false} 
+               onClick={() => setModalImage(imgSrc)} 
+             />
+           </div>
         </div>
       </div>
     </SlideContainer>
   );
 
   const Plan2026_1 = () => <Slide2026Template title="사용자 프로필 고도화" subtitle="체계적인 학습 관리 시스템 (LMS)" desc="스마트드럼 및 시니어 서비스 내 개별 학습자 관리 시스템을 도입합니다. 진도율과 성취도를 정밀하게 데이터화하여 맞춤형 교육을 실현합니다." icon={<Activity size={24} />} points={["개인별 학습 이력 추적", "성취도 기반 맞춤형 피드백", "강사용 관리 대시보드"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=LMS+System+UI" />;
-  const Plan2026_2 = () => <Slide2026Template title="All-in-One 플랫폼" subtitle="'주은에듀클래스(가칭)'" desc="파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=All-in-One+Platform" />;
+  const Plan2026_2 = () => <Slide2026Template title="All-in-One 플랫폼" subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">주은에듀클래스(가칭)</span></span>} desc="기존 '시니어100'에서 '주은에듀클래스'로 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=All-in-One+Platform" />;
   const Plan2026_3 = () => <Slide2026Template title="전용 앱(App) 개발" subtitle="Android Tablet Optimization" desc="웹 기반의 한계를 넘어선 빠르고 안정적인 반응 속도를 구현합니다. 정부 지원사업(R&D)을 활용하여 기술력을 입증합니다." icon={<Tablet size={24} />} points={["안드로이드 태블릿 최적화", "초저지연 터치 반응 속도", "오프라인 모드 지원"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=Tablet+App+Mockup" />;
   
   // 10. Convergence Slide
@@ -499,7 +519,7 @@ const Presentation = () => {
 
   const Plan2026_4 = () => <Slide2026Template title="디지털 헬스케어" subtitle="인지장애 예방 솔루션" desc="악기 연주 데이터를 뇌 건강 지표로 활용하여, 교육 시장을 넘어 실버 케어 및 의료 보조 시장으로 진입합니다." icon={<Cpu size={24} />} points={["리듬 반응 속도 인지 분석", "치매 안심 센터 보급", "의료 데이터 표준화"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=Digital+Healthcare" />;
 
-  // 12. Meme Strategy Slide
+  // 11. Meme Strategy Slide
   const MemeSlide = () => (
     <SlideContainer>
       <div className="w-full max-w-6xl h-full flex flex-col justify-center">
