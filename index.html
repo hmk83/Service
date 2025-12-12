@@ -15,8 +15,8 @@
     <!-- Babel (JSX 변환용) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Lucide Icons (아이콘 데이터용) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Lucide Icons (아이콘 데이터용) - UMD Build -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
     <style>
         body { margin: 0; padding: 0; overflow: hidden; background-color: #020617; }
@@ -94,7 +94,12 @@
         // --- Lucide Icons Wrapper for Browser Environment ---
         const createLucideIcon = (iconName) => {
             return ({ size = 24, className = "", ...props }) => {
-                const iconData = window.lucide.icons[iconName];
+                // window.lucide 객체가 로드되었는지 확인
+                if (!window.lucide) return null;
+                
+                // 아이콘 데이터 찾기 (lucide.icons 안에 있거나 lucide 객체 바로 아래에 있음)
+                const iconData = window.lucide.icons ? window.lucide.icons[iconName] : window.lucide[iconName];
+                
                 if (!iconData) return null;
                 
                 const svgChildren = iconData.map(([tag, attrs], index) => {
@@ -121,33 +126,34 @@
             };
         };
 
-        const ChevronRight = createLucideIcon('chevronRight');
-        const ChevronLeft = createLucideIcon('chevronLeft');
-        const Calendar = createLucideIcon('calendar');
-        const Music = createLucideIcon('music');
-        const Activity = createLucideIcon('activity');
-        const Layers = createLucideIcon('layers');
-        const Tablet = createLucideIcon('tablet');
-        const Share2 = createLucideIcon('share2');
-        const Globe = createLucideIcon('globe');
-        const ShieldCheck = createLucideIcon('shieldCheck');
-        const TrendingUp = createLucideIcon('trendingUp');
-        const Cpu = createLucideIcon('cpu');
-        const HeartHandshake = createLucideIcon('heartHandshake');
-        const X = createLucideIcon('x');
-        const AlertCircle = createLucideIcon('alertCircle');
-        const BarChart2 = createLucideIcon('barChart2');
-        const Brain = createLucideIcon('brain');
-        const Gamepad2 = createLucideIcon('gamepad2');
-        const MousePointerClick = createLucideIcon('mousePointerClick');
-        const Sparkles = createLucideIcon('sparkles');
-        const Zap = createLucideIcon('zap');
-        const Users = createLucideIcon('users');
-        const Flag = createLucideIcon('flag');
-        const Plus = createLucideIcon('plus');
-        const ArrowRight = createLucideIcon('arrowRight');
-        const Code = createLucideIcon('code');
-        const FileCode = createLucideIcon('fileCode');
+        // 아이콘 이름 수정 (PascalCase)
+        const ChevronRight = createLucideIcon('ChevronRight');
+        const ChevronLeft = createLucideIcon('ChevronLeft');
+        const Calendar = createLucideIcon('Calendar');
+        const Music = createLucideIcon('Music');
+        const Activity = createLucideIcon('Activity');
+        const Layers = createLucideIcon('Layers');
+        const Tablet = createLucideIcon('Tablet');
+        const Share2 = createLucideIcon('Share2');
+        const Globe = createLucideIcon('Globe');
+        const ShieldCheck = createLucideIcon('ShieldCheck');
+        const TrendingUp = createLucideIcon('TrendingUp');
+        const Cpu = createLucideIcon('Cpu');
+        const HeartHandshake = createLucideIcon('HeartHandshake');
+        const X = createLucideIcon('X');
+        const AlertCircle = createLucideIcon('AlertCircle');
+        const BarChart2 = createLucideIcon('BarChart2');
+        const Brain = createLucideIcon('Brain');
+        const Gamepad2 = createLucideIcon('Gamepad2');
+        const MousePointerClick = createLucideIcon('MousePointerClick');
+        const Sparkles = createLucideIcon('Sparkles');
+        const Zap = createLucideIcon('Zap');
+        const Users = createLucideIcon('Users');
+        const Flag = createLucideIcon('Flag');
+        const Plus = createLucideIcon('Plus');
+        const ArrowRight = createLucideIcon('ArrowRight');
+        const Code = createLucideIcon('Code');
+        const FileCode = createLucideIcon('FileCode');
 
         // --- Shared Helper Components ---
 
@@ -630,6 +636,8 @@
                 }, 500);
                 }
             }, [currentSlide, isAnimating]);
+
+            // NOTE: 스크롤(휠) 페이지 넘김 기능은 사용자 요청으로 삭제됨.
 
             useEffect(() => {
                 const handleKeyDown = (e) => {
