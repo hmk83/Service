@@ -60,7 +60,7 @@
              100% { transform: translateY(0px); }
         }
         
-        /* Graph Animations (복구됨) */
+        /* Graph Animations */
         @keyframes grow-up { 
             from { height: 0; } 
             to { height: var(--target-height); } 
@@ -94,39 +94,16 @@
         // --- Lucide Icons Wrapper for Browser Environment ---
         const createLucideIcon = (iconName) => {
             return ({ size = 24, className = "", ...props }) => {
-                // window.lucide 객체가 로드되었는지 확인
                 if (!window.lucide) return null;
-                
-                // 아이콘 데이터 찾기 (lucide.icons 안에 있거나 lucide 객체 바로 아래에 있음)
                 const iconData = window.lucide.icons ? window.lucide.icons[iconName] : window.lucide[iconName];
-                
                 if (!iconData) return null;
-                
                 const svgChildren = iconData.map(([tag, attrs], index) => {
                     return React.createElement(tag, { key: index, ...attrs });
                 });
-
-                return React.createElement(
-                    'svg',
-                    {
-                        xmlns: "http://www.w3.org/2000/svg",
-                        width: size,
-                        height: size,
-                        viewBox: "0 0 24 24",
-                        fill: "none",
-                        stroke: "currentColor",
-                        strokeWidth: "2",
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                        className: className,
-                        ...props
-                    },
-                    svgChildren
-                );
+                return React.createElement('svg', { xmlns: "http://www.w3.org/2000/svg", width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className: className, ...props }, svgChildren);
             };
         };
 
-        // 아이콘 이름 수정 (PascalCase)
         const ChevronRight = createLucideIcon('ChevronRight');
         const ChevronLeft = createLucideIcon('ChevronLeft');
         const Calendar = createLucideIcon('Calendar');
@@ -154,54 +131,65 @@
         const ArrowRight = createLucideIcon('ArrowRight');
         const Code = createLucideIcon('Code');
         const FileCode = createLucideIcon('FileCode');
+        const CheckCircle = createLucideIcon('CheckCircle');
 
         // --- Shared Helper Components ---
 
         const ImagePlaceholder = ({ src, alt, className = "", enableZoom = true, onClick = null, objectFit = "cover" }) => {
             const [imgSrc, setImgSrc] = useState(src);
-            
-            useEffect(() => {
-                setImgSrc(src);
-            }, [src]);
-
+            useEffect(() => { setImgSrc(src); }, [src]);
             return (
-                <div 
-                onClick={onClick}
-                className={`overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800/50 relative group z-0 ${enableZoom ? 'hover:z-50' : ''} ${onClick ? 'cursor-zoom-in' : 'cursor-default'} ${className}`}
-                >
-                <img 
-                    src={imgSrc || "/api/placeholder/800/600"} 
-                    alt={alt}
-                    className={`w-full h-full transition-transform duration-500 opacity-90 group-hover:opacity-100 ${enableZoom ? 'group-hover:scale-120' : ''}`}
-                    style={{ objectFit: objectFit }}
-                    onError={() => setImgSrc("https://placehold.co/600x400/1e293b/cbd5e1?text=Image+Box")}
-                />
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300 pointer-events-none"></div>
+                <div onClick={onClick} className={`overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800/50 relative group z-0 ${enableZoom ? 'hover:z-50' : ''} ${onClick ? 'cursor-zoom-in' : 'cursor-default'} ${className}`}>
+                    <img src={imgSrc || "/api/placeholder/800/600"} alt={alt} className={`w-full h-full transition-transform duration-500 opacity-90 group-hover:opacity-100 ${enableZoom ? 'group-hover:scale-120' : ''}`} style={{ objectFit: objectFit }} onError={() => setImgSrc("https://placehold.co/600x400/1e293b/cbd5e1?text=Image+Box")} />
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300 pointer-events-none"></div>
                 </div>
             );
         };
 
         const ImageModal = ({ modalImage, setModalImage }) => {
+            // modalImage can be string (single image) or array (slideshow)
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [fade, setFade] = useState(true);
+
+            useEffect(() => {
+                if (Array.isArray(modalImage)) {
+                    setCurrentIndex(0);
+                    const interval = setInterval(() => {
+                        setFade(false); // Start fade out
+                        setTimeout(() => {
+                            setCurrentIndex((prev) => (prev + 1) % modalImage.length);
+                            setFade(true); // Start fade in
+                        }, 500); // Wait for fade out to finish (half of css transition)
+                    }, 3000); // Change image every 3 seconds
+                    return () => clearInterval(interval);
+                }
+            }, [modalImage]);
+
             if (!modalImage) return null;
+
+            const isArray = Array.isArray(modalImage);
+            const currentSrc = isArray ? modalImage[currentIndex] : modalImage;
+
             return (
-                <div 
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-fade-in-up"
-                onClick={() => setModalImage(null)}
-                >
-                <div className="relative w-full h-full flex items-center justify-center p-4">
-                    <img 
-                    src={modalImage} 
-                    alt="Full view" 
-                    className="w-full h-full object-contain"
-                    onClick={(e) => e.stopPropagation()} 
-                    />
-                    <button 
-                    onClick={() => setModalImage(null)}
-                    className="absolute top-6 right-6 p-3 bg-slate-800/80 hover:bg-red-500 border border-slate-600 rounded-full text-white transition-all duration-300 shadow-xl z-50 group"
-                    >
-                    <X size={36} className="group-hover:scale-110 transition-transform"/>
-                    </button>
-                </div>
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-fade-in-up" onClick={() => setModalImage(null)}>
+                    <div className="relative w-full h-full flex items-center justify-center p-4">
+                        <img 
+                            src={currentSrc} 
+                            alt="Full view" 
+                            className={`w-full h-full object-contain transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
+                            onClick={(e) => e.stopPropagation()} 
+                        />
+                        {isArray && (
+                            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
+                                {modalImage.map((_, idx) => (
+                                    <div key={idx} className={`w-2 h-2 rounded-full transition-all ${idx === currentIndex ? 'bg-white w-4' : 'bg-white/50'}`}></div>
+                                ))}
+                            </div>
+                        )}
+                        <button onClick={() => setModalImage(null)} className="absolute top-6 right-6 p-3 bg-slate-800/80 hover:bg-red-500 border border-slate-600 rounded-full text-white transition-all duration-300 shadow-xl z-50 group">
+                            <X size={36} className="group-hover:scale-110 transition-transform"/>
+                        </button>
+                    </div>
                 </div>
             );
         };
@@ -219,27 +207,20 @@
             useEffect(() => {
                 let startTime = null;
                 let animationFrameId;
-
                 const animate = (currentTime) => {
-                if (!startTime) startTime = currentTime;
-                const progress = Math.min((currentTime - startTime) / duration, 1);
-                setCount(Math.floor(progress * end));
-                if (progress < 1) {
-                    animationFrameId = requestAnimationFrame(animate);
-                }
+                    if (!startTime) startTime = currentTime;
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    setCount(Math.floor(progress * end));
+                    if (progress < 1) { animationFrameId = requestAnimationFrame(animate); }
                 };
                 animationFrameId = requestAnimationFrame(animate);
-                
                 return () => cancelAnimationFrame(animationFrameId);
             }, [end, duration]);
             return <span>{count}</span>;
         };
 
         const SlideContainer = ({ children, className = "", onClick = null }) => (
-            <div 
-                onClick={onClick}
-                className={`w-full h-full flex flex-col justify-center items-center px-8 py-4 transition-all duration-500 ease-in-out ${className}`}
-            >
+            <div onClick={onClick} className={`w-full h-full flex flex-col justify-center items-center px-8 py-4 transition-all duration-500 ease-in-out ${className}`}>
                 {children}
             </div>
         );
@@ -249,25 +230,14 @@
         const CoverSlide = ({ nextSlide }) => (
             <SlideContainer>
                 <div className="text-center space-y-6 max-w-6xl z-10 flex flex-col justify-center h-full">
-                <div className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-sm font-semibold tracking-widest mb-2 animate-fade-in-down mx-auto">
-                    주은교육(주)
-                </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 leading-tight tracking-tight animate-fade-in-up mb-4">
-                    Service Operation Team
-                </h1>
+                <div className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-sm font-semibold tracking-widest mb-2 animate-fade-in-down mx-auto">주은교육(주)</div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 leading-tight tracking-tight animate-fade-in-up mb-4">Service Operation Team</h1>
                 <div className="relative h-32 md:h-40 w-full flex justify-center items-center overflow-visible">
-                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-white animate-slide-left-2025" style={{ left: '50%', transform: 'translateX(-50%)' }}>
-                    <span className="text-slate-500">2025</span>
-                    </div>
+                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-white animate-slide-left-2025" style={{ left: '50%', transform: 'translateX(-50%)' }}><span className="text-slate-500">2025</span></div>
                     <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-slate-600 opacity-0 animate-fade-in-delay">-</div>
-                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-cyan-400 opacity-0 animate-slide-in-2026" style={{ right: '50%', transform: 'translateX(50%)' }}>
-                    2026
-                    </div>
+                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-cyan-400 opacity-0 animate-slide-in-2026" style={{ right: '50%', transform: 'translateX(50%)' }}>2026</div>
                 </div>
-                <p className="text-xl text-slate-400 font-light mt-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-500">
-                    혁신적인 에듀테크 플랫폼 구축과<br/>
-                    디지털 헬스케어의 미래를 엽니다.
-                </p>
+                <p className="text-xl text-slate-400 font-light mt-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-500">혁신적인 에듀테크 플랫폼 구축과<br/>디지털 헬스케어의 미래를 엽니다.</p>
                 <div className="mt-16 animate-fade-in-up animation-delay-700">
                     <button onClick={nextSlide} className="group px-10 py-4 bg-gradient-to-r from-cyan-700/80 to-blue-700/80 hover:from-cyan-600 hover:to-blue-600 rounded-full text-white text-lg font-medium transition-all duration-300 flex items-center gap-2 mx-auto border border-white/10 backdrop-blur-sm shadow-lg shadow-cyan-900/20">
                     Start Presentation <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -282,43 +252,19 @@
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 text-center tracking-tight">사업 추진 목표</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl px-4">
                 <div className="group relative p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50 hover:border-cyan-500/40 transition-all duration-300 hover:-translate-y-1">
-                    <div className="flex items-center gap-3 mb-6">
-                    <span className="text-3xl font-bold text-cyan-400">2025</span>
-                    <div className="h-px flex-1 bg-slate-700 group-hover:bg-cyan-500/30 transition-colors"></div>
-                    </div>
+                    <div className="flex items-center gap-3 mb-6"><span className="text-3xl font-bold text-cyan-400">2025</span><div className="h-px flex-1 bg-slate-700 group-hover:bg-cyan-500/30 transition-colors"></div></div>
                     <div className="space-y-4">
                     <h3 className="text-xl font-bold text-white">서비스 확장 및 안정화</h3>
-                    <p className="text-slate-300 leading-relaxed text-base font-light">
-                        시니어 시장 진입과 더불어, <span className="text-cyan-400 font-medium">자체 R&D 기반의 독자적 콘텐츠 생태계</span>를 구축하여 차별화된 교육 가치를 창출하고 서비스 경쟁력을 극대화합니다.
-                    </p>
-                    <div className="w-full h-40 mt-4">
-                        <ImagePlaceholder 
-                            src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg" 
-                            className="h-full rounded-lg" 
-                            enableZoom={false} 
-                            onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg")}
-                        />
-                    </div>
+                    <p className="text-slate-300 leading-relaxed text-base font-light">시니어 시장 진입과 더불어, <span className="text-cyan-400 font-medium">자체 R&D 기반의 독자적 콘텐츠 생태계</span>를 구축하여 차별화된 교육 가치를 창출하고 서비스 경쟁력을 극대화합니다.</p>
+                    <div className="w-full h-40 mt-4"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg" className="h-full rounded-lg" enableZoom={false} onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg")}/></div>
                     </div>
                 </div>
                 <div className="group relative p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50 hover:border-indigo-500/40 transition-all duration-300 hover:-translate-y-1">
-                    <div className="flex items-center gap-3 mb-6">
-                    <span className="text-3xl font-bold text-indigo-400">2026</span>
-                    <div className="h-px flex-1 bg-slate-700 group-hover:bg-indigo-500/30 transition-colors"></div>
-                    </div>
+                    <div className="flex items-center gap-3 mb-6"><span className="text-3xl font-bold text-indigo-400">2026</span><div className="h-px flex-1 bg-slate-700 group-hover:bg-indigo-500/30 transition-colors"></div></div>
                     <div className="space-y-4">
                     <h3 className="text-xl font-bold text-white">에듀테크 플랫폼 완성</h3>
-                    <p className="text-slate-300 leading-relaxed text-base font-light">
-                        파편화된 서비스와 자료를 통합하고 <span className="text-indigo-400 font-medium">"디바이스 연동형 All-in-One 플랫폼"</span> 구축. 데이터 기반 <span className="text-indigo-400 font-medium">디지털 헬스케어</span> 진출.
-                    </p>
-                    <div className="w-full h-40 mt-4">
-                        <ImagePlaceholder 
-                            src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg" 
-                            className="h-full rounded-lg" 
-                            enableZoom={false} 
-                            onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg")}
-                        />
-                    </div>
+                    <p className="text-slate-300 leading-relaxed text-base font-light">파편화된 서비스와 자료를 통합하고 <span className="text-indigo-400 font-medium">"디바이스 연동형 All-in-One 플랫폼"</span> 구축. 데이터 기반 <span className="text-indigo-400 font-medium">디지털 헬스케어</span> 진출.</p>
+                    <div className="w-full h-40 mt-4"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg" className="h-full rounded-lg" enableZoom={false} onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg")}/></div>
                     </div>
                 </div>
                 </div>
@@ -345,45 +291,70 @@
             { month: "12월", title: "ABC notation 구축", desc: "컨텐츠 작업 최소화", Icon: FileCode, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/12.png", link: "https://senior100.co.kr/serviceops/score.html" },
         ];
 
-        const Plan2025Card = ({ content, align, setModalImage }) => (
-            <div className={`w-full max-w-sm p-5 rounded-xl border backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] ${content.highlight ? 'bg-cyan-950/30 border-cyan-500/40 shadow-lg shadow-cyan-900/10' : 'bg-slate-900/40 border-slate-700/50 hover:border-slate-500'} ${align === 'right' ? 'ml-auto text-left' : 'mr-auto text-right'}`}>
-                <div className={`flex items-center gap-3 mb-3 ${align === 'right' ? 'justify-start' : 'justify-end'}`}>
-                    {align === 'left' && <span className={`text-xl font-bold ${content.highlight ? 'text-cyan-400' : 'text-slate-400'}`}>{content.month}</span>}
-                    <div className={`${content.highlight ? 'text-cyan-400' : 'text-slate-500'}`}>
-                    {content.Icon && <content.Icon size={18} />}
-                    </div>
-                    {align === 'right' && <span className={`text-xl font-bold ${content.highlight ? 'text-cyan-400' : 'text-slate-400'}`}>{content.month}</span>}
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1">{content.title}</h3>
-                <p className="text-slate-400 text-sm mb-3 font-light">{content.desc}</p>
-                
-                {content.details && (
-                <div className="my-4 flex flex-col gap-2">
-                    {content.details.map((detail, i) => (
-                    <div key={i} className="bg-slate-800/80 border border-slate-500 rounded-lg p-3 text-center text-white font-bold text-lg shadow-md hover:bg-slate-700 transition-colors">
-                        {detail}
-                    </div>
-                    ))}
-                </div>
-                )}
+        const Plan2025Card = ({ content, align, setModalImage }) => {
+            const cardRef = useRef(null);
+            const [isVisible, setIsVisible] = useState(false);
 
-                <div className="w-full mt-4">
-                    <ImagePlaceholder 
-                        src={content.img} 
-                        className="w-full h-auto rounded-lg" 
-                        enableZoom={false} 
-                        objectFit="contain"
-                        onClick={() => {
-                            if (content.link) {
-                                window.open(content.link, '_blank');
-                            } else {
-                                setModalImage(content.img);
-                            }
-                        }}
-                    />
+            useEffect(() => {
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        if (entry.isIntersecting) {
+                            setIsVisible(true);
+                            observer.disconnect();
+                        }
+                    },
+                    { threshold: 0.1 }
+                );
+                if (cardRef.current) observer.observe(cardRef.current);
+                return () => observer.disconnect();
+            }, []);
+
+            return (
+                <div ref={cardRef} className={`w-full max-w-sm p-5 rounded-xl border backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] ${content.highlight ? 'bg-cyan-950/30 border-cyan-500/40 shadow-lg shadow-cyan-900/10' : 'bg-slate-900/40 border-slate-700/50 hover:border-slate-500'} ${align === 'right' ? 'ml-auto text-left' : 'mr-auto text-right'}`}>
+                    <div className={`flex items-center gap-3 mb-3 ${align === 'right' ? 'justify-start' : 'justify-end'}`}>
+                        {align === 'left' && <span className={`text-xl font-bold ${content.highlight ? 'text-cyan-400' : 'text-slate-400'}`}>{content.month}</span>}
+                        <div className={`${content.highlight ? 'text-cyan-400' : 'text-slate-500'}`}>
+                        {content.Icon && <content.Icon size={18} />}
+                        </div>
+                        {align === 'right' && <span className={`text-xl font-bold ${content.highlight ? 'text-cyan-400' : 'text-slate-400'}`}>{content.month}</span>}
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-1">{content.title}</h3>
+                    <p className="text-slate-400 text-sm mb-3 font-light">{content.desc}</p>
+                    
+                    {/* Animated Details */}
+                    {content.details && (
+                    <div className="my-4 flex flex-col gap-2 items-start">
+                        {content.details.map((detail, i) => (
+                        <div 
+                            key={i} 
+                            className={`flex items-center gap-2 bg-slate-800/90 border border-slate-600 rounded-lg px-4 py-2 text-white font-bold text-sm shadow-md hover:bg-slate-700 hover:border-cyan-500 transition-all duration-700 ease-out transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
+                            style={{ transitionDelay: `${i * 150}ms` }}
+                        >
+                            <CheckCircle size={14} className="text-cyan-400" />
+                            {detail}
+                        </div>
+                        ))}
+                    </div>
+                    )}
+
+                    <div className="w-full mt-4">
+                        <ImagePlaceholder 
+                            src={content.img} 
+                            className="w-full h-auto rounded-lg" 
+                            enableZoom={false} 
+                            objectFit="contain"
+                            onClick={() => {
+                                if (content.link) {
+                                    window.open(content.link, '_blank');
+                                } else {
+                                    setModalImage(content.img);
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        };
 
         const Plan2025Slide = ({ setModalImage }) => (
             <SlideContainer className="!justify-start pt-20"> 
@@ -529,11 +500,23 @@
         );
 
         const Plan2026_1 = ({ setModalImage }) => (
-            <div className="w-full h-full"><Slide2026Template title="사용자 프로필 고도화" subtitle="체계적인 학습 관리 시스템 (LMS)" desc="스마트드럼 및 시니어 서비스 내 개별 학습자 관리 시스템을 도입합니다. 진도율과 성취도를 정밀하게 데이터화하여 맞춤형 교육을 실현합니다." icon={<Activity size={24} />} points={["개인별 학습 이력 추적", "성취도 기반 맞춤형 피드백", "강사용 관리 대시보드"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=LMS+System+UI" setModalImage={setModalImage} /></div>
+            <div className="w-full h-full"><Slide2026Template title="사용자 프로필 고도화" subtitle="체계적인 학습 관리 시스템 (LMS)" desc="스마트드럼 및 시니어 서비스 내 개별 학습자 관리 시스템을 도입합니다. 진도율과 성취도를 정밀하게 데이터화하여 맞춤형 교육을 실현합니다." icon={<Activity size={24} />} points={["개인별 학습 이력 추적", "성취도 기반 맞춤형 피드백", "강사용 관리 대시보드"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/13.png" setModalImage={setModalImage} /></div>
         ); 
 
-        const Plan2026_2 = ({ setModalImage }) => <Slide2026Template title="All-in-One 플랫폼" subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">주은에듀클래스(가칭)</span></span>} desc="기존 '시니어100'에서 '주은에듀클래스'로 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=All-in-One+Platform" setModalImage={setModalImage} />;
-        const Plan2026_3 = ({ setModalImage }) => <Slide2026Template title="전용 앱(App) 개발" subtitle="Android Tablet Optimization" desc="웹 기반의 한계를 넘어선 빠르고 안정적인 반응 속도를 구현합니다. 정부 지원사업(R&D)을 활용하여 기술력을 입증합니다." icon={<Tablet size={24} />} points={["안드로이드 태블릿 최적화", "초저지연 터치 반응 속도", "오프라인 모드 지원"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=Tablet+App+Mockup" setModalImage={setModalImage} />;
+        const Plan2026_2 = ({ setModalImage }) => <Slide2026Template title="All-in-One 플랫폼" subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">주은에듀클래스(가칭)</span></span>} desc="기존 '시니어100'에서 '주은에듀클래스'로 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/14.png" setModalImage={setModalImage} />;
+        
+        const Plan2026_3 = ({ setModalImage }) => {
+            // Slideshow Logic for specific image (15, 16, 17)
+            const handleAppImageClick = () => {
+                setModalImage([
+                    "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/15.png",
+                    "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/16.png",
+                    "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/17.png"
+                ]);
+            };
+
+            return <Slide2026Template title="전용 앱(App) 개발" subtitle="Android Tablet Optimization" desc="웹 기반의 한계를 넘어선 빠르고 안정적인 반응 속도를 구현합니다. 정부 지원사업(R&D)을 활용하여 기술력을 입증합니다." icon={<Tablet size={24} />} points={["안드로이드 태블릿 최적화", "초저지연 터치 반응 속도", "오프라인 모드 지원"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/15.png" setModalImage={handleAppImageClick} />;
+        }
         
         const ConvergenceSlide = () => {
             const [step, setStep] = useState(0); 
@@ -545,7 +528,7 @@
                 {step === 0 && (<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center animate-pulse pointer-events-none"><div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20 mb-4"><MousePointerClick size={40} className="text-white" /></div><span className="text-white/70 text-sm font-medium tracking-widest uppercase">Click to Merge</span></div>)}
                 <div className="relative w-full h-[300px] flex items-center justify-center">
                     <div className={`absolute flex flex-col items-center transition-all duration-700 ease-in-out z-20 ${step === 0 ? 'translate-x-[-200px] opacity-100' : ''} ${step === 1 ? 'translate-x-[-20px] opacity-100' : ''} ${step === 2 ? 'translate-x-[-20px] opacity-100 animate-shake' : ''} ${step >= 3 ? 'opacity-0 scale-0' : ''}`}><div className="w-48 h-48 rounded-3xl bg-slate-800 border-2 border-slate-600 flex flex-col items-center justify-center shadow-2xl"><Share2 size={48} className="text-indigo-400 mb-4" /><h3 className="text-xl font-bold text-white">All-in-One<br/>Platform</h3><p className="text-slate-400 text-sm mt-2">Web + Device Link</p></div></div>
-                    <div className={`absolute transition-opacity duration-300 z-10 ${step >= 1 ? 'opacity-0' : 'opacity-100'}`}><div className="w-12 h-12 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-slate-300"><Plus size={24} /></div></div>
+                    {/* Plus Icon Removed */}
                     <div className={`absolute flex flex-col items-center transition-all duration-700 ease-in-out z-20 ${step === 0 ? 'translate-x-[200px] opacity-100' : ''} ${step === 1 ? 'translate-x-[20px] opacity-100' : ''} ${step === 2 ? 'translate-x-[20px] opacity-100 animate-shake' : ''} ${step >= 3 ? 'opacity-0 scale-0' : ''}`}><div className="w-48 h-48 rounded-3xl bg-slate-800 border-2 border-slate-600 flex flex-col items-center justify-center shadow-2xl"><Tablet size={48} className="text-purple-400 mb-4" /><h3 className="text-xl font-bold text-white">Dedicated<br/>App</h3><p className="text-slate-400 text-sm mt-2">Native Optimization</p></div></div>
                     <div className={`absolute flex flex-col items-center transition-all duration-700 ease-out z-30 ${step < 3 ? 'scale-0 opacity-0' : 'scale-125 opacity-100'}`}><div className="w-56 h-56 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex flex-col items-center justify-center shadow-[0_0_80px_rgba(139,92,246,0.6)] border-4 border-white/20"><Cpu size={56} className="text-white mb-4 animate-pulse" /><h3 className="text-2xl font-black text-white text-center">Digital<br/>Healthcare</h3><p className="text-indigo-100 text-sm mt-2 opacity-80">Cognitive Solution</p></div></div>
                 </div>
@@ -555,7 +538,7 @@
             );
         };
 
-        const Plan2026_4 = ({ setModalImage }) => <Slide2026Template title="디지털 헬스케어" subtitle="인지장애 예방 솔루션" desc="악기 연주 데이터를 뇌 건강 지표로 활용하여, 교육 시장을 넘어 실버 케어 및 의료 보조 시장으로 진입합니다." icon={<Cpu size={24} />} points={["리듬 반응 속도 인지 분석", "치매 안심 센터 보급", "의료 데이터 표준화"]} imgSrc="https://placehold.co/800x600/1e293b/6366f1?text=Digital+Healthcare" setModalImage={setModalImage} />;
+        const Plan2026_4 = ({ setModalImage }) => <Slide2026Template title="디지털 헬스케어" subtitle="인지장애 예방 솔루션" desc="악기 연주 데이터를 뇌 건강 지표로 활용하여, 교육 시장을 넘어 실버 케어 및 의료 보조 시장으로 진입합니다." icon={<Cpu size={24} />} points={["리듬 반응 속도 인지 분석", "치매 안심 센터 보급", "의료 데이터 표준화"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/18.jpeg" setModalImage={setModalImage} />;
 
         const MemeSlide = () => (
             <SlideContainer>
@@ -637,7 +620,7 @@
                 }
             }, [currentSlide, isAnimating]);
 
-            // NOTE: 스크롤(휠) 페이지 넘김 기능은 사용자 요청으로 삭제됨.
+            // NOTE: Scroll wheel navigation removed as requested.
 
             useEffect(() => {
                 const handleKeyDown = (e) => {
