@@ -59,6 +59,16 @@
              50% { transform: translateY(-5px); }
              100% { transform: translateY(0px); }
         }
+        
+        /* Graph Animations (복구됨) */
+        @keyframes grow-up { 
+            from { height: 0; } 
+            to { height: var(--target-height); } 
+        }
+        @keyframes grow-right { 
+            from { width: 0; } 
+            to { width: var(--target-width); } 
+        }
 
         .animate-fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } 
         .animate-fade-in-down { animation: fade-in-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } 
@@ -82,13 +92,11 @@
         const { useState, useEffect, useRef, useCallback } = React;
 
         // --- Lucide Icons Wrapper for Browser Environment ---
-        // Lucide 아이콘을 React 컴포넌트로 변환하는 헬퍼 함수
         const createLucideIcon = (iconName) => {
             return ({ size = 24, className = "", ...props }) => {
                 const iconData = window.lucide.icons[iconName];
                 if (!iconData) return null;
                 
-                // SVG 데이터 생성
                 const svgChildren = iconData.map(([tag, attrs], index) => {
                     return React.createElement(tag, { key: index, ...attrs });
                 });
@@ -113,7 +121,6 @@
             };
         };
 
-        // 사용된 아이콘들 매핑
         const ChevronRight = createLucideIcon('chevronRight');
         const ChevronLeft = createLucideIcon('chevronLeft');
         const Calendar = createLucideIcon('calendar');
@@ -450,7 +457,18 @@
                 <SlideContainer>
                 <div className="w-full max-w-6xl flex flex-col items-center">
                     <div className="text-center mb-12"><div className="flex items-center justify-center gap-3 mb-2"><AlertCircle className="text-red-400" size={32} /><h2 className="text-4xl font-bold text-white">2025 버그 리포트 분석</h2></div><p className="text-slate-400 text-lg">시스템별 오류 발생 현황 (총 <span className="text-red-400 font-bold text-2xl"><Counter end={totalCount} /></span>건)</p></div>
-                    <div className="w-full h-[50vh] flex items-end justify-center gap-6 md:gap-10 px-4">{data.map((item, idx) => (<div key={idx} className="flex flex-col items-center group w-full max-w-[120px]"><div className="mb-3 text-white font-bold text-2xl opacity-0 animate-fade-in-up" style={{ animationDelay: `${idx * 100 + 500}ms` }}><Counter end={item.value} /></div><div className="w-full relative flex items-end justify-center"><div className={`w-16 md:w-20 rounded-t-xl ${item.color} opacity-80 group-hover:opacity-100 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.15)] group-hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]`} style={{ height: '0', animation: `grow-up 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards ${idx * 100}ms`, '--target-height': `${(item.value / maxVal) * 45}vh` }}></div></div><div className="mt-4 text-sm md:text-base text-slate-300 font-bold text-center">{item.label}</div></div>))}</div>
+                    <div className="w-full h-[50vh] flex items-end justify-center gap-6 md:gap-10 px-4">{data.map((item, idx) => (<div key={idx} className="flex flex-col items-center group w-full max-w-[120px]"><div className="mb-3 text-white font-bold text-2xl opacity-0 animate-fade-in-up" style={{ animationDelay: `${idx * 100 + 500}ms` }}><Counter end={item.value} /></div>
+                    <div className="w-full relative flex items-end justify-center">
+                       <div 
+                         className={`w-16 md:w-20 rounded-t-xl ${item.color} opacity-80 group-hover:opacity-100 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.15)] group-hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]`}
+                         style={{ 
+                           height: '0', 
+                           animation: `grow-up 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards ${idx * 100}ms`,
+                           '--target-height': `${(item.value / maxVal) * 45}vh`
+                         }}
+                       ></div>
+                    </div>
+                    <div className="mt-4 text-sm md:text-base text-slate-300 font-bold text-center">{item.label}</div></div>))}</div>
                 </div>
                 </SlideContainer>
             );
@@ -459,7 +477,22 @@
         const BugReportSlide2 = () => {
             const data = [{ name: "우산중흥원", val: 4 }, { name: "경안원", val: 3 }, { name: "아림원", val: 3 }, { name: "월영원", val: 2 }, { name: "청롤원", val: 2 }, { name: "서동원", val: 2 }, { name: "교리원", val: 1 }, { name: "수성원", val: 1 }, { name: "현화원", val: 1 }, { name: "죽곡원", val: 1 }, { name: "스마트늘봄", val: 1 }, { name: "갈현이화원", val: 1 }, { name: "푸리마원", val: 1 }, { name: "가경원", val: 1 }, { name: "모아미래원", val: 1 }, { name: "초지원", val: 1 }, { name: "이동원", val: 1 }];
             const mid = Math.ceil(data.length / 2); const leftCol = data.slice(0, mid); const rightCol = data.slice(mid);
-            const BarItem = ({ item, index, delayBase }) => (<div className="flex items-center gap-4 mb-3 w-full"><div className="w-24 text-right text-slate-300 text-sm font-medium truncate shrink-0">{item.name}</div><div className="flex-1 bg-slate-800/50 rounded-full h-4 overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]" style={{ width: '0', animation: `grow-right 1s cubic-bezier(0.16, 1, 0.3, 1) forwards ${delayBase + (index * 50)}ms`, '--target-width': `${(item.val / 4) * 100}%` }}></div></div><div className="w-6 text-white font-bold text-sm shrink-0">{item.val}</div></div>);
+            const BarItem = ({ item, index, delayBase }) => (
+                <div className="flex items-center gap-4 mb-3 w-full">
+                    <div className="w-24 text-right text-slate-300 text-sm font-medium truncate shrink-0">{item.name}</div>
+                    <div className="flex-1 bg-slate-800/50 rounded-full h-4 overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                          style={{
+                            width: '0',
+                            animation: `grow-right 1s cubic-bezier(0.16, 1, 0.3, 1) forwards ${delayBase + (index * 50)}ms`,
+                            '--target-width': `${(item.val / 4) * 100}%`
+                          }}
+                        ></div>
+                    </div>
+                    <div className="w-6 text-white font-bold text-sm shrink-0">{item.val}</div>
+                </div>
+            );
             return (
                 <SlideContainer>
                 <div className="w-full max-w-6xl h-full flex flex-col justify-center"><div className="text-center mb-8"><div className="flex items-center justify-center gap-3 mb-2"><BarChart2 className="text-blue-400" size={32} /><h2 className="text-3xl md:text-4xl font-bold text-white">학원별 오류 요청 현황</h2></div><p className="text-slate-400">가맹점별 이슈 접수 빈도 분석</p></div><div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 w-full max-h-[60vh] overflow-y-auto custom-scrollbar pr-2"><div className="flex flex-col">{leftCol.map((item, idx) => <BarItem key={idx} item={item} index={idx} delayBase={0} />)}</div><div className="flex flex-col">{rightCol.map((item, idx) => <BarItem key={idx} item={item} index={idx} delayBase={leftCol.length * 50} />)}</div></div></div>
@@ -575,7 +608,6 @@
             const [modalImage, setModalImage] = useState(null);
             const touchStartX = useRef(0);
             const touchEndX = useRef(0);
-            const lastScrollTime = useRef(0);
 
             const totalSlides = 16;
 
@@ -598,31 +630,6 @@
                 }, 500);
                 }
             }, [currentSlide, isAnimating]);
-
-            // Wheel Navigation
-            useEffect(() => {
-                const handleWheel = (e) => {
-                const now = Date.now();
-                if (now - lastScrollTime.current < 800) return; 
-                
-                if (Math.abs(e.deltaY) < 30) return;
-
-                if (e.deltaY > 0) {
-                    if (currentSlide < totalSlides - 1) {
-                    nextSlide();
-                    lastScrollTime.current = now;
-                    }
-                } else {
-                    if (currentSlide > 0) {
-                    prevSlide();
-                    lastScrollTime.current = now;
-                    }
-                }
-                };
-
-                window.addEventListener('wheel', handleWheel);
-                return () => window.removeEventListener('wheel', handleWheel);
-            }, [nextSlide, prevSlide, currentSlide]);
 
             useEffect(() => {
                 const handleKeyDown = (e) => {
