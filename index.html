@@ -70,6 +70,16 @@
             to { width: var(--target-width); } 
         }
 
+        /* BI Animation Keyframes */
+        @keyframes vibrate-copy {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0, 0); }
+        }
+
         .animate-fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } 
         .animate-fade-in-down { animation: fade-in-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } 
         .animate-slide-left-2025 { animation: slide-left-2025 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
@@ -77,12 +87,15 @@
         .animate-fade-in-delay { animation: fade-in-delay 2.5s ease-out forwards; }
         .animate-shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both infinite; }
         .animate-expand-from-center { animation: expand-from-center 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-vibrate { animation: vibrate-copy 0.3s linear infinite; }
         
         .animation-delay-200 { animation-delay: 0.2s; } 
         .animation-delay-300 { animation-delay: 0.3s; } 
         .animation-delay-500 { animation-delay: 0.5s; } 
         .animation-delay-700 { animation-delay: 0.7s; }
         .animation-delay-2000 { animation-delay: 2s; } 
+
+        .font-kakao { color: #FEE500; }
     </style>
 </head>
 <body>
@@ -132,6 +145,7 @@
         const Code = createLucideIcon('Code');
         const FileCode = createLucideIcon('FileCode');
         const CheckCircle = createLucideIcon('CheckCircle');
+        const PlayCircle = createLucideIcon('PlayCircle');
 
         // --- Shared Helper Components ---
 
@@ -147,7 +161,6 @@
         };
 
         const ImageModal = ({ modalImage, setModalImage }) => {
-            // modalImage can be string (single image) or array (slideshow)
             const [currentIndex, setCurrentIndex] = useState(0);
             const [fade, setFade] = useState(true);
 
@@ -155,12 +168,12 @@
                 if (Array.isArray(modalImage)) {
                     setCurrentIndex(0);
                     const interval = setInterval(() => {
-                        setFade(false); // Start fade out
+                        setFade(false);
                         setTimeout(() => {
                             setCurrentIndex((prev) => (prev + 1) % modalImage.length);
-                            setFade(true); // Start fade in
-                        }, 500); // Wait for fade out to finish (half of css transition)
-                    }, 3000); // Change image every 3 seconds
+                            setFade(true);
+                        }, 500);
+                    }, 3000);
                     return () => clearInterval(interval);
                 }
             }, [modalImage]);
@@ -189,6 +202,124 @@
                         <button onClick={() => setModalImage(null)} className="absolute top-6 right-6 p-3 bg-slate-800/80 hover:bg-red-500 border border-slate-600 rounded-full text-white transition-all duration-300 shadow-xl z-50 group">
                             <X size={36} className="group-hover:scale-110 transition-transform"/>
                         </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Brand Identity Modal Component ---
+        const BrandIdentityModal = ({ isOpen, onClose }) => {
+            const [step, setStep] = useState(0);
+
+            useEffect(() => {
+                if (isOpen) {
+                    setStep(0);
+                    // Sequence
+                    const t1 = setTimeout(() => setStep(1), 800);  // Vibrate & Copy start
+                    const t2 = setTimeout(() => setStep(2), 2500); // Move Up & JUEUN appear
+                    const t3 = setTimeout(() => setStep(3), 4500); // Separation starts
+                    const t4 = setTimeout(() => setStep(4), 5500); // Final Layout
+
+                    return () => {
+                        clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
+                    };
+                }
+            }, [isOpen]);
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-[110] bg-black/95 flex items-center justify-center overflow-hidden">
+                    <button onClick={onClose} className="absolute top-8 right-8 text-slate-400 hover:text-white transition-colors z-[120]">
+                        <X size={40} />
+                    </button>
+
+                    {/* Main Container for Layout Shift */}
+                    <div className={`relative flex items-center transition-all duration-1000 ease-in-out ${step >= 4 ? 'gap-12' : 'gap-0'}`}>
+                        
+                        {/* LEFT GROUP (English Logo) */}
+                        <div className={`relative flex flex-col items-center transition-transform duration-1000 ease-in-out`}>
+                            
+                            {/* Logo Row: JUEUN + SSAM (Attached) */}
+                            <div className="relative flex items-end mb-1">
+                                {/* JUEUN Text */}
+                                <div className={`text-6xl md:text-7xl font-black text-white transition-all duration-700 ${step >= 2 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+                                    JUEUN
+                                </div>
+                                
+                                {/* SSAM Text (Static target) */}
+                                <div className={`text-6xl md:text-7xl font-black font-kakao transition-all duration-500 ease-in-out ${step >= 2 ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>SSAM</div>
+                            </div>
+
+                            {/* Slogan Row: English */}
+                            <div className={`relative transition-all duration-1000 ${step >= 2 ? 'w-full' : 'w-auto'}`}>
+                                <div className={`
+                                    font-bold text-slate-500 whitespace-nowrap flex justify-between w-full
+                                    transition-all duration-1000 ease-in-out
+                                    ${step >= 2 ? 'text-[0.65rem] md:text-[0.8rem] tracking-widest opacity-100' : 'text-xl md:text-2xl tracking-tight opacity-100'}
+                                `}>
+                                    {/* Using spans for justification */}
+                                    <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span>
+                                    <span>&nbsp;</span>
+                                    <span>S</span><span>C</span><span>H</span><span>O</span><span>O</span><span>L</span>
+                                    <span>&nbsp;</span>
+                                    <span>A</span><span>R</span><span>T</span>
+                                    <span>&nbsp;</span>
+                                    <span>M</span><span>U</span><span>S</span><span>I</span><span>C</span>
+                                </div>
+
+                                {/* Animated Flying Letters Overlay */}
+                                {/* These fly up and then fade out as the static SSAM appears */}
+                                <div className={`absolute inset-0 w-full h-full pointer-events-none`}>
+                                    {/* S -> S */}
+                                    <div className={`absolute transition-all duration-1000 ease-in-out
+                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
+                                        ${step >= 2 ? 'top-[-5.5rem] left-[56%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[0%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
+                                    `}>S</div>
+                                    {/* S -> S */}
+                                    <div className={`absolute transition-all duration-1000 ease-in-out
+                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
+                                        ${step >= 2 ? 'top-[-5.5rem] left-[67%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[18%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
+                                    `}>S</div>
+                                    {/* A -> A */}
+                                    <div className={`absolute transition-all duration-1000 ease-in-out
+                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
+                                        ${step >= 2 ? 'top-[-5.5rem] left-[78%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[45%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
+                                    `}>A</div>
+                                    {/* M -> M */}
+                                    <div className={`absolute transition-all duration-1000 ease-in-out
+                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
+                                        ${step >= 2 ? 'top-[-5.5rem] left-[89%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[59%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
+                                    `}>M</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CENTER DIVIDER */}
+                        <div className={`w-px bg-slate-700 h-24 transition-all duration-1000 ease-out origin-top ${step >= 4 ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}></div>
+
+                        {/* RIGHT GROUP (Korean Logo) */}
+                        <div className={`flex flex-col items-center transition-all duration-1000 ease-out ${step >= 4 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10 absolute right-0'}`}>
+                            {/* Logo Row: 주은 + 쌤 */}
+                            <div className="flex items-end mb-1">
+                                <div className="text-6xl md:text-7xl font-black text-white mr-1">주은</div>
+                                <div className="text-6xl md:text-7xl font-black font-kakao">쌤</div>
+                            </div>
+                            
+                            {/* Slogan Row: Fits width of "주은쌤" */}
+                            <div className="w-full border-t border-transparent">
+                                <div className="text-[0.45rem] md:text-[0.55rem] font-bold text-slate-500 tracking-tight flex justify-between w-full whitespace-nowrap">
+                                    <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span>
+                                    <span>&nbsp;</span>
+                                    <span>S</span><span>C</span><span>H</span><span>O</span><span>O</span><span>L</span>
+                                    <span>&nbsp;</span>
+                                    <span>A</span><span>R</span><span>T</span>
+                                    <span>&nbsp;</span>
+                                    <span>M</span><span>U</span><span>S</span><span>I</span><span>C</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             );
@@ -487,12 +618,25 @@
             </SlideContainer>
         );
 
-        const Slide2026Template = ({ title, subtitle, desc, icon, points, imgSrc, setModalImage }) => (
+        const Slide2026Template = ({ title, subtitle, desc, icon, points, imgSrc, setModalImage, onButtonClick }) => (
             <SlideContainer>
                 <div className="w-full max-w-6xl h-full flex flex-col justify-center">
                 <div className="flex items-center gap-3 mb-8"><div className="px-3 py-1 bg-indigo-600/80 rounded text-white font-bold text-sm tracking-wider">2026 PLAN</div><div className="h-px flex-1 bg-slate-800"></div></div>
                 <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-stretch h-auto lg:h-[50vh]">
-                    <div className="flex-1 flex flex-col justify-center space-y-6"><div><div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20">{icon}</div><h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">{title}</h2><p className="text-xl text-indigo-300 font-light mt-1">{subtitle}</p><p className="text-base text-slate-400 leading-relaxed mt-4 font-light">{desc}</p></div>{points && (<ul className="space-y-2 mt-2">{points.map((p, i) => (<li key={i} className="flex items-center gap-3 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>{p}</li>))}</ul>)}</div>
+                    <div className="flex-1 flex flex-col justify-center space-y-6">
+                        <div>
+                            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20">{icon}</div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">{title}</h2>
+                            <p className="text-xl text-indigo-300 font-light mt-1">{subtitle}</p>
+                            <p className="text-base text-slate-400 leading-relaxed mt-4 font-light">{desc}</p>
+                        </div>
+                        {points && (<ul className="space-y-2 mt-2">{points.map((p, i) => (<li key={i} className="flex items-center gap-3 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>{p}</li>))}</ul>)}
+                        {onButtonClick && (
+                            <button onClick={onButtonClick} className="mt-4 px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-white font-semibold flex items-center gap-2 w-fit transition-all hover:scale-105">
+                                <Sparkles size={18} className="text-yellow-400" /> 브랜드 아이덴티티(BI) 보기
+                            </button>
+                        )}
+                    </div>
                     <div className="flex-1 w-full h-64 lg:h-auto"><ImagePlaceholder src={imgSrc} className="w-full h-full rounded-2xl border border-slate-700/50 shadow-2xl" enableZoom={false} onClick={() => setModalImage(imgSrc)} /></div>
                 </div>
                 </div>
@@ -503,7 +647,7 @@
             <div className="w-full h-full"><Slide2026Template title="사용자 프로필 고도화" subtitle="체계적인 학습 관리 시스템 (LMS)" desc="스마트드럼 및 시니어 서비스 내 개별 학습자 관리 시스템을 도입합니다. 진도율과 성취도를 정밀하게 데이터화하여 맞춤형 교육을 실현합니다." icon={<Activity size={24} />} points={["개인별 학습 이력 추적", "성취도 기반 맞춤형 피드백", "강사용 관리 대시보드"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/13.png" setModalImage={setModalImage} /></div>
         ); 
 
-        const Plan2026_2 = ({ setModalImage }) => <Slide2026Template title="All-in-One 플랫폼" subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">주은에듀클래스(가칭)</span></span>} desc="기존 '시니어100'에서 '주은에듀클래스'로 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/14.png" setModalImage={setModalImage} />;
+        const Plan2026_2 = ({ setModalImage, openBrandModal }) => <Slide2026Template title="All-in-One 플랫폼" subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">통합 플랫폼</span></span>} desc="기존 '시니어100'에서 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/14.png" setModalImage={setModalImage} onButtonClick={openBrandModal} />;
         
         const Plan2026_3 = ({ setModalImage }) => {
             const handleAppImageClick = () => {
@@ -594,6 +738,7 @@
             const [currentSlide, setCurrentSlide] = useState(0);
             const [isAnimating, setIsAnimating] = useState(false);
             const [modalImage, setModalImage] = useState(null);
+            const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
             const touchStartX = useRef(0);
             const touchEndX = useRef(0);
 
@@ -619,12 +764,13 @@
                 }
             }, [currentSlide, isAnimating]);
 
-            // NOTE: Scroll wheel navigation removed as requested.
-
             useEffect(() => {
                 const handleKeyDown = (e) => {
-                if (modalImage) {
-                    if (e.key === 'Escape') setModalImage(null);
+                if (modalImage || isBrandModalOpen) {
+                    if (e.key === 'Escape') {
+                        setModalImage(null);
+                        setIsBrandModalOpen(false);
+                    }
                     return;
                 }
                 if (e.key === 'ArrowRight') nextSlide();
@@ -632,12 +778,12 @@
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [currentSlide, isAnimating, modalImage, nextSlide, prevSlide]);
+            }, [currentSlide, isAnimating, modalImage, isBrandModalOpen, nextSlide, prevSlide]);
 
             const handleTouchStart = (e) => { touchStartX.current = e.changedTouches[0].screenX; };
             const handleTouchEnd = (e) => {
                 touchEndX.current = e.changedTouches[0].screenX;
-                if (modalImage) return; 
+                if (modalImage || isBrandModalOpen) return; 
                 if (touchStartX.current - touchEndX.current > 50) nextSlide();
                 if (touchEndX.current - touchStartX.current > 50) prevSlide();
             };
@@ -647,6 +793,7 @@
                 
                 <Background />
                 <ImageModal modalImage={modalImage} setModalImage={setModalImage} />
+                <BrandIdentityModal isOpen={isBrandModalOpen} onClose={() => setIsBrandModalOpen(false)} />
 
                 <div className="w-full h-full flex flex-col relative z-0">
                     <div className="absolute top-0 w-full p-6 flex justify-between items-center z-50 pointer-events-none">
@@ -667,7 +814,7 @@
                     {currentSlide === 5 && <BugReportSlide2 />}
                     {currentSlide === 6 && <Cover2026Slide />}
                     {currentSlide === 7 && <Plan2026_1 setModalImage={setModalImage} />}
-                    {currentSlide === 8 && <Plan2026_2 setModalImage={setModalImage} />}
+                    {currentSlide === 8 && <Plan2026_2 setModalImage={setModalImage} openBrandModal={() => setIsBrandModalOpen(true)} />}
                     {currentSlide === 9 && <Plan2026_3 setModalImage={setModalImage} />}
                     {currentSlide === 10 && <ConvergenceSlide />}
                     {currentSlide === 11 && <Plan2026_4 setModalImage={setModalImage} />}
