@@ -1,47 +1,79 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2025-2026 사업계획서 - Service Operation Team</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- React & ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    
+
     <!-- Babel (JSX 변환용) -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+
     <!-- Lucide Icons (아이콘 데이터용) - UMD Build -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
     <style>
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #020617; }
-        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #020617;
+        }
+
         /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
 
         /* Animation Keyframes */
-        @keyframes fade-in-up { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } } 
-        @keyframes fade-in-down { 0% { opacity: 0; transform: translateY(-20px); } 100% { opacity: 1; transform: translateY(0); } } 
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-in-down {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
         @keyframes slide-left-2025 {
             0% { left: 50%; transform: translateX(-50%); opacity: 0; }
             20% { left: 50%; transform: translateX(-50%); opacity: 1; }
             50% { left: 50%; transform: translateX(-50%); }
             100% { left: 35%; transform: translateX(-100%); color: #64748b; }
         }
+
         @keyframes slide-in-2026 {
             0% { right: 0; transform: translateX(100%); opacity: 0; }
             50% { right: 0; transform: translateX(100%); opacity: 0; }
             100% { right: 35%; transform: translateX(100%); opacity: 1; }
         }
-        @keyframes fade-in-delay { 0%, 60% { opacity: 0; } 100% { opacity: 1; } }
+
+        @keyframes fade-in-delay {
+            0%, 60% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
         @keyframes shake {
             0% { transform: translateX(0); }
             25% { transform: translateX(-5px) rotate(-5deg); }
@@ -49,28 +81,30 @@
             75% { transform: translateX(-5px) rotate(-5deg); }
             100% { transform: translateX(0); }
         }
+
         @keyframes expand-from-center {
-             0% { opacity: 0; transform: scale(0.1); }
-             70% { opacity: 0.8; transform: scale(1.05); } 
-             100% { opacity: 1; transform: scale(1); }
-        }
-        @keyframes subtle-float {
-             0% { transform: translateY(0px); }
-             50% { transform: translateY(-5px); }
-             100% { transform: translateY(0px); }
-        }
-        
-        /* Graph Animations */
-        @keyframes grow-up { 
-            from { height: 0; } 
-            to { height: var(--target-height); } 
-        }
-        @keyframes grow-right { 
-            from { width: 0; } 
-            to { width: var(--target-width); } 
+            0% { opacity: 0; transform: scale(0.1); }
+            70% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* BI Animation Keyframes */
+        @keyframes subtle-float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Graph Animations */
+        @keyframes grow-up {
+            from { height: 0; }
+            to { height: var(--target-height); }
+        }
+
+        @keyframes grow-right {
+            from { width: 0; }
+            to { width: var(--target-width); }
+        }
+
         @keyframes vibrate-copy {
             0% { transform: translate(0, 0); }
             20% { transform: translate(-2px, 2px); }
@@ -80,31 +114,32 @@
             100% { transform: translate(0, 0); }
         }
 
-        .animate-fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } 
-        .animate-fade-in-down { animation: fade-in-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; } 
+        .animate-fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in-down { animation: fade-in-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-slide-left-2025 { animation: slide-left-2025 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         .animate-slide-in-2026 { animation: slide-in-2026 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
         .animate-fade-in-delay { animation: fade-in-delay 2.5s ease-out forwards; }
-        .animate-shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both infinite; }
+        .animate-shake { animation: shake 0.3s cubic-bezier(.36, .07, .19, .97) both infinite; }
         .animate-expand-from-center { animation: expand-from-center 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
         .animate-vibrate { animation: vibrate-copy 0.3s linear infinite; }
-        
-        .animation-delay-200 { animation-delay: 0.2s; } 
-        .animation-delay-300 { animation-delay: 0.3s; } 
-        .animation-delay-500 { animation-delay: 0.5s; } 
+
+        .animation-delay-200 { animation-delay: 0.2s; }
+        .animation-delay-300 { animation-delay: 0.3s; }
+        .animation-delay-500 { animation-delay: 0.5s; }
         .animation-delay-700 { animation-delay: 0.7s; }
-        .animation-delay-2000 { animation-delay: 2s; } 
+        .animation-delay-2000 { animation-delay: 2s; }
 
         .font-kakao { color: #FEE500; }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useCallback } = React;
 
-        // --- Lucide Icons Wrapper for Browser Environment ---
+        // --- Lucide Icons Wrapper ---
         const createLucideIcon = (iconName) => {
             return ({ size = 24, className = "", ...props }) => {
                 if (!window.lucide) return null;
@@ -119,7 +154,6 @@
 
         const ChevronRight = createLucideIcon('ChevronRight');
         const ChevronLeft = createLucideIcon('ChevronLeft');
-        const Calendar = createLucideIcon('Calendar');
         const Music = createLucideIcon('Music');
         const Activity = createLucideIcon('Activity');
         const Layers = createLucideIcon('Layers');
@@ -127,7 +161,6 @@
         const Share2 = createLucideIcon('Share2');
         const Globe = createLucideIcon('Globe');
         const ShieldCheck = createLucideIcon('ShieldCheck');
-        const TrendingUp = createLucideIcon('TrendingUp');
         const Cpu = createLucideIcon('Cpu');
         const HeartHandshake = createLucideIcon('HeartHandshake');
         const X = createLucideIcon('X');
@@ -137,24 +170,21 @@
         const Gamepad2 = createLucideIcon('Gamepad2');
         const MousePointerClick = createLucideIcon('MousePointerClick');
         const Sparkles = createLucideIcon('Sparkles');
-        const Zap = createLucideIcon('Zap');
         const Users = createLucideIcon('Users');
-        const Flag = createLucideIcon('Flag');
-        const Plus = createLucideIcon('Plus');
         const ArrowRight = createLucideIcon('ArrowRight');
         const Code = createLucideIcon('Code');
         const FileCode = createLucideIcon('FileCode');
         const CheckCircle = createLucideIcon('CheckCircle');
-        const PlayCircle = createLucideIcon('PlayCircle');
+        const ExternalLink = createLucideIcon('ExternalLink');
 
         // --- Shared Helper Components ---
 
-        const ImagePlaceholder = ({ src, alt, className = "", enableZoom = true, onClick = null, objectFit = "cover" }) => {
+        const ImagePlaceholder = ({ src, alt, className = "", enableZoom = true, onClick = null, objectFit = "cover", objectPosition = "center" }) => {
             const [imgSrc, setImgSrc] = useState(src);
             useEffect(() => { setImgSrc(src); }, [src]);
             return (
                 <div onClick={onClick} className={`overflow-hidden rounded-lg border border-slate-700/50 bg-slate-800/50 relative group z-0 ${enableZoom ? 'hover:z-50' : ''} ${onClick ? 'cursor-zoom-in' : 'cursor-default'} ${className}`}>
-                    <img src={imgSrc || "/api/placeholder/800/600"} alt={alt} className={`w-full h-full transition-transform duration-500 opacity-90 group-hover:opacity-100 ${enableZoom ? 'group-hover:scale-120' : ''}`} style={{ objectFit: objectFit }} onError={() => setImgSrc("https://placehold.co/600x400/1e293b/cbd5e1?text=Image+Box")} />
+                    <img src={imgSrc || "/api/placeholder/800/600"} alt={alt} className={`w-full h-full transition-transform duration-500 opacity-90 group-hover:opacity-100 ${enableZoom ? 'group-hover:scale-110' : ''}`} style={{ objectFit: objectFit, objectPosition: objectPosition }} onError={() => setImgSrc("https://placehold.co/600x400/1e293b/cbd5e1?text=Image+Box")} />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300 pointer-events-none"></div>
                 </div>
             );
@@ -184,45 +214,38 @@
             const currentSrc = isArray ? modalImage[currentIndex] : modalImage;
 
             return (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-fade-in-up" onClick={() => setModalImage(null)}>
-                    <div className="relative w-full h-full flex items-center justify-center p-4">
-                        <img 
-                            src={currentSrc} 
-                            alt="Full view" 
-                            className={`w-full h-full object-contain transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
-                            onClick={(e) => e.stopPropagation()} 
+                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md animate-fade-in-up overflow-y-auto custom-scrollbar" onClick={() => setModalImage(null)}>
+                    <div className="min-h-screen w-full flex flex-col items-center py-20 px-4">
+                        <img
+                            src={currentSrc}
+                            alt="Full view"
+                            className={`w-[90%] md:w-[95%] max-w-7xl h-auto rounded-lg shadow-2xl transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}
+                            onClick={(e) => e.stopPropagation()}
                         />
                         {isArray && (
-                            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
+                            <div className="mt-8 flex gap-2">
                                 {modalImage.map((_, idx) => (
                                     <div key={idx} className={`w-2 h-2 rounded-full transition-all ${idx === currentIndex ? 'bg-white w-4' : 'bg-white/50'}`}></div>
                                 ))}
                             </div>
                         )}
-                        <button onClick={() => setModalImage(null)} className="absolute top-6 right-6 p-3 bg-slate-800/80 hover:bg-red-500 border border-slate-600 rounded-full text-white transition-all duration-300 shadow-xl z-50 group">
-                            <X size={36} className="group-hover:scale-110 transition-transform"/>
+                        <button onClick={() => setModalImage(null)} className="fixed top-6 right-6 p-3 bg-slate-800/80 hover:bg-red-500 border border-slate-600 rounded-full text-white transition-all duration-300 shadow-xl z-[110] group">
+                            <X size={36} className="group-hover:scale-110 transition-transform" />
                         </button>
                     </div>
                 </div>
             );
         };
 
-        // --- Brand Identity Modal Component ---
         const BrandIdentityModal = ({ isOpen, onClose }) => {
             const [step, setStep] = useState(0);
-
             useEffect(() => {
                 if (isOpen) {
                     setStep(0);
-                    // Sequence
-                    const t1 = setTimeout(() => setStep(1), 800);  // Vibrate & Copy start
-                    const t2 = setTimeout(() => setStep(2), 2500); // Move Up & JUEUN appear
-                    const t3 = setTimeout(() => setStep(3), 4500); // Separation starts
-                    const t4 = setTimeout(() => setStep(4), 5500); // Final Layout
-
-                    return () => {
-                        clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
-                    };
+                    const t1 = setTimeout(() => setStep(1), 800);
+                    const t2 = setTimeout(() => setStep(2), 2500);
+                    const t4 = setTimeout(() => setStep(4), 5500);
+                    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t4); };
                 }
             }, [isOpen]);
 
@@ -230,96 +253,37 @@
 
             return (
                 <div className="fixed inset-0 z-[110] bg-black/95 flex items-center justify-center overflow-hidden">
-                    <button onClick={onClose} className="absolute top-8 right-8 text-slate-400 hover:text-white transition-colors z-[120]">
-                        <X size={40} />
-                    </button>
-
-                    {/* Main Container for Layout Shift */}
+                    <button onClick={onClose} className="absolute top-8 right-8 text-slate-400 hover:text-white transition-colors z-[120]"><X size={40} /></button>
                     <div className={`relative flex items-center transition-all duration-1000 ease-in-out ${step >= 4 ? 'gap-12' : 'gap-0'}`}>
-                        
-                        {/* LEFT GROUP (English Logo) */}
-                        <div className={`relative flex flex-col items-center transition-transform duration-1000 ease-in-out`}>
-                            
-                            {/* Logo Row: JUEUN + SSAM (Attached) */}
+                        <div className="relative flex flex-col items-center transition-transform duration-1000 ease-in-out">
                             <div className="relative flex items-end mb-1">
-                                {/* JUEUN Text */}
-                                <div className={`text-6xl md:text-7xl font-black text-white transition-all duration-700 ${step >= 2 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-                                    JUEUN
-                                </div>
-                                
-                                {/* SSAM Text (Static target) */}
+                                <div className={`text-6xl md:text-7xl font-black text-white transition-all duration-700 ${step >= 2 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>JUEUN</div>
                                 <div className={`text-6xl md:text-7xl font-black font-kakao transition-all duration-500 ease-in-out ${step >= 2 ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>SSAM</div>
                             </div>
-
-                            {/* Slogan Row: English */}
                             <div className={`relative transition-all duration-1000 ${step >= 2 ? 'w-full' : 'w-auto'}`}>
-                                <div className={`
-                                    font-bold text-slate-500 whitespace-nowrap flex justify-between w-full
-                                    transition-all duration-1000 ease-in-out
-                                    ${step >= 2 ? 'text-[0.65rem] md:text-[0.8rem] tracking-widest opacity-100' : 'text-xl md:text-2xl tracking-tight opacity-100'}
-                                `}>
-                                    {/* Using spans for justification */}
-                                    <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span>
-                                    <span>&nbsp;</span>
-                                    <span>S</span><span>C</span><span>H</span><span>O</span><span>O</span><span>L</span>
-                                    <span>&nbsp;</span>
-                                    <span>A</span><span>R</span><span>T</span>
-                                    <span>&nbsp;</span>
-                                    <span>M</span><span>U</span><span>S</span><span>I</span><span>C</span>
+                                <div className={`font-bold text-slate-500 whitespace-nowrap flex justify-between w-full transition-all duration-1000 ease-in-out ${step >= 2 ? 'text-[0.65rem] md:text-[0.8rem] tracking-widest opacity-100' : 'text-xl md:text-2xl tracking-tight opacity-100'}`}>
+                                    <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span><span>&nbsp;</span><span>S</span><span>C</span><span>H</span><span>O</span><span>O</span><span>L</span><span>&nbsp;</span><span>A</span><span>R</span><span>T</span><span>&nbsp;</span><span>M</span><span>U</span><span>S</span><span>I</span><span>C</span>
                                 </div>
-
-                                {/* Animated Flying Letters Overlay */}
-                                {/* These fly up and then fade out as the static SSAM appears */}
-                                <div className={`absolute inset-0 w-full h-full pointer-events-none`}>
-                                    {/* S -> S */}
-                                    <div className={`absolute transition-all duration-1000 ease-in-out
-                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
-                                        ${step >= 2 ? 'top-[-5.5rem] left-[56%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[0%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
-                                    `}>S</div>
-                                    {/* S -> S */}
-                                    <div className={`absolute transition-all duration-1000 ease-in-out
-                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
-                                        ${step >= 2 ? 'top-[-5.5rem] left-[67%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[18%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
-                                    `}>S</div>
-                                    {/* A -> A */}
-                                    <div className={`absolute transition-all duration-1000 ease-in-out
-                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
-                                        ${step >= 2 ? 'top-[-5.5rem] left-[78%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[45%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
-                                    `}>A</div>
-                                    {/* M -> M */}
-                                    <div className={`absolute transition-all duration-1000 ease-in-out
-                                        ${step === 1 ? 'animate-vibrate font-kakao' : ''}
-                                        ${step >= 2 ? 'top-[-5.5rem] left-[89%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[59%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}
-                                    `}>M</div>
+                                <div className="absolute inset-0 w-full h-full pointer-events-none">
+                                    <div className={`absolute transition-all duration-1000 ease-in-out ${step === 1 ? 'animate-vibrate font-kakao' : ''} ${step >= 2 ? 'top-[-5.5rem] left-[56%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[0%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}`}>S</div>
+                                    <div className={`absolute transition-all duration-1000 ease-in-out ${step === 1 ? 'animate-vibrate font-kakao' : ''} ${step >= 2 ? 'top-[-5.5rem] left-[67%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[18%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}`}>S</div>
+                                    <div className={`absolute transition-all duration-1000 ease-in-out ${step === 1 ? 'animate-vibrate font-kakao' : ''} ${step >= 2 ? 'top-[-5.5rem] left-[78%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[45%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}`}>A</div>
+                                    <div className={`absolute transition-all duration-1000 ease-in-out ${step === 1 ? 'animate-vibrate font-kakao' : ''} ${step >= 2 ? 'top-[-5.5rem] left-[89%] text-6xl md:text-7xl font-black font-kakao opacity-0' : 'left-[59%] top-0 text-xl md:text-2xl font-bold text-slate-500 opacity-100'}`}>M</div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* CENTER DIVIDER */}
                         <div className={`w-px bg-slate-700 h-24 transition-all duration-1000 ease-out origin-top ${step >= 4 ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}></div>
-
-                        {/* RIGHT GROUP (Korean Logo) */}
                         <div className={`flex flex-col items-center transition-all duration-1000 ease-out ${step >= 4 ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10 absolute right-0'}`}>
-                            {/* Logo Row: 주은 + 쌤 */}
                             <div className="flex items-end mb-1">
                                 <div className="text-6xl md:text-7xl font-black text-white mr-1">주은</div>
                                 <div className="text-6xl md:text-7xl font-black font-kakao">쌤</div>
                             </div>
-                            
-                            {/* Slogan Row: Fits width of "주은쌤" */}
                             <div className="w-full border-t border-transparent">
                                 <div className="text-[0.45rem] md:text-[0.55rem] font-bold text-slate-500 tracking-tight flex justify-between w-full whitespace-nowrap">
-                                    <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span>
-                                    <span>&nbsp;</span>
-                                    <span>S</span><span>C</span><span>H</span><span>O</span><span>O</span><span>L</span>
-                                    <span>&nbsp;</span>
-                                    <span>A</span><span>R</span><span>T</span>
-                                    <span>&nbsp;</span>
-                                    <span>M</span><span>U</span><span>S</span><span>I</span><span>C</span>
+                                    <span>S</span><span>M</span><span>A</span><span>R</span><span>T</span><span>&nbsp;</span><span>S</span><span>C</span><span>H</span><span>O</span><span>O</span><span>L</span><span>&nbsp;</span><span>A</span><span>R</span><span>T</span><span>&nbsp;</span><span>M</span><span>U</span><span>S</span><span>I</span><span>C</span>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             );
@@ -361,19 +325,22 @@
         const CoverSlide = ({ nextSlide }) => (
             <SlideContainer>
                 <div className="text-center space-y-6 max-w-6xl z-10 flex flex-col justify-center h-full">
-                <div className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-sm font-semibold tracking-widest mb-2 animate-fade-in-down mx-auto">주은교육(주)</div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 leading-tight tracking-tight animate-fade-in-up mb-4">Service Operation Team</h1>
-                <div className="relative h-32 md:h-40 w-full flex justify-center items-center overflow-visible">
-                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-white animate-slide-left-2025" style={{ left: '50%', transform: 'translateX(-50%)' }}><span className="text-slate-500">2025</span></div>
-                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-slate-600 opacity-0 animate-fade-in-delay">-</div>
-                    <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-cyan-400 opacity-0 animate-slide-in-2026" style={{ right: '50%', transform: 'translateX(50%)' }}>2026</div>
-                </div>
-                <p className="text-xl text-slate-400 font-light mt-8 max-w-2xl mx-auto animate-fade-in-up animation-delay-500">혁신적인 에듀테크 플랫폼 구축과<br/>디지털 헬스케어의 미래를 엽니다.</p>
-                <div className="mt-16 animate-fade-in-up animation-delay-700">
-                    <button onClick={nextSlide} className="group px-10 py-4 bg-gradient-to-r from-cyan-700/80 to-blue-700/80 hover:from-cyan-600 hover:to-blue-600 rounded-full text-white text-lg font-medium transition-all duration-300 flex items-center gap-2 mx-auto border border-white/10 backdrop-blur-sm shadow-lg shadow-cyan-900/20">
-                    Start Presentation <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
-                </div>
+                    <div className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-sm font-semibold tracking-widest mb-2 animate-fade-in-down mx-auto">주은교육(주)</div>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 leading-tight tracking-tight animate-fade-in-up mb-4">Service Operation Team</h1>
+                    <div className="relative h-32 md:h-40 w-full flex justify-center items-center overflow-visible">
+                        <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-white animate-slide-left-2025" style={{ left: '50%', transform: 'translateX(-50%)' }}><span className="text-slate-500">2025</span></div>
+                        <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-slate-600 opacity-0 animate-fade-in-delay">-</div>
+                        <div className="absolute text-6xl md:text-8xl lg:text-9xl font-extrabold text-cyan-400 opacity-0 animate-slide-in-2026" style={{ right: '50%', transform: 'translateX(50%)' }}>2026</div>
+                    </div>
+                    <p className="text-xl md:text-2xl text-slate-400 font-light mt-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-500 leading-relaxed">
+                        혁신적인 에듀테크 플랫폼 구축과<br />
+                        <span className="text-white font-medium">신뢰의 한해를 목표합니다.</span>
+                    </p>
+                    <div className="mt-16 animate-fade-in-up animation-delay-700">
+                        <button onClick={nextSlide} className="group px-10 py-4 bg-gradient-to-r from-cyan-700/80 to-blue-700/80 hover:from-cyan-600 hover:to-blue-600 rounded-full text-white text-lg font-medium transition-all duration-300 flex items-center gap-2 mx-auto border border-white/10 backdrop-blur-sm shadow-lg shadow-cyan-900/20">
+                            Start Presentation <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    </div>
                 </div>
             </SlideContainer>
         );
@@ -382,22 +349,22 @@
             <SlideContainer>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-10 text-center tracking-tight">사업 추진 목표</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl px-4">
-                <div className="group relative p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50 hover:border-cyan-500/40 transition-all duration-300 hover:-translate-y-1">
-                    <div className="flex items-center gap-3 mb-6"><span className="text-3xl font-bold text-cyan-400">2025</span><div className="h-px flex-1 bg-slate-700 group-hover:bg-cyan-500/30 transition-colors"></div></div>
-                    <div className="space-y-4">
-                    <h3 className="text-xl font-bold text-white">서비스 확장 및 안정화</h3>
-                    <p className="text-slate-300 leading-relaxed text-base font-light">시니어 시장 진입과 더불어, <span className="text-cyan-400 font-medium">자체 R&D 기반의 독자적 콘텐츠 생태계</span>를 구축하여 차별화된 교육 가치를 창출하고 서비스 경쟁력을 극대화합니다.</p>
-                    <div className="w-full h-40 mt-4"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg" className="h-full rounded-lg" enableZoom={false} onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg")}/></div>
+                    <div className="group relative p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50 hover:border-cyan-500/40 transition-all duration-300 hover:-translate-y-1">
+                        <div className="flex items-center gap-3 mb-6"><span className="text-3xl font-bold text-cyan-400">2025</span><div className="h-px flex-1 bg-slate-700 group-hover:bg-cyan-500/30 transition-colors"></div></div>
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold text-white">서비스 확장 및 안정화</h3>
+                            <p className="text-slate-300 leading-relaxed text-base font-light">시니어 시장 진입과 더불어, <span className="text-cyan-400 font-medium">자체 R&D 기반의 독자적 콘텐츠 생태계</span>를 구축하여 차별화된 교육 가치를 창출하고 서비스 경쟁력을 극대화합니다.</p>
+                            <div className="w-full h-40 mt-4"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg" className="h-full rounded-lg" enableZoom={false} onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/01.jpg")} /></div>
+                        </div>
                     </div>
-                </div>
-                <div className="group relative p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50 hover:border-indigo-500/40 transition-all duration-300 hover:-translate-y-1">
-                    <div className="flex items-center gap-3 mb-6"><span className="text-3xl font-bold text-indigo-400">2026</span><div className="h-px flex-1 bg-slate-700 group-hover:bg-indigo-500/30 transition-colors"></div></div>
-                    <div className="space-y-4">
-                    <h3 className="text-xl font-bold text-white">에듀테크 플랫폼 완성</h3>
-                    <p className="text-slate-300 leading-relaxed text-base font-light">파편화된 서비스와 자료를 통합하고 <span className="text-indigo-400 font-medium">"디바이스 연동형 All-in-One 플랫폼"</span> 구축. 데이터 기반 <span className="text-indigo-400 font-medium">디지털 헬스케어</span> 진출.</p>
-                    <div className="w-full h-40 mt-4"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg" className="h-full rounded-lg" enableZoom={false} onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg")}/></div>
+                    <div className="group relative p-8 rounded-2xl bg-slate-900/50 border border-slate-700/50 hover:border-indigo-500/40 transition-all duration-300 hover:-translate-y-1">
+                        <div className="flex items-center gap-3 mb-6"><span className="text-3xl font-bold text-indigo-400">2026</span><div className="h-px flex-1 bg-slate-700 group-hover:bg-indigo-500/30 transition-colors"></div></div>
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold text-white">에듀테크 플랫폼 완성</h3>
+                            <p className="text-slate-300 leading-relaxed text-base font-light">파편화된 서비스와 자료를 통합하고 <span className="text-indigo-400 font-medium">"디바이스 연동형 All-in-One 플랫폼"</span> 구축. 데이터 기반 <span className="text-indigo-400 font-medium">디지털 헬스케어</span> 진출.</p>
+                            <div className="w-full h-40 mt-4"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg" className="h-full rounded-lg" enableZoom={false} onClick={() => setModalImage("https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/02.jpg")} /></div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </SlideContainer>
         );
@@ -410,200 +377,159 @@
             { month: "10월", title: "드럼 퀘스트 메뉴 오픈", desc: "단계별 미션 수행형 게임", Icon: Gamepad2, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/07.jpg" },
             { month: "10월", title: "시니어100 홈페이지", desc: "브랜드 홍보 온라인 거점", Icon: Globe, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/08.jpg" },
             { month: "11월", title: "시니어100 영문 지원", desc: "해외 시장 진출 가능성 타진", Icon: Globe, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/09.png" },
-            { 
-                month: "11월", 
-                title: "리포트 허브 구축", 
-                desc: "운영 데이터 체계적 관리", 
-                Icon: BarChart2, 
-                img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/10.png",
-                details: ["컨텐츠(악보) 관리", "버그 리포트", "서비스 등록 요청"]
-            },
+            { month: "11월", title: "리포트 허브 구축", desc: "운영 데이터 체계적 관리", Icon: BarChart2, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/10.png", details: ["컨텐츠(악보) 관리", "버그 리포트", "서비스 등록 요청"] },
             { month: "12월", title: "영상 지원센터(임베드)", desc: "자체 임베드로 안정성 확보", Icon: ShieldCheck, highlight: true, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/11.jpg" },
-            { month: "12월", title: "ABC notation 구축", desc: "컨텐츠 작업 최소화", Icon: FileCode, img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/12.png", link: "https://senior100.co.kr/serviceops/score.html" },
+            { 
+                month: "12월", 
+                title: "ABC notation 구축", 
+                desc: "컨텐츠 작업 최소화", 
+                Icon: FileCode, 
+                img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/12.png", 
+                links: [
+                    { label: "악보 뷰어", url: "https://senior100.co.kr/serviceops/score.html" },
+                    { label: "레코딩 뷰어", url: "https://senior100.co.kr/serviceops/score_rec.html" }
+                ]
+            },
         ];
 
         const Plan2025Card = ({ content, align, setModalImage }) => {
             const cardRef = useRef(null);
             const [isVisible, setIsVisible] = useState(false);
-
             useEffect(() => {
-                const observer = new IntersectionObserver(
-                    ([entry]) => {
-                        if (entry.isIntersecting) {
-                            setIsVisible(true);
-                            observer.disconnect();
-                        }
-                    },
-                    { threshold: 0.1 }
-                );
+                const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } }, { threshold: 0.1 });
                 if (cardRef.current) observer.observe(cardRef.current);
                 return () => observer.disconnect();
             }, []);
 
             return (
-                <div ref={cardRef} className={`w-full max-w-sm p-5 rounded-xl border backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] ${content.highlight ? 'bg-cyan-950/30 border-cyan-500/40 shadow-lg shadow-cyan-900/10' : 'bg-slate-900/40 border-slate-700/50 hover:border-slate-500'} ${align === 'right' ? 'ml-auto text-left' : 'mr-auto text-right'}`}>
+                <div ref={cardRef} className={`w-full max-sm:max-w-full max-w-sm p-5 rounded-xl border backdrop-blur-sm transition-all duration-300 hover:scale-[1.01] ${content.highlight ? 'bg-cyan-950/30 border-cyan-500/40 shadow-lg shadow-cyan-900/10' : 'bg-slate-900/40 border-slate-700/50 hover:border-slate-500'} ${align === 'right' ? 'ml-auto text-left' : 'mr-auto text-right'}`}>
                     <div className={`flex items-center gap-3 mb-3 ${align === 'right' ? 'justify-start' : 'justify-end'}`}>
                         {align === 'left' && <span className={`text-xl font-bold ${content.highlight ? 'text-cyan-400' : 'text-slate-400'}`}>{content.month}</span>}
-                        <div className={`${content.highlight ? 'text-cyan-400' : 'text-slate-500'}`}>
-                        {content.Icon && <content.Icon size={18} />}
-                        </div>
+                        <div className={`${content.highlight ? 'text-cyan-400' : 'text-slate-500'}`}>{content.Icon && <content.Icon size={18} />}</div>
                         {align === 'right' && <span className={`text-xl font-bold ${content.highlight ? 'text-cyan-400' : 'text-slate-400'}`}>{content.month}</span>}
                     </div>
                     <h3 className="text-lg font-bold text-white mb-1">{content.title}</h3>
                     <p className="text-slate-400 text-sm mb-3 font-light">{content.desc}</p>
                     
-                    {/* Animated Details */}
-                    {content.details && (
-                    <div className="my-4 flex flex-col gap-2 items-start">
-                        {content.details.map((detail, i) => (
-                        <div 
-                            key={i} 
-                            className={`flex items-center gap-2 bg-slate-800/90 border border-slate-600 rounded-lg px-4 py-2 text-white font-bold text-sm shadow-md hover:bg-slate-700 hover:border-cyan-500 transition-all duration-700 ease-out transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}
-                            style={{ transitionDelay: `${i * 150}ms` }}
-                        >
-                            <CheckCircle size={14} className="text-cyan-400" />
-                            {detail}
+                    {content.links && (
+                        <div className={`flex flex-wrap gap-2 mb-3 ${align === 'right' ? 'justify-start' : 'justify-end'}`}>
+                            {content.links.map((link, idx) => (
+                                <button 
+                                    key={idx} 
+                                    onClick={() => window.open(link.url, '_blank')}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/80 hover:bg-cyan-600 border border-slate-600 rounded-full text-xs font-semibold text-white transition-colors"
+                                >
+                                    <ExternalLink size={12} /> {link.label}
+                                </button>
+                            ))}
                         </div>
-                        ))}
-                    </div>
                     )}
 
+                    {content.details && (
+                        <div className="my-4 flex flex-col gap-2 items-start">
+                            {content.details.map((detail, i) => (
+                                <div key={i} className={`flex items-center gap-2 bg-slate-800/90 border border-slate-600 rounded-lg px-4 py-2 text-white font-bold text-sm shadow-md transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: `${i * 150}ms` }}>
+                                    <CheckCircle size={14} className="text-cyan-400" /> {detail}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className="w-full mt-4">
-                        <ImagePlaceholder 
-                            src={content.img} 
-                            className="w-full h-auto rounded-lg" 
-                            enableZoom={false} 
-                            objectFit="contain"
-                            onClick={() => {
-                                if (content.link) {
-                                    window.open(content.link, '_blank');
-                                } else {
-                                    setModalImage(content.img);
-                                }
-                            }}
-                        />
+                        <ImagePlaceholder src={content.img} className="w-full h-auto rounded-lg" enableZoom={false} objectFit="contain" onClick={() => { if (!content.links) setModalImage(content.img); }} />
                     </div>
                 </div>
             );
         };
 
         const Plan2025Slide = ({ setModalImage }) => (
-            <SlideContainer className="!justify-start pt-20"> 
+            <SlideContainer className="!justify-start pt-20">
                 <div className="w-full max-w-5xl relative h-[85vh] flex flex-col">
-                <div className="text-center mb-8 shrink-0"><h2 className="text-3xl md:text-4xl font-bold text-white mb-2">2025 PLAN</h2><span className="text-cyan-400 text-sm font-medium tracking-wide">신규 시장 진입 및 리스크 관리</span></div>
-                <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pb-20">
-                    <div className="relative space-y-8 py-4">
-                        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-700 transform -translate-x-1/2 hidden md:block"></div>
-                        {plans2025.map((plan, idx) => (
-                        <div key={idx} className="relative flex items-center justify-center w-full">
-                            <div className="hidden md:flex w-1/2 pr-12 justify-end">{idx % 2 === 0 && <Plan2025Card content={plan} align="left" setModalImage={setModalImage} />}</div>
-                            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-slate-950 border-2 border-cyan-500 rounded-full z-10 shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
-                            <div className="hidden md:flex w-1/2 pl-12 justify-start">{idx % 2 !== 0 && <Plan2025Card content={plan} align="right" setModalImage={setModalImage} />}</div>
-                            <div className="flex md:hidden w-full"><Plan2025Card content={plan} align="right" setModalImage={setModalImage} /></div>
+                    <div className="text-center mb-8 shrink-0"><h2 className="text-3xl md:text-4xl font-bold text-white mb-2">2025 PLAN</h2><span className="text-cyan-400 text-sm font-medium tracking-wide">신규 시장 진입 및 리스크 관리</span></div>
+                    <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pb-20">
+                        <div className="relative space-y-8 py-4">
+                            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-700 transform -translate-x-1/2 hidden md:block"></div>
+                            {plans2025.map((plan, idx) => (
+                                <div key={idx} className="relative flex items-center justify-center w-full">
+                                    <div className="hidden md:flex w-1/2 pr-12 justify-end">{idx % 2 === 0 && <Plan2025Card content={plan} align="left" setModalImage={setModalImage} />}</div>
+                                    <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-slate-950 border-2 border-cyan-500 rounded-full z-10 shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
+                                    <div className="hidden md:flex w-1/2 pl-12 justify-start">{idx % 2 !== 0 && <Plan2025Card content={plan} align="right" setModalImage={setModalImage} />}</div>
+                                    <div className="flex md:hidden w-full"><Plan2025Card content={plan} align="right" setModalImage={setModalImage} /></div>
+                                </div>
+                            ))}
                         </div>
-                        ))}
                     </div>
-                </div>
                 </div>
             </SlideContainer>
         );
 
         const AdditionalDevSlide = () => {
-            const items = [
-                "저작권 계정 권한 도입", "컬러오선 개발", 
-                "ZOOM 영상 송출 연동", "어드민 해외 연락처 등록", "홈페이지 FOOTER 수정",
-                "드럼게임고고 컬러 변경", "스마트드럼 드럼 퀘스트", "시니어 인지놀이 메뉴",
-                "시니어 콘서트 메뉴", "시니어 로그인 이력 확인", "ADMIN 최적화 작업", "ADMIN 도메인 이전"
-            ];
-
+            const items = ["저작권 계정 권한 도입", "컬러오선 개발", "ZOOM 영상 송출 연동", "어드민 해외 연락처 등록", "홈페이지 FOOTER 수정", "드럼게임고고 컬러 변경", "스마트드럼 드럼 퀘스트", "시니어 인지놀이 메뉴", "시니어 콘서트 메뉴", "시니어 로그인 이력 확인", "ADMIN 최적화 작업", "ADMIN 도메인 이전", "프로필 기능 추가"];
             return (
                 <SlideContainer>
-                <div className="w-full max-w-6xl h-full flex flex-col justify-center relative overflow-hidden">
-                    <div className="text-center mb-12 z-10">
-                    <div className="flex items-center justify-center gap-3 mb-3">
-                        <Code className="text-cyan-400" size={32} />
-                        <h2 className="text-4xl font-bold text-white">Additional Development</h2>
+                    <div className="w-full max-w-6xl h-full flex flex-col justify-center relative overflow-hidden">
+                        <div className="text-center mb-12 z-10"><div className="flex items-center justify-center gap-3 mb-3"><Code className="text-cyan-400" size={32} /><h2 className="text-4xl font-bold text-white">Additional Development</h2></div><p className="text-slate-400">지속적인 고도화 및 운영 지원 사항</p></div>
+                        <div className="flex flex-wrap justify-center content-center gap-4 md:gap-6 max-w-5xl mx-auto h-[60vh] relative animate-expand-from-center">
+                            {items.map((item, idx) => (
+                                <div key={idx} className={`px-5 py-3 rounded-full border backdrop-blur-md shadow-lg ${idx % 3 === 0 ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200' : idx % 3 === 1 ? 'bg-cyan-900/40 border-cyan-500/50 text-cyan-200' : 'bg-purple-900/40 border-purple-500/50 text-purple-200'} text-sm md:text-base font-medium hover:scale-110 hover:brightness-125 transition-transform cursor-default`} style={{ animation: `subtle-float ${3 + Math.random() * 3}s ease-in-out infinite`, animationDelay: `${Math.random() * 2}s` }}>{item}</div>
+                            ))}
+                        </div>
                     </div>
-                    <p className="text-slate-400">지속적인 고도화 및 운영 지원 사항</p>
-                    </div>
-
-                    <div className="flex flex-wrap justify-center content-center gap-4 md:gap-6 max-w-5xl mx-auto h-[60vh] relative animate-expand-from-center">
-                        {items.map((item, idx) => {
-                        const delay = Math.random() * 2;
-                        const duration = 3 + Math.random() * 3;
-                        
-                        return (
-                            <div 
-                            key={idx}
-                            className={`
-                                px-5 py-3 rounded-full border backdrop-blur-md shadow-lg
-                                ${idx % 3 === 0 ? 'bg-indigo-900/40 border-indigo-500/50 text-indigo-200' : 
-                                idx % 3 === 1 ? 'bg-cyan-900/40 border-cyan-500/50 text-cyan-200' : 
-                                'bg-purple-900/40 border-purple-500/50 text-purple-200'}
-                                text-sm md:text-base font-medium
-                                hover:scale-110 hover:brightness-125 transition-transform cursor-default
-                            `}
-                            style={{
-                                animation: `subtle-float ${duration}s ease-in-out infinite`,
-                                animationDelay: `${delay}s`
-                            }}
-                            >
-                            {item}
-                            </div>
-                        );
-                        })}
-                    </div>
-                </div>
                 </SlideContainer>
             );
         };
 
         const BugReportSlide1 = () => {
-            const data = [{ label: "HMS", value: 19, color: "bg-red-500" }, { label: "스마트피아노", value: 12, color: "bg-orange-500" }, { label: "뮤직플레이", value: 10, color: "bg-amber-500" }, { label: "학부모앱", value: 7, color: "bg-green-500" }, { label: "출결", value: 6, color: "bg-emerald-500" }];
+            const data = [{ label: "HMS", value: 21, color: "bg-red-500" }, { label: "스마트피아노", value: 12, color: "bg-orange-500" }, { label: "뮤직플레이", value: 10, color: "bg-amber-500" }, { label: "학부모앱", value: 8, color: "bg-green-500" }, { label: "출결", value: 6, color: "bg-emerald-500" }];
             const totalCount = data.reduce((acc, curr) => acc + curr.value, 0); const maxVal = Math.max(...data.map(d => d.value));
             return (
                 <SlideContainer>
-                <div className="w-full max-w-6xl flex flex-col items-center">
-                    <div className="text-center mb-12"><div className="flex items-center justify-center gap-3 mb-2"><AlertCircle className="text-red-400" size={32} /><h2 className="text-4xl font-bold text-white">2025 버그 리포트 분석</h2></div><p className="text-slate-400 text-lg">시스템별 오류 발생 현황 (총 <span className="text-red-400 font-bold text-2xl"><Counter end={totalCount} /></span>건)</p></div>
-                    <div className="w-full h-[50vh] flex items-end justify-center gap-6 md:gap-10 px-4">{data.map((item, idx) => (<div key={idx} className="flex flex-col items-center group w-full max-w-[120px]"><div className="mb-3 text-white font-bold text-2xl opacity-0 animate-fade-in-up" style={{ animationDelay: `${idx * 100 + 500}ms` }}><Counter end={item.value} /></div>
-                    <div className="w-full relative flex items-end justify-center">
-                       <div 
-                         className={`w-16 md:w-20 rounded-t-xl ${item.color} opacity-80 group-hover:opacity-100 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.15)] group-hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]`}
-                         style={{ 
-                           height: '0', 
-                           animation: `grow-up 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards ${idx * 100}ms`,
-                           '--target-height': `${(item.value / maxVal) * 45}vh`
-                         }}
-                       ></div>
+                    <div className="w-full max-w-6xl flex flex-col items-center">
+                        <div className="text-center mb-12"><div className="flex items-center justify-center gap-3 mb-2"><AlertCircle className="text-red-400" size={32} /><h2 className="text-4xl font-bold text-white">2025 버그 리포트 분석</h2></div><p className="text-slate-400 text-lg">시스템별 오류 발생 현황 (총 <span className="text-red-400 font-bold text-2xl"><Counter end={totalCount} /></span>건)</p></div>
+                        <div className="w-full h-[50vh] flex items-end justify-center gap-6 md:gap-10 px-4">
+                            {data.map((item, idx) => (
+                                <div key={idx} className="flex flex-col items-center group w-full max-w-[120px]">
+                                    <div className="mb-3 text-white font-bold text-2xl opacity-0 animate-fade-in-up" style={{ animationDelay: `${idx * 100 + 500}ms` }}><Counter end={item.value} /></div>
+                                    <div className="w-full relative flex items-end justify-center">
+                                        <div className={`w-16 md:w-20 rounded-t-xl ${item.color} opacity-80 group-hover:opacity-100 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.15)]`} style={{ height: '0', animation: `grow-up 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards ${idx * 100}ms`, '--target-height': `${(item.value / maxVal) * 45}vh` }}></div>
+                                    </div>
+                                    <div className="mt-4 text-sm md:text-base text-slate-300 font-bold text-center">{item.label}</div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <div className="mt-4 text-sm md:text-base text-slate-300 font-bold text-center">{item.label}</div></div>))}</div>
-                </div>
                 </SlideContainer>
             );
         };
 
         const BugReportSlide2 = () => {
-            const data = [{ name: "우산중흥원", val: 4 }, { name: "경안원", val: 3 }, { name: "아림원", val: 3 }, { name: "월영원", val: 2 }, { name: "청롤원", val: 2 }, { name: "서동원", val: 2 }, { name: "교리원", val: 1 }, { name: "수성원", val: 1 }, { name: "현화원", val: 1 }, { name: "죽곡원", val: 1 }, { name: "스마트늘봄", val: 1 }, { name: "갈현이화원", val: 1 }, { name: "푸리마원", val: 1 }, { name: "가경원", val: 1 }, { name: "모아미래원", val: 1 }, { name: "초지원", val: 1 }, { name: "이동원", val: 1 }];
+            const data = [
+                { name: "우산중흥원", val: 4 }, { name: "경안원", val: 3 }, { name: "아림원", val: 3 },
+                { name: "월영원", val: 2 }, { name: "청롤원", val: 2 }, { name: "서동원", val: 2 },
+                { name: "교리원", val: 1 }, { name: "수성원", val: 1 }, { name: "현화원", val: 1 },
+                { name: "죽곡원", val: 1 }, { name: "스마트늘봄", val: 1 }, { name: "갈현이화원", val: 1 },
+                { name: "푸리마원", val: 1 }, { name: "가경원", val: 1 }, { name: "모아미래원", val: 1 },
+                { name: "초지원", val: 1 }, { name: "이동원", val: 1 },
+                { name: "아이러브원", val: 1 }, { name: "파라곤원", val: 1 }, { name: "효행원", val: 1 }
+            ];
             const mid = Math.ceil(data.length / 2); const leftCol = data.slice(0, mid); const rightCol = data.slice(mid);
             const BarItem = ({ item, index, delayBase }) => (
                 <div className="flex items-center gap-4 mb-3 w-full">
                     <div className="w-24 text-right text-slate-300 text-sm font-medium truncate shrink-0">{item.name}</div>
                     <div className="flex-1 bg-slate-800/50 rounded-full h-4 overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"
-                          style={{
-                            width: '0',
-                            animation: `grow-right 1s cubic-bezier(0.16, 1, 0.3, 1) forwards ${delayBase + (index * 50)}ms`,
-                            '--target-width': `${(item.val / 4) * 100}%`
-                          }}
-                        ></div>
+                        <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]" style={{ width: '0', animation: `grow-right 1s cubic-bezier(0.16, 1, 0.3, 1) forwards ${delayBase + (index * 50)}ms`, '--target-width': `${(item.val / 4) * 100}%` }}></div>
                     </div>
                     <div className="w-6 text-white font-bold text-sm shrink-0">{item.val}</div>
                 </div>
             );
             return (
                 <SlideContainer>
-                <div className="w-full max-w-6xl h-full flex flex-col justify-center"><div className="text-center mb-8"><div className="flex items-center justify-center gap-3 mb-2"><BarChart2 className="text-blue-400" size={32} /><h2 className="text-3xl md:text-4xl font-bold text-white">학원별 오류 요청 현황</h2></div><p className="text-slate-400">가맹점별 이슈 접수 빈도 분석</p></div><div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 w-full max-h-[60vh] overflow-y-auto custom-scrollbar pr-2"><div className="flex flex-col">{leftCol.map((item, idx) => <BarItem key={idx} item={item} index={idx} delayBase={0} />)}</div><div className="flex flex-col">{rightCol.map((item, idx) => <BarItem key={idx} item={item} index={idx} delayBase={leftCol.length * 50} />)}</div></div></div>
+                    <div className="w-full max-w-6xl h-full flex flex-col justify-center">
+                        <div className="text-center mb-8"><div className="flex items-center justify-center gap-3 mb-2"><BarChart2 className="text-blue-400" size={32} /><h2 className="text-3xl md:text-4xl font-bold text-white">학원별 오류 요청 현황</h2></div><p className="text-slate-400">가맹점별 이슈 접수 빈도 분석</p></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 w-full max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
+                            <div className="flex flex-col">{leftCol.map((item, idx) => <BarItem key={idx} item={item} index={idx} delayBase={0} />)}</div>
+                            <div className="flex flex-col">{rightCol.map((item, idx) => <BarItem key={idx} item={item} index={idx} delayBase={leftCol.length * 50} />)}</div>
+                        </div>
+                    </div>
                 </SlideContainer>
             );
         };
@@ -611,73 +537,76 @@
         const Cover2026Slide = () => (
             <SlideContainer>
                 <div className="text-center space-y-8 z-10 relative w-full h-full flex flex-col justify-center items-center overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] md:text-[25rem] font-black text-slate-800/40 select-none z-0 pointer-events-none blur-sm">2025</div>
-                <div className="absolute -inset-20 bg-indigo-500/10 blur-[100px] rounded-full animate-pulse z-0"></div>
-                <div className="relative z-10"><h2 className="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-indigo-200 to-indigo-500 animate-fade-in-up tracking-tighter">2026</h2><div className="h-2 w-32 bg-indigo-500 mx-auto mt-4 rounded-full animate-fade-in-up animation-delay-200"></div><p className="text-2xl md:text-3xl text-indigo-300 font-light mt-8 animate-fade-in-up animation-delay-300 uppercase tracking-widest">The Future of Edutech</p></div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] md:text-[25rem] font-black text-slate-800/40 select-none z-0 pointer-events-none blur-sm">2025</div>
+                    <div className="relative z-10"><h2 className="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-indigo-200 to-indigo-500 animate-fade-in-up tracking-tighter">2026</h2><div className="h-2 w-32 bg-indigo-500 mx-auto mt-4 rounded-full animate-fade-in-up animation-delay-200"></div><p className="text-2xl md:text-3xl text-indigo-300 font-light mt-8 animate-fade-in-up animation-delay-300 uppercase tracking-widest">The Future of Edutech</p></div>
                 </div>
             </SlideContainer>
         );
 
-        const Slide2026Template = ({ title, subtitle, desc, icon, points, imgSrc, setModalImage, onButtonClick }) => (
+        const Slide2026Template = ({ title, subtitle, desc, icon, points, imgSrc, setModalImage, onButtonClick, objectPosition = "center" }) => (
             <SlideContainer>
                 <div className="w-full max-w-6xl h-full flex flex-col justify-center">
-                <div className="flex items-center gap-3 mb-8"><div className="px-3 py-1 bg-indigo-600/80 rounded text-white font-bold text-sm tracking-wider">2026 PLAN</div><div className="h-px flex-1 bg-slate-800"></div></div>
-                <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-stretch h-auto lg:h-[50vh]">
-                    <div className="flex-1 flex flex-col justify-center space-y-6">
-                        <div>
-                            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20">{icon}</div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">{title}</h2>
-                            <p className="text-xl text-indigo-300 font-light mt-1">{subtitle}</p>
-                            <p className="text-base text-slate-400 leading-relaxed mt-4 font-light">{desc}</p>
+                    <div className="flex items-center gap-3 mb-8"><div className="px-3 py-1 bg-indigo-600/80 rounded text-white font-bold text-sm tracking-wider">2026 PLAN</div><div className="h-px flex-1 bg-slate-800"></div></div>
+                    <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-stretch h-auto lg:h-[50vh]">
+                        <div className="flex-1 flex flex-col justify-center space-y-6">
+                            <div>
+                                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 border border-indigo-500/20">{icon}</div>
+                                <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">{title}</h2>
+                                <p className="text-xl text-indigo-300 font-light mt-1">{subtitle}</p>
+                                <p className="text-base text-slate-400 leading-relaxed mt-4 font-light">{desc}</p>
+                            </div>
+                            {points && (<ul className="space-y-2 mt-2">{points.map((p, i) => (<li key={i} className="flex items-center gap-3 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>{p}</li>))}</ul>)}
+                            {onButtonClick && (
+                                <button onClick={onButtonClick} className="mt-4 px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-white font-semibold flex items-center gap-2 w-fit transition-all hover:scale-105">
+                                    <Sparkles size={18} className="text-yellow-400" /> 브랜드 아이덴티티(BI) 보기
+                                </button>
+                            )}
                         </div>
-                        {points && (<ul className="space-y-2 mt-2">{points.map((p, i) => (<li key={i} className="flex items-center gap-3 text-slate-300 text-sm"><div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>{p}</li>))}</ul>)}
-                        {onButtonClick && (
-                            <button onClick={onButtonClick} className="mt-4 px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-white font-semibold flex items-center gap-2 w-fit transition-all hover:scale-105">
-                                <Sparkles size={18} className="text-yellow-400" /> 브랜드 아이덴티티(BI) 보기
-                            </button>
-                        )}
+                        <div className="flex-1 w-full h-64 lg:h-auto"><ImagePlaceholder src={imgSrc} className="w-full h-full rounded-2xl border border-slate-700/50 shadow-2xl" enableZoom={false} objectPosition={objectPosition} onClick={() => setModalImage(imgSrc)} /></div>
                     </div>
-                    <div className="flex-1 w-full h-64 lg:h-auto"><ImagePlaceholder src={imgSrc} className="w-full h-full rounded-2xl border border-slate-700/50 shadow-2xl" enableZoom={false} onClick={() => setModalImage(imgSrc)} /></div>
-                </div>
                 </div>
             </SlideContainer>
         );
 
         const Plan2026_1 = ({ setModalImage }) => (
-            <div className="w-full h-full"><Slide2026Template title="사용자 프로필 고도화" subtitle="체계적인 학습 관리 시스템 (LMS)" desc="스마트드럼 및 시니어 서비스 내 개별 학습자 관리 시스템을 도입합니다. 진도율과 성취도를 정밀하게 데이터화하여 맞춤형 교육을 실현합니다." icon={<Activity size={24} />} points={["개인별 학습 이력 추적", "성취도 기반 맞춤형 피드백", "강사용 관리 대시보드"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/13.png" setModalImage={setModalImage} /></div>
-        ); 
+            <Slide2026Template title="사용자 프로필 고도화" subtitle="체계적인 학습 관리 시스템 (LMS)" desc="스마트드럼 및 시니어 서비스 내 개별 학습자 관리 시스템을 도입합니다. 진도율과 성취도를 정밀하게 데이터화하여 맞춤형 교육을 실현합니다." icon={<Activity size={24} />} points={["개인별 학습 이력 추적", "성취도 기반 맞춤형 피드백", "강사용 관리 대시보드"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/13.png" setModalImage={setModalImage} />
+        );
 
-        const Plan2026_2 = ({ setModalImage, openBrandModal }) => <Slide2026Template title="All-in-One 플랫폼" subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">통합 플랫폼</span></span>} desc="기존 '시니어100'에서 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." icon={<Share2 size={24} />} points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/14.png" setModalImage={setModalImage} onButtonClick={openBrandModal} />;
-        
+        const Plan2026_2 = ({ setModalImage, openBrandModal }) => (
+            <Slide2026Template 
+                title="All-in-One 플랫폼" 
+                subtitle={<span><span className="text-slate-500 line-through mr-2">시니어100</span><ArrowRight className="inline w-5 h-5 mr-2 text-slate-400" /><span className="text-cyan-400 font-bold">통합 플랫폼</span></span>} 
+                desc="기존 '시니어100'에서 브랜드를 확장합니다. 파편화된 서비스와 자료를 통합하고, 디바이스와 웹 서비스를 실시간으로 연동하여 새로운 교육 경험을 제공합니다." 
+                icon={<Share2 size={24} />} 
+                points={["브랜드 리포지셔닝 및 확장", "교육 자료 원스톱 검색", "디바이스-웹 실시간 연동"]} 
+                imgSrc="https://raw.githubusercontent.com/hmk83/Service/main/14_1.JPG" 
+                setModalImage={setModalImage} 
+                onButtonClick={openBrandModal}
+                objectPosition="top"
+            />
+        );
+
         const Plan2026_3 = ({ setModalImage }) => {
-            const handleAppImageClick = () => {
-                setModalImage([
-                    "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/15.png",
-                    "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/16.png",
-                    "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/17.png"
-                ]);
-            };
-
+            const handleAppImageClick = () => setModalImage(["https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/15.png", "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/16.png", "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/17.png"]);
             return <Slide2026Template title="전용 앱(App) 개발" subtitle="Android Tablet Optimization" desc="웹 기반의 한계를 넘어선 빠르고 안정적인 반응 속도를 구현합니다. 정부 지원사업(R&D)을 활용하여 기술력을 입증합니다." icon={<Tablet size={24} />} points={["안드로이드 태블릿 최적화", "초저지연 터치 반응 속도", "오프라인 모드 지원"]} imgSrc="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/15.png" setModalImage={handleAppImageClick} />;
-        }
-        
+        };
+
         const ConvergenceSlide = () => {
-            const [step, setStep] = useState(0); 
+            const [step, setStep] = useState(0);
             const runAnimation = () => { if (step === 0) { setStep(1); setTimeout(() => setStep(2), 800); setTimeout(() => setStep(3), 1800); setTimeout(() => setStep(4), 2300); } };
             return (
-            <SlideContainer onClick={runAnimation} className="cursor-pointer">
-                <div className="w-full max-w-6xl h-full flex flex-col justify-center items-center relative overflow-hidden">
-                <div className="text-center mb-16 relative z-10"><h2 className="text-5xl font-black text-white tracking-tight mb-4">핵심 기술 융합</h2><p className="text-indigo-300 text-xl font-light">{step === 0 ? "Click to see Convergence Strategy" : "Convergence Strategy"}</p></div>
-                {step === 0 && (<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center animate-pulse pointer-events-none"><div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20 mb-4"><MousePointerClick size={40} className="text-white" /></div><span className="text-white/70 text-sm font-medium tracking-widest uppercase">Click to Merge</span></div>)}
-                <div className="relative w-full h-[300px] flex items-center justify-center">
-                    <div className={`absolute flex flex-col items-center transition-all duration-700 ease-in-out z-20 ${step === 0 ? 'translate-x-[-200px] opacity-100' : ''} ${step === 1 ? 'translate-x-[-20px] opacity-100' : ''} ${step === 2 ? 'translate-x-[-20px] opacity-100 animate-shake' : ''} ${step >= 3 ? 'opacity-0 scale-0' : ''}`}><div className="w-48 h-48 rounded-3xl bg-slate-800 border-2 border-slate-600 flex flex-col items-center justify-center shadow-2xl"><Share2 size={48} className="text-indigo-400 mb-4" /><h3 className="text-xl font-bold text-white">All-in-One<br/>Platform</h3><p className="text-slate-400 text-sm mt-2">Web + Device Link</p></div></div>
-                    {/* Plus Icon Removed */}
-                    <div className={`absolute flex flex-col items-center transition-all duration-700 ease-in-out z-20 ${step === 0 ? 'translate-x-[200px] opacity-100' : ''} ${step === 1 ? 'translate-x-[20px] opacity-100' : ''} ${step === 2 ? 'translate-x-[20px] opacity-100 animate-shake' : ''} ${step >= 3 ? 'opacity-0 scale-0' : ''}`}><div className="w-48 h-48 rounded-3xl bg-slate-800 border-2 border-slate-600 flex flex-col items-center justify-center shadow-2xl"><Tablet size={48} className="text-purple-400 mb-4" /><h3 className="text-xl font-bold text-white">Dedicated<br/>App</h3><p className="text-slate-400 text-sm mt-2">Native Optimization</p></div></div>
-                    <div className={`absolute flex flex-col items-center transition-all duration-700 ease-out z-30 ${step < 3 ? 'scale-0 opacity-0' : 'scale-125 opacity-100'}`}><div className="w-56 h-56 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex flex-col items-center justify-center shadow-[0_0_80px_rgba(139,92,246,0.6)] border-4 border-white/20"><Cpu size={56} className="text-white mb-4 animate-pulse" /><h3 className="text-2xl font-black text-white text-center">Digital<br/>Healthcare</h3><p className="text-indigo-100 text-sm mt-2 opacity-80">Cognitive Solution</p></div></div>
-                </div>
-                <div className={`mt-16 text-center max-w-2xl text-slate-400 text-lg leading-relaxed transition-all duration-1000 transform ${step >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}><span className="text-indigo-400 font-bold">실시간 연동 기술</span>과 <span className="text-purple-400 font-bold">고성능 앱</span>의 결합은<br/>단순 교육을 넘어 <span className="text-white font-bold border-b border-indigo-500/50 pb-1">디지털 헬스케어의 핵심 기반</span>이 됩니다.</div>
-                </div>
-            </SlideContainer>
+                <SlideContainer onClick={runAnimation} className="cursor-pointer">
+                    <div className="w-full max-w-6xl h-full flex flex-col justify-center items-center relative overflow-hidden">
+                        <div className="text-center mb-16 relative z-10"><h2 className="text-5xl font-black text-white tracking-tight mb-4">핵심 기술 융합</h2><p className="text-indigo-300 text-xl font-light">{step === 0 ? "Click to see Convergence Strategy" : "Convergence Strategy"}</p></div>
+                        {step === 0 && (<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center animate-pulse pointer-events-none"><div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/20 mb-4"><MousePointerClick size={40} className="text-white" /></div><span className="text-white/70 text-sm font-medium tracking-widest uppercase">Click to Merge</span></div>)}
+                        <div className="relative w-full h-[300px] flex items-center justify-center">
+                            <div className={`absolute flex flex-col items-center transition-all duration-700 ease-in-out z-20 ${step === 0 ? 'translate-x-[-200px] opacity-100' : ''} ${step === 1 ? 'translate-x-[-20px] opacity-100' : ''} ${step === 2 ? 'translate-x-[-20px] opacity-100 animate-shake' : ''} ${step >= 3 ? 'opacity-0 scale-0' : ''}`}><div className="w-48 h-48 rounded-3xl bg-slate-800 border-2 border-slate-600 flex flex-col items-center justify-center shadow-2xl"><Share2 size={48} className="text-indigo-400 mb-4" /><h3 className="text-xl font-bold text-white">All-in-One<br />Platform</h3></div></div>
+                            <div className={`absolute flex flex-col items-center transition-all duration-700 ease-in-out z-20 ${step === 0 ? 'translate-x-[200px] opacity-100' : ''} ${step === 1 ? 'translate-x-[20px] opacity-100' : ''} ${step === 2 ? 'translate-x-[20px] opacity-100 animate-shake' : ''} ${step >= 3 ? 'opacity-0 scale-0' : ''}`}><div className="w-48 h-48 rounded-3xl bg-slate-800 border-2 border-slate-600 flex flex-col items-center justify-center shadow-2xl"><Tablet size={48} className="text-purple-400 mb-4" /><h3 className="text-xl font-bold text-white">Dedicated<br />App</h3></div></div>
+                            <div className={`absolute flex flex-col items-center transition-all duration-700 ease-out z-30 ${step < 3 ? 'scale-0 opacity-0' : 'scale-125 opacity-100'}`}><div className="w-56 h-56 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex flex-col items-center justify-center shadow-[0_0_80px_rgba(139,92,246,0.6)] border-4 border-white/20"><Cpu size={56} className="text-white mb-4 animate-pulse" /><h3 className="text-2xl font-black text-white text-center">Digital<br />Healthcare</h3></div></div>
+                        </div>
+                        <div className={`mt-16 text-center max-w-2xl text-slate-400 text-lg leading-relaxed transition-all duration-1000 transform ${step >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}><span className="text-indigo-400 font-bold">실시간 연동 기술</span>과 <span className="text-purple-400 font-bold">고성능 앱</span>의 결합은<br />단순 교육을 넘어 <span className="text-white font-bold border-b border-indigo-500/50 pb-1">디지털 헬스케어의 핵심 기반</span>이 됩니다.</div>
+                    </div>
+                </SlideContainer>
             );
         };
 
@@ -686,14 +615,14 @@
         const MemeSlide = () => (
             <SlideContainer>
                 <div className="w-full max-w-6xl h-full flex flex-col justify-center">
-                <div className="flex items-center justify-between mb-8"><div className="flex items-center gap-3"><div className="p-3 bg-pink-500/20 rounded-xl border border-pink-500/30 text-pink-400"><Sparkles size={28} /></div><div><h2 className="text-4xl font-bold text-white">트렌드 밈(Meme) 콘텐츠 전략</h2><p className="text-slate-400 text-sm mt-1">Engagement & Viral Marketing</p></div></div><div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500/30 rounded-full"><Users size={16} className="text-purple-300" /><span className="text-sm font-semibold text-purple-200">Collaboration with Marketing Team</span></div></div>
-                <div className="flex flex-col lg:flex-row gap-10 h-auto lg:h-[50vh]">
-                    <div className="flex-1 space-y-6 flex flex-col justify-center">
-                        <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700 hover:border-pink-500/30 transition-all duration-300"><div className="flex items-center gap-3 mb-3"><Share2 className="text-blue-400" size={20} /><h3 className="text-xl font-bold text-white">Marketing Asset</h3></div><p className="text-slate-300 leading-relaxed font-light">제작된 콘텐츠는 본사 및 가맹원 SNS 마케팅 소재로 즉시 배포. <span className="text-blue-400 font-semibold">"트렌디한 학원"</span> 이미지 구축에 기여합니다.</p></div>
-                        <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700 hover:border-pink-500/30 transition-all duration-300"><div className="flex items-center gap-3 mb-3"><Gamepad2 className="text-green-400" size={20} /><h3 className="text-xl font-bold text-white">Fun Factor</h3></div><p className="text-slate-300 leading-relaxed font-light">단순 연습을 넘어, 친구들과 공유하고 즐길 수 있는 놀이 문화 형성. 원생 만족도 및 리텐션 강화.</p></div>
+                    <div className="flex items-center justify-between mb-8"><div className="flex items-center gap-3"><div className="p-3 bg-pink-500/20 rounded-xl border border-pink-500/30 text-pink-400"><Sparkles size={28} /></div><div><h2 className="text-4xl font-bold text-white">트렌드 밈(Meme) 콘텐츠 전략</h2><p className="text-slate-400 text-sm mt-1">Engagement & Viral Marketing</p></div></div><div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-900/50 to-pink-900/50 border border-purple-500/30 rounded-full"><Users size={16} className="text-purple-300" /><span className="text-sm font-semibold text-purple-200">Marketing Team Collaboration</span></div></div>
+                    <div className="flex flex-col lg:flex-row gap-10 h-auto lg:h-[50vh]">
+                        <div className="flex-1 space-y-6 flex flex-col justify-center">
+                            <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700 hover:border-pink-500/30 transition-all duration-300"><div className="flex items-center gap-3 mb-3"><Share2 className="text-blue-400" size={20} /><h3 className="text-xl font-bold text-white">Marketing Asset</h3></div><p className="text-slate-300 leading-relaxed font-light">제작된 콘텐츠는 본사 및 가맹원 SNS 마케팅 소재로 즉시 배포. <span className="text-blue-400 font-semibold">"트렌디한 학원"</span> 이미지 구축에 기여합니다.</p></div>
+                            <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700 hover:border-pink-500/30 transition-all duration-300"><div className="flex items-center gap-3 mb-3"><Gamepad2 className="text-green-400" size={20} /><h3 className="text-xl font-bold text-white">Fun Factor</h3></div><p className="text-slate-300 leading-relaxed font-light">단순 연습을 넘어, 친구들과 공유하고 즐길 수 있는 놀이 문화 형성. 원생 만족도 및 리텐션 강화.</p></div>
+                        </div>
+                        <div className="flex-1 grid grid-cols-2 gap-4"><div className="col-span-2 h-40"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/19.png" className="h-full rounded-2xl" /></div><div className="h-40"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/20.png" className="h-full rounded-2xl" /></div><div className="h-40"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/21.png" className="h-full rounded-2xl" /></div></div>
                     </div>
-                    <div className="flex-1 grid grid-cols-2 gap-4"><div className="col-span-2 h-40"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/19.png" className="h-full rounded-2xl" /></div><div className="h-40"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/20.png" className="h-full rounded-2xl" /></div><div className="h-40"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/21.png" className="h-full rounded-2xl" /></div></div>
-                </div>
                 </div>
             </SlideContainer>
         );
@@ -701,16 +630,15 @@
         const RoadmapSlide = () => (
             <SlideContainer>
                 <div className="w-full max-w-6xl h-full flex flex-col justify-center items-center">
-                <div className="text-center mb-16"><h2 className="text-5xl font-black text-white tracking-tight">2026 ROADMAP</h2><p className="text-indigo-400 mt-2 text-lg">Yearly Milestone Overview</p></div>
-                <div className="relative w-full px-10">
-                    <div className="absolute left-0 right-0 top-1/2 h-1 bg-slate-700 -translate-y-1/2 rounded-full"></div><div className="absolute left-0 right-0 top-1/2 h-1 bg-gradient-to-r from-cyan-500 via-indigo-500 to-pink-500 -translate-y-1/2 rounded-full opacity-50 blur-sm"></div>
-                    <div className="relative flex justify-between w-full">
-                        <div className="flex flex-col items-center group"><div className="w-12 h-12 bg-slate-900 border-4 border-cyan-500 rounded-full flex items-center justify-center z-10 shadow-[0_0_20px_rgba(6,182,212,0.5)] group-hover:scale-110 transition-transform"><Activity size={20} className="text-cyan-400" /></div><div className="absolute top-16 text-center w-40 opacity-100 transition-opacity duration-300"><h4 className="text-white font-bold text-lg">프로필/LMS 고도화</h4><p className="text-slate-400 text-sm">개인별 학습 이력 및 성취도 데이터화</p></div></div>
-                        <div className="flex flex-col items-center group"><div className="w-12 h-12 bg-slate-900 border-4 border-indigo-500 rounded-full flex items-center justify-center z-10 shadow-[0_0_20px_rgba(99,102,241,0.5)] group-hover:scale-110 transition-transform"><Share2 size={20} className="text-indigo-400" /></div><div className="absolute top-16 text-center w-40 opacity-100 transition-opacity duration-300"><h4 className="text-white font-bold text-lg">통합 플랫폼 구축</h4><p className="text-slate-400 text-sm">모든 교육 자료와 서비스를 하나로 통합</p></div></div>
-                        <div className="flex flex-col items-center group"><div className="w-12 h-12 bg-slate-900 border-4 border-purple-500 rounded-full flex items-center justify-center z-10 shadow-[0_0_20px_rgba(168,85,247,0.5)] group-hover:scale-110 transition-transform"><Tablet size={20} className="text-purple-400" /></div><div className="absolute top-16 text-center w-40 opacity-100 transition-opacity duration-300"><h4 className="text-white font-bold text-lg">전용 앱 출시</h4><p className="text-slate-400 text-sm">안드로이드 태블릿 전용 앱 최적화</p></div></div>
-                        <div className="flex flex-col items-center group"><div className="w-12 h-12 bg-slate-900 border-4 border-pink-500 rounded-full flex items-center justify-center z-10 shadow-[0_0_20px_rgba(236,72,153,0.5)] group-hover:scale-110 transition-transform"><Cpu size={20} className="text-pink-500" /></div><div className="absolute top-16 text-center w-40 opacity-100 transition-opacity duration-300"><h4 className="text-white font-bold text-lg">헬스케어 확장</h4><p className="text-slate-400 text-sm">데이터 기반 인지재활 솔루션</p></div></div>
+                    <div className="text-center mb-16"><h2 className="text-5xl font-black text-white tracking-tight">2026 ROADMAP</h2><p className="text-indigo-400 mt-2 text-lg">Yearly Milestone Overview</p></div>
+                    <div className="relative w-full px-10">
+                        <div className="absolute left-0 right-0 top-1/2 h-1 bg-slate-700 -translate-y-1/2 rounded-full"></div>
+                        <div className="relative flex justify-between w-full">
+                            {[{icon: Activity, title: "프로필/LMS", color: "border-cyan-500"}, {icon: Share2, title: "통합 플랫폼", color: "border-indigo-500"}, {icon: Tablet, title: "전용 앱 출시", color: "border-purple-500"}, {icon: Cpu, title: "헬스케어 확장", color: "border-pink-500"}].map((m, i) => (
+                                <div key={i} className="flex flex-col items-center group"><div className={`w-12 h-12 bg-slate-900 border-4 ${m.color} rounded-full flex items-center justify-center z-10 transition-transform hover:scale-110`}><m.icon size={20} className="text-white" /></div><div className="absolute top-16 text-center w-40"><h4 className="text-white font-bold text-lg">{m.title}</h4></div></div>
+                            ))}
+                        </div>
                     </div>
-                </div>
                 </div>
             </SlideContainer>
         );
@@ -719,16 +647,39 @@
             <SlideContainer>
                 <div className="text-center mb-10"><h2 className="text-3xl md:text-4xl font-bold text-white mb-3">기대 효과</h2><p className="text-lg text-slate-400 font-light">기술적 완성도와 신뢰 구축을 통한 브랜드 가치 상승</p></div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl px-4 h-[60vh] md:h-auto">
-                <div className="bg-slate-900/40 border border-slate-700/50 p-6 rounded-2xl hover:border-cyan-500/30 transition-all duration-500 group flex flex-col"><div className="w-12 h-12 mx-auto bg-cyan-900/20 rounded-xl flex items-center justify-center mb-4 text-cyan-400"><Layers size={24} /></div><h3 className="text-lg font-bold text-white mb-2 text-center">수업 질적 향상</h3><p className="text-slate-400 text-sm text-center mb-4 font-light leading-relaxed">안정적인 수업 환경 제공으로 원장님의 교육 집중도를 높이고, <span className="text-cyan-400 font-medium">기존 시스템에 대한 불만을 만족으로 전환</span>하여 재계약률을 높입니다.</p><div className="flex-1 w-full min-h-[120px]"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/22.png" className="h-full rounded-lg" /></div></div>
-                <div className="bg-slate-900/40 border border-slate-700/50 p-6 rounded-2xl hover:border-indigo-500/30 transition-all duration-500 group flex flex-col"><div className="w-12 h-12 mx-auto bg-indigo-900/20 rounded-xl flex items-center justify-center mb-4 text-indigo-400"><HeartHandshake size={24} /></div><h3 className="text-lg font-bold text-white mb-2 text-center">신뢰도 강화</h3><p className="text-slate-400 text-sm text-center mb-4 font-light leading-relaxed">데이터 기반의 투명한 학습 관리(LMS)를 통해 <span className="text-indigo-400 font-medium">'관리 부재'에 대한 오해를 불식</span>시키고, 학부모와 원장님 모두가 신뢰하는 파트너로 자리매김합니다.</p><div className="flex-1 w-full min-h-[120px]"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/23.png" className="h-full rounded-lg" /></div></div>
-                <div className="bg-slate-900/40 border border-slate-700/50 p-6 rounded-2xl hover:border-pink-500/30 transition-all duration-500 group flex flex-col"><div className="w-12 h-12 mx-auto bg-pink-900/20 rounded-xl flex items-center justify-center mb-4 text-pink-400"><Cpu size={24} /></div><h3 className="text-lg font-bold text-white mb-2 text-center">사업 가치 증대</h3><p className="text-slate-400 text-sm text-center mb-4 font-light leading-relaxed">단순 교육 프랜차이즈를 넘어, 인지 재활 데이터와 디지털 헬스케어 기술을 보유한 <span className="text-pink-400 font-medium">'토탈 라이프 케어 플랫폼'</span>으로 기업 밸류에이션을 극대화합니다.</p><div className="flex-1 w-full min-h-[120px]"><ImagePlaceholder src="https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/24.png" className="h-full rounded-lg" /></div></div>
+                    {[{
+                        icon: Layers, 
+                        title: "수업 질적 향상", 
+                        desc: <span>안정적인 환경 제공으로 기존 가맹원 <br /> 만족도 상승 및 신규 가맹 유치 기반 마련</span>, 
+                        color: "text-cyan-400", 
+                        img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/22.png"
+                    }, {
+                        icon: HeartHandshake, 
+                        title: "신뢰도 강화", 
+                        desc: <span>안정적인 웹학습 서비스 업데이트를 <br /> 통해 가맹점과 학부모의 신뢰 상승</span>, 
+                        color: "text-indigo-400", 
+                        img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/23.png"
+                    }, {
+                        icon: Cpu, 
+                        title: "사업 가치 증대", 
+                        desc: "토탈 라이프 케어 플랫폼으로 밸류 극대화", 
+                        color: "text-pink-400", 
+                        img: "https://raw.githubusercontent.com/hmk83/Service/refs/heads/main/24.png"
+                    }].map((e, i) => (
+                        <div key={i} className="bg-slate-900/40 border border-slate-700/50 p-6 rounded-2xl flex flex-col group transition-all duration-500 hover:border-white/20">
+                            <div className={`w-12 h-12 mx-auto bg-slate-800 rounded-xl flex items-center justify-center mb-4 ${e.color}`}><e.icon size={24} /></div>
+                            <h3 className="text-lg font-bold text-white mb-2 text-center">{e.title}</h3>
+                            <div className="text-slate-400 text-sm text-center mb-4 font-light leading-relaxed">{e.desc}</div>
+                            <div className="flex-1 w-full min-h-[120px]"><ImagePlaceholder src={e.img} className="h-full rounded-lg" /></div>
+                        </div>
+                    ))}
                 </div>
             </SlideContainer>
         );
 
         const EndingSlide = () => (
             <SlideContainer>
-                <div className="text-center z-10"><h1 className="text-6xl md:text-7xl font-bold text-white mb-6 animate-fade-in-up">Thank You</h1><p className="text-xl text-slate-400 animate-fade-in-up animation-delay-200 font-light">주은교육(주) 서비스운영팀</p><div className="mt-12 w-20 h-1 bg-cyan-500/50 mx-auto rounded-full"></div></div>
+                <div className="text-center z-10"><h1 className="text-6xl md:text-7xl font-bold text-white mb-6 animate-fade-in-up">Thank You</h1><p className="text-xl text-slate-400 font-light">주은교육(주) 서비스운영팀</p><div className="mt-12 w-20 h-1 bg-cyan-500/50 mx-auto rounded-full"></div></div>
             </SlideContainer>
         );
 
@@ -746,35 +697,23 @@
 
             const nextSlide = useCallback(() => {
                 if (currentSlide < totalSlides - 1 && !isAnimating) {
-                setIsAnimating(true);
-                setTimeout(() => {
-                    setCurrentSlide(prev => prev + 1);
-                    setIsAnimating(false);
-                }, 500);
+                    setIsAnimating(true);
+                    setTimeout(() => { setCurrentSlide(prev => prev + 1); setIsAnimating(false); }, 500);
                 }
             }, [currentSlide, isAnimating]);
 
             const prevSlide = useCallback(() => {
                 if (currentSlide > 0 && !isAnimating) {
-                setIsAnimating(true);
-                setTimeout(() => {
-                    setCurrentSlide(prev => prev - 1);
-                    setIsAnimating(false);
-                }, 500);
+                    setIsAnimating(true);
+                    setTimeout(() => { setCurrentSlide(prev => prev - 1); setIsAnimating(false); }, 500);
                 }
             }, [currentSlide, isAnimating]);
 
             useEffect(() => {
                 const handleKeyDown = (e) => {
-                if (modalImage || isBrandModalOpen) {
-                    if (e.key === 'Escape') {
-                        setModalImage(null);
-                        setIsBrandModalOpen(false);
-                    }
-                    return;
-                }
-                if (e.key === 'ArrowRight') nextSlide();
-                if (e.key === 'ArrowLeft') prevSlide();
+                    if (modalImage || isBrandModalOpen) { if (e.key === 'Escape') { setModalImage(null); setIsBrandModalOpen(false); } return; }
+                    if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+                    if (e.key === 'ArrowLeft') prevSlide();
                 };
                 window.addEventListener('keydown', handleKeyDown);
                 return () => window.removeEventListener('keydown', handleKeyDown);
@@ -783,52 +722,51 @@
             const handleTouchStart = (e) => { touchStartX.current = e.changedTouches[0].screenX; };
             const handleTouchEnd = (e) => {
                 touchEndX.current = e.changedTouches[0].screenX;
-                if (modalImage || isBrandModalOpen) return; 
+                if (modalImage || isBrandModalOpen) return;
                 if (touchStartX.current - touchEndX.current > 50) nextSlide();
                 if (touchEndX.current - touchStartX.current > 50) prevSlide();
             };
 
             return (
                 <div className="w-full h-screen bg-slate-950 text-white overflow-hidden relative font-sans selection:bg-cyan-500/30" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-                
-                <Background />
-                <ImageModal modalImage={modalImage} setModalImage={setModalImage} />
-                <BrandIdentityModal isOpen={isBrandModalOpen} onClose={() => setIsBrandModalOpen(false)} />
+                    <Background />
+                    <ImageModal modalImage={modalImage} setModalImage={setModalImage} />
+                    <BrandIdentityModal isOpen={isBrandModalOpen} onClose={() => setIsBrandModalOpen(false)} />
 
-                <div className="w-full h-full flex flex-col relative z-0">
-                    <div className="absolute top-0 w-full p-6 flex justify-between items-center z-50 pointer-events-none">
-                    <div className="text-xs font-bold tracking-widest text-slate-600 uppercase">Service Operation Team</div>
-                    <div className="flex gap-1.5">
-                        {[...Array(totalSlides)].map((_, idx) => (
-                        <div key={idx} className={`h-1 rounded-full transition-all duration-500 ${idx === currentSlide ? 'w-8 bg-cyan-500' : 'w-2 bg-slate-800'}`} />
-                        ))}
-                    </div>
-                    </div>
+                    <div className="w-full h-full flex flex-col relative z-0">
+                        <div className="absolute top-0 w-full p-6 flex justify-between items-center z-50 pointer-events-none">
+                            <div className="text-xs font-bold tracking-widest text-slate-600 uppercase">Service Operation Team</div>
+                            <div className="flex gap-1.5">
+                                {[...Array(totalSlides)].map((_, idx) => (
+                                    <div key={idx} className={`h-1 rounded-full transition-all duration-500 ${idx === currentSlide ? 'w-8 bg-cyan-500' : 'w-2 bg-slate-800'}`} />
+                                ))}
+                            </div>
+                        </div>
 
-                    <div className="flex-1 relative w-full h-full">
-                    {currentSlide === 0 && <CoverSlide nextSlide={nextSlide} />}
-                    {currentSlide === 1 && <GoalsSlide setModalImage={setModalImage} />}
-                    {currentSlide === 2 && <Plan2025Slide setModalImage={setModalImage} />}
-                    {currentSlide === 3 && <AdditionalDevSlide />}
-                    {currentSlide === 4 && <BugReportSlide1 />}
-                    {currentSlide === 5 && <BugReportSlide2 />}
-                    {currentSlide === 6 && <Cover2026Slide />}
-                    {currentSlide === 7 && <Plan2026_1 setModalImage={setModalImage} />}
-                    {currentSlide === 8 && <Plan2026_2 setModalImage={setModalImage} openBrandModal={() => setIsBrandModalOpen(true)} />}
-                    {currentSlide === 9 && <Plan2026_3 setModalImage={setModalImage} />}
-                    {currentSlide === 10 && <ConvergenceSlide />}
-                    {currentSlide === 11 && <Plan2026_4 setModalImage={setModalImage} />}
-                    {currentSlide === 12 && <MemeSlide />}
-                    {currentSlide === 13 && <RoadmapSlide />}
-                    {currentSlide === 14 && <EffectSlide />}
-                    {currentSlide === 15 && <EndingSlide />}
-                    </div>
+                        <div className="flex-1 relative w-full h-full">
+                            {currentSlide === 0 && <CoverSlide nextSlide={nextSlide} />}
+                            {currentSlide === 1 && <GoalsSlide setModalImage={setModalImage} />}
+                            {currentSlide === 2 && <Plan2025Slide setModalImage={setModalImage} />}
+                            {currentSlide === 3 && <AdditionalDevSlide />}
+                            {currentSlide === 4 && <BugReportSlide1 />}
+                            {currentSlide === 5 && <BugReportSlide2 />}
+                            {currentSlide === 6 && <Cover2026Slide />}
+                            {currentSlide === 7 && <Plan2026_1 setModalImage={setModalImage} />}
+                            {currentSlide === 8 && <Plan2026_2 setModalImage={setModalImage} openBrandModal={() => setIsBrandModalOpen(true)} />}
+                            {currentSlide === 9 && <Plan2026_3 setModalImage={setModalImage} />}
+                            {currentSlide === 10 && <ConvergenceSlide />}
+                            {currentSlide === 11 && <Plan2026_4 setModalImage={setModalImage} />}
+                            {currentSlide === 12 && <MemeSlide />}
+                            {currentSlide === 13 && <RoadmapSlide />}
+                            {currentSlide === 14 && <EffectSlide />}
+                            {currentSlide === 15 && <EndingSlide />}
+                        </div>
 
-                    <div className="absolute bottom-6 w-full px-8 flex justify-between items-center z-50 pointer-events-none">
-                        <button onClick={prevSlide} disabled={currentSlide === 0} className={`pointer-events-auto p-3 rounded-full border border-slate-700 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 ${currentSlide === 0 ? 'opacity-0 cursor-not-allowed' : 'hover:bg-slate-800 hover:border-cyan-500/50 text-white hover:text-cyan-400'}`}><ChevronLeft size={24} /></button>
-                        <button onClick={nextSlide} disabled={currentSlide === totalSlides - 1} className={`pointer-events-auto p-3 rounded-full border border-slate-700 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 ${currentSlide === totalSlides - 1 ? 'opacity-0 cursor-not-allowed' : 'hover:bg-slate-800 hover:border-cyan-500/50 text-white hover:text-cyan-400'}`}><ChevronRight size={24} /></button>
+                        <div className="absolute bottom-6 w-full px-8 flex justify-between items-center z-50 pointer-events-none">
+                            <button onClick={prevSlide} disabled={currentSlide === 0} className={`pointer-events-auto p-3 rounded-full border border-slate-700 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 ${currentSlide === 0 ? 'opacity-0 cursor-not-allowed' : 'hover:bg-slate-800 hover:border-cyan-500/50 text-white hover:text-cyan-400'}`}><ChevronLeft size={24} /></button>
+                            <button onClick={nextSlide} disabled={currentSlide === totalSlides - 1} className={`pointer-events-auto p-3 rounded-full border border-slate-700 bg-slate-900/50 backdrop-blur-sm transition-all duration-300 ${currentSlide === totalSlides - 1 ? 'opacity-0 cursor-not-allowed' : 'hover:bg-slate-800 hover:border-cyan-500/50 text-white hover:text-cyan-400'}`}><ChevronRight size={24} /></button>
+                        </div>
                     </div>
-                </div>
                 </div>
             );
         };
@@ -837,4 +775,5 @@
         root.render(<Presentation />);
     </script>
 </body>
+
 </html>
