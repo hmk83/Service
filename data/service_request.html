@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, private">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>서비스 등록 요청</title>
+    <style>
+        :root {
+            --brand: #4CAF50;
+            --blue: #2962FF;
+            --danger: #f44336;
+            --muted: #6b7280;
+            --line: #e5e7eb;
+            --bg: #f5f7fb;
+            --hero: #3f8cff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+            background: var(--bg);
+            color: #111;
+            padding-bottom: 80px;
+        }
+
+        .page {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 12px 24px;
+        }
+
+        /* HERO */
+        .hero {
+            margin: 12px 0 0;
+            padding: 24px 20px 20px;
+            border-radius: 16px 16px 0 0;
+            background: var(--hero);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .hero-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .stat-card {
+            background: #fff;
+            color: #111;
+            border-radius: 12px;
+            padding: 10px 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .12);
+        }
+
+        .stat-title {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: #2962FF;
+            color: #fff;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* FILTER */
+        .filter-wrap {
+            background: #fff;
+            padding: 16px 18px 14px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .12);
+            border: 1px solid #e0e7ff;
+            border-top: none;
+            margin-bottom: 14px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .filter-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .15s;
+        }
+
+        .btn:hover {
+            background: #f9fafb;
+        }
+
+        .btn-primary {
+            background: var(--brand);
+            border-color: var(--brand);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(.96);
+        }
+
+        .btn-secondary {
+            background: #1e40af;
+            border-color: #1e40af;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            filter: brightness(.96);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            filter: brightness(.96);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-item label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+        }
+
+        .filter-item input[type="text"],
+        .filter-item input[type="date"],
+        .filter-item select {
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 13px;
+            min-width: 120px;
+        }
+
+        .filter-item.search {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* TOOLBAR & TABLE */
+        .toolbar {
+            margin-top: 14px;
+            background: #3f51b5;
+            border-radius: 12px 12px 0 0;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-save {
+            background: #00c853;
+            border-color: #00c853;
+            color: #fff;
+        }
+
+        .btn-load {
+            background: #2196f3;
+            border-color: #2196f3;
+            color: #fff;
+        }
+
+        .table-wrap {
+            background: #fff;
+            border-radius: 0 0 12px 12px;
+            border: 1px solid #e0e7ff;
+            border-top: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #f1f5ff;
+        }
+
+        th,
+        td {
+            padding: 7px 8px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            font-size: 12px;
+            color: #555;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafbff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-select {
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            font-size: 12px;
+            background: #fff;
+        }
+
+        .cell-actions a {
+            font-size: 12px;
+            margin-right: 6px;
+            color: #1976d2;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .cell-actions a.copy {
+            color: #009688;
+            /* 복사 버튼 색상 구분 */
+        }
+
+        .cell-actions a.delete {
+            color: #d32f2f;
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #2196f3;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
+            color: #fff;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 8000;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            display: none;
+            z-index: 9000;
+            box-shadow: 0 8px 26px rgba(0, 0, 0, .6);
+            max-width: 90vw;
+            text-align: center;
+            white-space: pre-line;
+            /* 줄바꿈 허용 */
+        }
+
+        .toast.show {
+            display: block;
+            animation: toastDown .25s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes toastDown {
+            from {
+                transform: translate(-50%, -26px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 8500;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-inner {
+            width: min(960px, 96vw);
+            max-height: 92vh;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+            padding: 12px 14px 16px;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 999px;
+            color: #6b7280;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .form-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-item label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #555;
+        }
+
+        .form-item input[type="text"],
+        .form-item input[type="email"],
+        .form-item input[type="tel"],
+        .form-item input[type="date"],
+        .form-item select {
+            padding: 7px 9px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 13px;
+        }
+
+        .form-actions {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .muted {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* 삭제확인 */
+        .confirm-inner {
+            width: min(380px, 94vw);
+            max-height: 80vh;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+            padding: 12px 14px 16px;
+            overflow: auto;
+        }
+
+        @media (max-width:960px) {
+            .stat-row {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width:720px) {
+            .hero-title {
+                font-size: 20px;
+            }
+
+            .stat-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width:540px) {
+            .stat-row {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-item {
+                width: 100%;
+            }
+
+            .filter-item input,
+            .filter-item select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <!-- HERO + STATS -->
+        <section class="hero">
+            <div class="hero-title">서비스 등록 요청</div>
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-title">총 등록 수(진행중)</div>
+                    <div class="stat-value" id="statTotalActive">0</div>
+                    <button class="stat-btn" type="button">조회</button>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">종료 30일 남은 건수</div>
+                    <div class="stat-value" id="stat30">0</div>
+                    <button class="stat-btn" type="button">조회</button>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">종료 3일 남은 건수</div>
+                    <div class="stat-value" id="stat3">0</div>
+                    <button class="stat-btn" type="button">조회</button>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">금일 종료 건수</div>
+                    <div class="stat-value" id="statToday">0</div>
+                    <button class="stat-btn" type="button">조회</button>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">기간 종료 건수</div>
+                    <div class="stat-value" id="statEnded">0</div>
+                    <button class="stat-btn" type="button">조회</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FILTER -->
+        <section class="filter-wrap">
+            <div class="filter-header">
+                <div class="filter-title">필터</div>
+                <button class="btn btn-sm" id="btnToggleFilter" type="button">접기</button>
+            </div>
+            <div class="filters" id="filtersBody">
+                <div class="filter-item">
+                    <label>구분</label>
+                    <select id="filterCategory">
+                        <option value="">전체</option>
+                    </select>
+                </div>
+                <div class="filter-item search">
+                    <label>기관명 검색</label>
+                    <input type="text" id="filterName" placeholder="학원명/학교명/기관명">
+                </div>
+                <div class="filter-item">
+                    <label>날짜 구분</label>
+                    <select id="filterDateType">
+                        <option value="requestDate">요청날짜</option>
+                        <option value="startDate">시작날짜</option>
+                        <option value="endDate">종료날짜</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>날짜 시작</label>
+                    <input type="date" id="filterStart">
+                </div>
+                <div class="filter-item">
+                    <label>날짜 종료</label>
+                    <input type="date" id="filterEnd">
+                </div>
+                <div class="filter-item">
+                    <label>상태</label>
+                    <select id="filterStatus">
+                        <option value="">전체</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>정렬</label>
+                    <select id="filterSort">
+                        <option value="requestDateDesc">요청일 최신순</option>
+                        <option value="requestDateAsc">요청일 오래된순</option>
+                        <option value="endDateAsc">종료일 임박순</option>
+                        <option value="endDateDesc">종료일 먼순</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>&nbsp;</label>
+                    <div style="display:flex;gap:6px;">
+                        <button class="btn btn-sm" id="btnResetFilter" type="button">필터 초기화</button>
+                        <button class="btn btn-primary btn-sm" id="btnSearch" type="button">검색</button>
+                        <button class="btn btn-primary btn-sm" id="btnWriteRequest" type="button">작성</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOLBAR + TABLE -->
+        <section style="margin-top:10px;">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <button class="btn btn-save" id="btnSave" type="button">💾 서버에 저장</button>
+                    <button class="btn btn-load" id="btnLoad" type="button">📥 서버에서 불러오기</button>
+                </div>
+                <div class="muted" id="summaryLabel">총 0건</div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>서비스</th>
+                            <th>기관명</th>
+                            <th>요청자</th>
+                            <th>이메일</th>
+                            <th>연락처</th>
+                            <th>핸드폰번호</th>
+                            <th>비밀번호</th>
+                            <th>마스터 비밀번호</th>
+                            <th>요청날짜</th>
+                            <th>시작날짜</th>
+                            <th>종료날짜</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- FAB (작성 버튼) -->
+    <div class="fab" id="btnFab">+</div>
+
+    <!-- 신규 요청 모달 -->
+    <div class="modal-overlay" id="entryModal">
+        <div class="modal-inner">
+            <div class="modal-header">
+                <div class="modal-title">신규 요청 등록</div>
+                <button class="modal-close" type="button" id="entryClose">×</button>
+            </div>
+            <div class="muted" id="entryModeLabel" style="margin-bottom:6px;">신규 등록 모드</div>
+            <div class="form-grid">
+                <div class="form-item">
+                    <label>구분</label>
+                    <select id="fCategory"></select>
+                </div>
+                <div class="form-item">
+                    <label>서비스</label>
+                    <select id="fService"></select>
+                </div>
+                <div class="form-item">
+                    <label>기관명</label>
+                    <input type="text" id="fName">
+                </div>
+
+                <!-- 요청자: 드롭다운 + 직접입력 -->
+                <div class="form-item">
+                    <label>요청자</label>
+                    <select id="fRequesterSelect">
+                        <option value="">선택</option>
+                        <option value="홍혜숙">홍혜숙</option>
+                        <option value="조혜주">조혜주</option>
+                        <option value="이동욱">이동욱</option>
+                        <option value="조보금">조보금</option>
+                        <option value="유덕경">유덕경</option>
+                        <option value="__custom__">직접입력</option>
+                    </select>
+                    <input type="text" id="fRequesterCustom" placeholder="요청자 직접 입력"
+                        style="display:none;margin-top:4px;">
+                </div>
+
+                <div class="form-item">
+                    <label>이메일</label>
+                    <input type="email" id="fEmail">
+                </div>
+                <div class="form-item">
+                    <label>연락처</label>
+                    <input type="tel" id="fContact">
+                </div>
+                <div class="form-item">
+                    <label>핸드폰번호</label>
+                    <input type="tel" id="fPhone">
+                </div>
+                <div class="form-item">
+                    <label>비밀번호</label>
+                    <input type="text" id="fPassword">
+                </div>
+                <div class="form-item">
+                    <label>마스터 비밀번호</label>
+                    <input type="text" id="fMasterPassword">
+                </div>
+                <div class="form-item">
+                    <label>요청날짜</label>
+                    <input type="date" id="fRequestDate">
+                </div>
+                <div class="form-item">
+                    <label>시작날짜</label>
+                    <input type="date" id="fStartDate">
+                </div>
+                <div class="form-item">
+                    <label>종료날짜</label>
+                    <input type="date" id="fEndDate">
+                </div>
+                <div class="form-item">
+                    <label>상태</label>
+                    <select id="fStatus"></select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-danger btn-sm" type="button" id="btnDeleteEntry" style="display:none;">선택 요청
+                    삭제</button>
+                <div style="display:flex;gap:6px;">
+                    <button class="btn btn-sm" type="button" id="btnClearForm">입력 초기화</button>
+                    <button class="btn btn-primary" type="button" id="btnSaveEntry">등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="confirm-inner">
+            <div class="modal-header">
+                <div class="modal-title">삭제 확인</div>
+                <button class="modal-close" type="button" id="deleteClose">×</button>
+            </div>
+            <p style="font-size:13px;line-height:1.5;margin-bottom:10px;">
+                선택하신 요청을 <b>삭제</b>하면 복구가 불가능합니다.<br>
+                정말 삭제하시겠습니까?
+            </p>
+            <div class="form-actions" style="justify-content:flex-end;">
+                <button class="btn btn-sm" type="button" id="btnDeleteCancel">취소</button>
+                <button class="btn btn-danger btn-sm" type="button" id="btnDeleteOk">삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ===== 공통 유틸 ===== */
+        const FILE_NAME = "data/service_requests.json";
+        const ENDPOINTS = {
+            basePath: "",
+            save: ["save.php", "api.php"],
+            load: ["load.php", "api.php"],
+            fallbackJson: "data/service_requests.json"
+        };
+        const BACKUP_KEY = "service_requests_backup";
+
+        const DEFAULT_META = {
+            categories: ["학교", "기관", "학원", "시니어100", "기타"],
+            services: ["스마트드럼", "시니어스마트드럼", "스마트피아노", "스마트아트톡톡", "스마트뮤직플레이"],
+            statuses: ["진행중", "종료", "보류"]
+        };
+
+        const REQUESTERS = ["홍혜숙", "조혜주", "이동욱", "조보금", "유덕경"];
+
+        const INITIAL_RECORDS_RAW = [
+            {
+                "category": "학교",
+                "service": "스마트피아노",
+                "name": "나사렛새꿈학교",
+                "requester": "조혜주 팀장님",
+                "email": "tmdgns0927@naver.com",
+                "contact": "041-579-1295",
+                "phone": "041-579-1295",
+                "password": "zxcasd123",
+                "masterPassword": "12345",
+                "requestDate": "2025-11-11",
+                "startDate": "2025-11-11",
+                "endDate": "2026-06-30",
+                "status": "진행중",
+                "createdAt": 1762909499281
+            },
+            {
+                "category": "시니어100",
+                "service": "스마트드럼",
+                "name": "이은영",
+                "requester": "",
+                "email": "카카오가입",
+                "contact": "01072759747",
+                "phone": "01072759747",
+                "password": "",
+                "masterPassword": "12345",
+                "requestDate": "2025-11-07",
+                "startDate": "2025-11-10",
+                "endDate": "2025-11-17",
+                "status": "진행중",
+                "createdAt": 1762909102851
+            },
+            {
+                "category": "학교",
+                "service": "스마트드럼",
+                "name": "나사렛새꿈학교",
+                "requester": "조혜주 팀장님",
+                "email": "tmdgns0927@naver.com",
+                "contact": "041-579-1295",
+                "phone": "041-579-1295",
+                "password": "zxcasd123",
+                "masterPassword": "12345",
+                "requestDate": "2025-10-27",
+                "startDate": "2025-11-04",
+                "endDate": "2027-02-28",
+                "status": "진행중",
+                "createdAt": 1762909112291
+            },
+            {
+                "category": "학교",
+                "service": "스마트드럼",
+                "name": "구덕초등학교",
+                "requester": "조혜주 팀장님",
+                "email": "goduk2@korea.kr",
+                "contact": "051-255-1722",
+                "phone": "051-255-1722",
+                "password": "zxcasd123",
+                "masterPassword": "12345",
+                "requestDate": "2025-11-04",
+                "startDate": "2025-11-04",
+                "endDate": "2027-02-28",
+                "status": "진행중",
+                "createdAt": 1762909117361
+            }
+        ];
+
+        const $ = s => document.querySelector(s);
+        const $$ = s => Array.from(document.querySelectorAll(s));
+
+        const toast = (msg, type = "info") => {
+            const t = $("#toast");
+            if (!t) return;
+            if (t.timeoutId) clearTimeout(t.timeoutId);
+            t.textContent = msg;
+            t.style.background = type === "error" ? "#f44336" : type === "success" ? "#4CAF50" : "#333";
+            t.classList.add("show");
+            t.timeoutId = setTimeout(() => t.classList.remove("show"), 2600);
+        };
+
+        const escH = s => String(s || "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" }[m]));
+        const escA = s => String(s || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+        const urlJoin = (...parts) => parts.map(p => String(p || "").replace(/(^\/+|\/+$)/g, "")).filter(Boolean).join("/");
+
+        const todayStr = () => {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${y}-${m}-${day}`;
+        };
+        const parseDate = s => {
+            if (!s) return null;
+            const [y, m, d] = s.split("-").map(Number);
+            if (!y || !m || !d) return null;
+            return new Date(y, m - 1, d);
+        };
+        const diffInDays = (d1, d2) => {
+            const ms = 24 * 60 * 60 * 1000;
+            return Math.floor((d2.getTime() - d1.getTime()) / ms);
+        };
+        const fmtShortDateStr = s => {
+            if (!s) return "";
+            if (s.length === 10 && s[4] === "-" && s[7] === "-") return s.slice(2); // "2025-11-11" -> "25-11-11"
+            return s;
+        };
+        const nowIso = () => new Date().toISOString();
+        const nextId = () => "SR" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+        let state = {
+            data: { meta: DEFAULT_META, records: [] },
+            filters: {
+                category: "",
+                name: "",
+                dateType: "requestDate",
+                start: "",
+                end: "",
+                status: "",
+                sort: "requestDateDesc" // 정렬 상태 추가
+            },
+            editingId: null,
+            deleteTargetId: null
+        };
+
+        /* ===== 클립보드 복사 ===== */
+        function copyToClipboard(text) {
+            const t = document.createElement("textarea");
+            t.value = text;
+            document.body.appendChild(t);
+            t.select();
+            document.execCommand("copy");
+            document.body.removeChild(t);
+            toast("클립보드에 복사되었습니다.", "success");
+        }
+
+        /* ===== 서버 저장 ===== */
+        async function saveToServer() {
+            const payload = { filename: FILE_NAME, content: state.data };
+
+            const tryJsonPost = async (u, useDataKey) => {
+                const body = useDataKey
+                    ? JSON.stringify({ filename: payload.filename, data: payload.content })
+                    : JSON.stringify(payload);
+                return fetch(urlJoin(ENDPOINTS.basePath, u), {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body,
+                    cache: "no-store"
+                });
+            };
+            const tryFormPost = async (u, useDataKey) => {
+                const fd = new FormData();
+                fd.append("filename", payload.filename);
+                fd.append(useDataKey ? "data" : "content", JSON.stringify(payload.content));
+                return fetch(urlJoin(ENDPOINTS.basePath, u), {
+                    method: "POST",
+                    body: fd,
+                    cache: "no-store"
+                });
+            };
+
+            for (const base of ENDPOINTS.save) {
+                try {
+                    let r = await tryJsonPost(base, false);
+                    if (r.ok) {
+                        const j = await r.json().catch(() => null);
+                        if (!j || j.success) { toast("서버 저장 완료", "success"); return true; }
+                    }
+                    r = await tryJsonPost(base, true);
+                    if (r.ok) {
+                        const j = await r.json().catch(() => null);
+                        if (!j || j.success) { toast("서버 저장 완료(data)", "success"); return true; }
+                    }
+                    r = await tryFormPost(base, false);
+                    if (r.ok) {
+                        const j = await r.json().catch(() => null);
+                        if (!j || j.success) { toast("서버 저장 완료(form)", "success"); return true; }
+                    }
+                    r = await tryFormPost(base, true);
+                    if (r.ok) {
+                        const j = await r.json().catch(() => null);
+                        if (!j || j.success) { toast("서버 저장 완료(form:data)", "success"); return true; }
+                    }
+                } catch (e) { console.warn("save error", base, e); }
+            }
+            toast("❌ 저장 실패 — 경로/권한 확인 필요", "error");
+            return false;
+        }
+
+        /* ===== 서버 불러오기 ===== */
+        async function loadFromServer() {
+            const parseAny = async (res) => {
+                if (!res.ok) return null;
+                const txt = await res.text();
+                try {
+                    const j = JSON.parse(txt);
+                    if (j && typeof j === "object") {
+                        if ("success" in j && j.data !== undefined) return j.data;
+                        return j;
+                    }
+                } catch (_) { }
+                return null;
+            };
+
+            for (const base of ENDPOINTS.load) {
+                try {
+                    let u = urlJoin(ENDPOINTS.basePath, base) + `?filename=${encodeURIComponent(FILE_NAME)}&t=${Date.now()}`;
+                    let r = await fetch(u, { cache: "no-store" });
+                    let data = await parseAny(r);
+                    if (!data) {
+                        u = urlJoin(ENDPOINTS.basePath, base) + `?file=${encodeURIComponent(FILE_NAME)}&t=${Date.now()}`;
+                        r = await fetch(u, { cache: "no-store" });
+                        data = await parseAny(r);
+                    }
+                    if (data) {
+                        hydrateData(data);
+                        renderAll();
+                        toast("불러오기 완료", "success");
+                        return;
+                    }
+                } catch (e) { console.warn("load error", base, e); }
+            }
+
+            try {
+                const url = urlJoin(ENDPOINTS.basePath, ENDPOINTS.fallbackJson) + `?t=${Date.now()}`;
+                const j = await (await fetch(url, { cache: "no-store" })).json();
+                const data = (j?.data?.meta && j?.data?.records) ? j.data : j;
+                if (data) {
+                    hydrateData(data);
+                    renderAll();
+                    toast("불러오기 완료(json)", "success");
+                    return;
+                }
+            } catch (_) { }
+
+            const backup = localStorage.getItem(BACKUP_KEY);
+            if (backup) {
+                try {
+                    hydrateData(JSON.parse(backup));
+                    renderAll();
+                    toast("⚠️ 서버 실패 — localStorage 적용", "info");
+                    return;
+                } catch (_) { }
+            }
+
+            hydrateData({ meta: DEFAULT_META, records: INITIAL_RECORDS() });
+            renderAll();
+            toast("⚠️ 불러오기 실패 — 기본값 시작", "error");
+        }
+
+        /* ===== 초기 레코드 변환 ===== */
+        function INITIAL_RECORDS() {
+            return INITIAL_RECORDS_RAW.map((r, i) => ({
+                id: nextId() + "D" + i,
+                category: r.category || "기타",
+                service: r.service || "",
+                name: r.name || "",
+                requester: r.requester || "",
+                email: r.email || "",
+                contact: r.contact || "",
+                phone: r.phone || "",
+                password: r.password || "",
+                masterPassword: r.masterPassword || "",
+                requestDate: r.requestDate || "",
+                startDate: r.startDate || "",
+                endDate: r.endDate || "",
+                status: r.status || "진행중",
+                createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : nowIso(),
+                updatedAt: r.createdAt ? new Date(r.createdAt).toISOString() : nowIso()
+            }));
+        }
+
+        /* ===== 데이터 합치기 ===== */
+        function hydrateData(incoming) {
+            const metaIn = incoming?.meta || {};
+            const recIn = Array.isArray(incoming?.records) ? incoming.records : INITIAL_RECORDS();
+
+            const categories = Array.from(new Set([
+                ...DEFAULT_META.categories,
+                ...(metaIn.categories || [])
+            ]));
+            const services = Array.from(new Set([
+                ...DEFAULT_META.services,
+                ...(metaIn.services || [])
+            ]));
+            const statuses = Array.from(new Set([
+                ...DEFAULT_META.statuses,
+                ...(metaIn.statuses || [])
+            ]));
+
+            state.data.meta = { categories, services, statuses };
+            state.data.records = recIn.map(r => ({
+                id: r.id || nextId(),
+                category: r.category || "기타",
+                service: r.service || "",
+                name: r.name || "",
+                requester: r.requester || "",
+                email: r.email || "",
+                contact: r.contact || "",
+                phone: r.phone || "",
+                password: r.password || "",
+                masterPassword: r.masterPassword || "",
+                requestDate: r.requestDate || "",
+                startDate: r.startDate || "",
+                endDate: r.endDate || "",
+                status: r.status || "진행중",
+                createdAt: r.createdAt || nowIso(),
+                updatedAt: r.updatedAt || r.createdAt || nowIso()
+            }));
+
+            try { localStorage.setItem(BACKUP_KEY, JSON.stringify(state.data)); } catch (_) { }
+        }
+
+        /* ===== 옵션 렌더링 ===== */
+        function renderOptions() {
+            const { categories, services, statuses } = state.data.meta;
+
+            // 폼
+            $("#fCategory").innerHTML = categories.map(c => `<option value="${escA(c)}">${escH(c)}</option>`).join("");
+            $("#fService").innerHTML = services.map(s => `<option value="${escA(s)}">${escH(s)}</option>`).join("");
+            $("#fStatus").innerHTML = statuses.map(s => `<option value="${escA(s)}">${escH(s)}</option>`).join("");
+
+            // 필터
+            const fc = $("#filterCategory");
+            fc.innerHTML = `<option value="">전체</option>` + categories.map(c => `<option value="${escA(c)}">${escH(c)}</option>`).join("");
+            const fs = $("#filterStatus");
+            fs.innerHTML = `<option value="">전체</option>` + statuses.map(s => `<option value="${escA(s)}">${escH(s)}</option>`).join("");
+        }
+
+        /* ===== 통계 렌더링 ===== */
+        function renderStats() {
+            const list = state.data.records || [];
+            const today = parseDate(todayStr());
+            let totalActive = 0, soon30 = 0, soon3 = 0, todayEnd = 0, ended = 0;
+
+            list.forEach(r => {
+                if (r.status === "진행중") totalActive++;
+                const end = parseDate(r.endDate);
+                if (!end) return;
+                const diff = diffInDays(today, end); // end - today
+                if (diff === 0) todayEnd++;
+                if (diff > 0 && diff <= 3) soon3++;
+                if (diff > 0 && diff <= 30) soon30++;
+                if (end < today) ended++;
+            });
+
+            $("#statTotalActive").textContent = totalActive;
+            $("#stat30").textContent = soon30;
+            $("#stat3").textContent = soon3;
+            $("#statToday").textContent = todayEnd;
+            $("#statEnded").textContent = ended;
+            $("#summaryLabel").textContent = `총 ${list.length}건`;
+        }
+
+        /* ===== 필터된 리스트 ===== */
+        function getFilteredList() {
+            const { category, name, dateType, start, end, status, sort } = state.filters;
+            const keyword = (name || "").toLowerCase();
+            const sd = start ? parseDate(start) : null;
+            const ed = end ? parseDate(end) : null;
+
+            return (state.data.records || []).filter(r => {
+                if (category && r.category !== category) return false;
+                if (status && r.status !== status) return false;
+                if (keyword) {
+                    const hay = (r.name || "").toLowerCase();
+                    if (!hay.includes(keyword)) return false;
+                }
+                const targetDate = r[dateType] || "";
+                if (sd || ed) {
+                    const td = parseDate(targetDate);
+                    if (!td) return false;
+                    if (sd && td < sd) return false;
+                    if (ed && td > ed) return false;
+                }
+                return true;
+            }).sort((a, b) => {
+                // 1. 종료 상태는 무조건 하단으로 보냄
+                const aEnded = a.status === "종료";
+                const bEnded = b.status === "종료";
+                if (aEnded && !bEnded) return 1;
+                if (!aEnded && bEnded) return -1;
+
+                // 2. 사용자 선택 정렬 기준 적용
+                // sort 값: requestDateDesc(기본), requestDateAsc, endDateAsc, endDateDesc
+                let key = "requestDate";
+                let order = -1; // 내림차순(최신이 위로/큰값이 위로)
+
+                if (sort === "requestDateAsc") { key = "requestDate"; order = 1; }
+                else if (sort === "endDateAsc") { key = "endDate"; order = 1; }
+                else if (sort === "endDateDesc") { key = "endDate"; order = -1; }
+
+                const valA = a[key] || "";
+                const valB = b[key] || "";
+
+                if (valA < valB) return -1 * order;
+                if (valA > valB) return 1 * order;
+
+                // 값이 같으면 생성일 역순(최신 등록순)
+                const ca = a.createdAt || "";
+                const cb = b.createdAt || "";
+                return cb.localeCompare(ca);
+            });
+        }
+
+        /* ===== 테이블 렌더링 ===== */
+        function renderTable() {
+            const tbody = $("#tbody");
+            const rows = getFilteredList();
+            if (!rows.length) {
+                tbody.innerHTML = `
+        <tr>
+          <td colspan="14" style="text-align:center;padding:18px 4px;" class="muted">
+            해당 조건에 맞는 요청이 없습니다.
+          </td>
+        </tr>`;
+                return;
+            }
+            const statuses = state.data.meta.statuses || [];
+            tbody.innerHTML = rows.map(r => {
+                const options = statuses.map(s => `<option value="${escA(s)}"${s === r.status ? " selected" : ""}>${escH(s)}</option>`).join("");
+                return `
+        <tr data-id="${escA(r.id)}">
+          <td>${escH(r.category)}</td>
+          <td>${escH(r.service)}</td>
+          <td>${escH(r.name)}</td>
+          <td>${escH(r.requester)}</td>
+          <td>${escH(r.email)}</td>
+          <td>${escH(r.contact)}</td>
+          <td>${escH(r.phone)}</td>
+          <td>${escH(r.password)}</td>
+          <td>${escH(r.masterPassword)}</td>
+          <td>${escH(fmtShortDateStr(r.requestDate || ""))}</td>
+          <td>${escH(fmtShortDateStr(r.startDate || ""))}</td>
+          <td>${escH(fmtShortDateStr(r.endDate || ""))}</td>
+          <td>
+            <select class="status-select" data-role="status">
+              ${options}
+            </select>
+          </td>
+          <td class="cell-actions">
+            <a data-role="copy" class="copy">복사</a>
+            <a data-role="edit">수정</a>
+            <a data-role="delete" class="delete">삭제</a>
+          </td>
+        </tr>
+      `;
+            }).join("");
+        }
+
+        /* ===== 전체 렌더 ===== */
+        function renderAll() {
+            renderOptions();
+            renderStats();
+            renderTable();
+            try { localStorage.setItem(BACKUP_KEY, JSON.stringify(state.data)); } catch (_) { }
+        }
+
+        /* ===== 필터 UI 처리 ===== */
+        function applyFilterFromUI() {
+            state.filters.category = $("#filterCategory").value || "";
+            state.filters.name = $("#filterName").value || "";
+            state.filters.dateType = $("#filterDateType").value || "requestDate";
+            state.filters.start = $("#filterStart").value || "";
+            state.filters.end = $("#filterEnd").value || "";
+            state.filters.status = $("#filterStatus").value || "";
+            state.filters.sort = $("#filterSort").value || "requestDateDesc"; // 정렬 값 읽기
+            renderTable();
+            toast("필터 및 정렬이 적용되었습니다.");
+        }
+        function resetFilterUI() {
+            $("#filterCategory").value = "";
+            $("#filterName").value = "";
+            $("#filterDateType").value = "requestDate";
+            $("#filterStart").value = "";
+            $("#filterEnd").value = "";
+            $("#filterStatus").value = "";
+            $("#filterSort").value = "requestDateDesc"; // 정렬 UI 초기화
+            state.filters = {
+                category: "", name: "", dateType: "requestDate",
+                start: "", end: "", status: "", sort: "requestDateDesc"
+            };
+            renderAll();
+            toast("필터를 초기화했습니다.");
+        }
+
+        /* ===== 모달 관련 ===== */
+        function openEntryModal() {
+            $("#entryModal").classList.add("show");
+        }
+        function closeEntryModal() {
+            $("#entryModal").classList.remove("show");
+        }
+        function openDeleteModal(id) {
+            state.deleteTargetId = id;
+            $("#deleteModal").classList.add("show");
+        }
+        function closeDeleteModal() {
+            state.deleteTargetId = null;
+            $("#deleteModal").classList.remove("show");
+        }
+
+        function clearEntryForm() {
+            $("#fCategory").selectedIndex = 0;
+            $("#fService").selectedIndex = 0;
+            $("#fName").value = "";
+            $("#fRequesterSelect").value = "";
+            $("#fRequesterCustom").value = "";
+            $("#fRequesterCustom").style.display = "none";
+            $("#fEmail").value = "";
+            $("#fContact").value = "";
+            $("#fPhone").value = "";
+            $("#fPassword").value = "";
+            $("#fMasterPassword").value = "";
+            $("#fRequestDate").value = todayStr();
+            $("#fStartDate").value = "";
+            $("#fEndDate").value = "";
+            $("#fStatus").value = "진행중";
+            state.editingId = null;
+            $("#entryModeLabel").textContent = "신규 등록 모드";
+            $("#btnDeleteEntry").style.display = "none";
+        }
+
+        function fillEntryForm(id) {
+            const rec = state.data.records.find(r => r.id === id);
+            if (!rec) return;
+            state.editingId = id;
+            $("#fCategory").value = rec.category;
+            $("#fService").value = rec.service;
+            $("#fName").value = rec.name;
+
+            const sel = $("#fRequesterSelect");
+            const custom = $("#fRequesterCustom");
+            if (REQUESTERS.includes(rec.requester)) {
+                sel.value = rec.requester;
+                custom.style.display = "none";
+                custom.value = "";
+            } else if (rec.requester) {
+                sel.value = "__custom__";
+                custom.style.display = "block";
+                custom.value = rec.requester;
+            } else {
+                sel.value = "";
+                custom.style.display = "none";
+                custom.value = "";
+            }
+
+            $("#fEmail").value = rec.email;
+            $("#fContact").value = rec.contact;
+            $("#fPhone").value = rec.phone;
+            $("#fPassword").value = rec.password;
+            $("#fMasterPassword").value = rec.masterPassword;
+            $("#fRequestDate").value = rec.requestDate || "";
+            $("#fStartDate").value = rec.startDate || "";
+            $("#fEndDate").value = rec.endDate || "";
+            $("#fStatus").value = rec.status;
+            $("#entryModeLabel").textContent = "수정 모드";
+            $("#btnDeleteEntry").style.display = "inline-flex";
+        }
+
+        function collectEntryForm() {
+            const category = $("#fCategory").value;
+            const service = $("#fService").value;
+            const name = $("#fName").value.trim();
+
+            const sel = $("#fRequesterSelect");
+            const custom = $("#fRequesterCustom");
+            let requester = "";
+            if (sel.value === "__custom__") {
+                requester = custom.value.trim();
+            } else {
+                requester = sel.value.trim();
+            }
+
+            const email = $("#fEmail").value.trim();
+            const contact = $("#fContact").value.trim();
+            const phone = $("#fPhone").value.trim();
+            const password = $("#fPassword").value.trim();
+            const masterPassword = $("#fMasterPassword").value.trim();
+            const requestDate = $("#fRequestDate").value;
+            const startDate = $("#fStartDate").value;
+            const endDate = $("#fEndDate").value;
+            const status = $("#fStatus").value;
+
+            if (!name) {
+                toast("기관명을 입력해 주세요.", "error");
+                $("#fName").focus();
+                return null;
+            }
+            if (!requestDate) {
+                toast("요청날짜를 입력해 주세요.", "error");
+                $("#fRequestDate").focus();
+                return null;
+            }
+            return {
+                category, service, name, requester, email, contact, phone,
+                password, masterPassword, requestDate, startDate, endDate, status
+            };
+        }
+
+        function saveEntry() {
+            const data = collectEntryForm();
+            if (!data) return;
+            const now = nowIso();
+            if (state.editingId) {
+                const rec = state.data.records.find(r => r.id === state.editingId);
+                if (!rec) { toast("수정 대상 요청을 찾을 수 없습니다.", "error"); return; }
+                Object.assign(rec, data, { updatedAt: now });
+                toast("수정되었습니다.", "success");
+            } else {
+                state.data.records.push({
+                    id: nextId(),
+                    ...data,
+                    createdAt: now,
+                    updatedAt: now
+                });
+                toast("등록되었습니다.", "success");
+            }
+            try { localStorage.setItem(BACKUP_KEY, JSON.stringify(state.data)); } catch (_) { }
+            renderAll();
+            saveToServer();
+            closeEntryModal();
+        }
+
+        function deleteCurrentEntry() {
+            if (!state.editingId) return;
+            openDeleteModal(state.editingId);
+        }
+
+        function performDelete() {
+            const id = state.deleteTargetId;
+            if (!id) { closeDeleteModal(); return; }
+            const idx = state.data.records.findIndex(r => r.id === id);
+            if (idx > -1) state.data.records.splice(idx, 1);
+            toast("삭제되었습니다.", "success");
+            try { localStorage.setItem(BACKUP_KEY, JSON.stringify(state.data)); } catch (_) { }
+            renderAll();
+            saveToServer();
+            if (state.editingId === id) {
+                clearEntryForm();
+                closeEntryModal();
+            }
+            closeDeleteModal();
+        }
+
+        /* ===== 초기화 ===== */
+        document.addEventListener("DOMContentLoaded", () => {
+            hydrateData({ meta: DEFAULT_META, records: INITIAL_RECORDS() });
+            renderAll();
+
+            // 요청자 드롭다운 직접입력 토글
+            const rqSel = $("#fRequesterSelect");
+            const rqCustom = $("#fRequesterCustom");
+            rqSel.addEventListener("change", () => {
+                if (rqSel.value === "__custom__") {
+                    rqCustom.style.display = "block";
+                    rqCustom.focus();
+                } else {
+                    rqCustom.style.display = "none";
+                    rqCustom.value = "";
+                }
+            });
+
+            // 필터 토글
+            $("#btnToggleFilter").addEventListener("click", () => {
+                const body = $("#filtersBody");
+                const hidden = body.style.display === "none";
+                body.style.display = hidden ? "flex" : "none";
+                $("#btnToggleFilter").textContent = hidden ? "접기" : "펼치기";
+            });
+
+            // 필터 이벤트
+            $("#btnSearch").addEventListener("click", applyFilterFromUI);
+            $("#btnResetFilter").addEventListener("click", resetFilterUI);
+
+            // 저장/불러오기
+            $("#btnSave").addEventListener("click", saveToServer);
+            $("#btnLoad").addEventListener("click", loadFromServer);
+
+            // 신규 작성 (검색 옆 버튼)
+            $("#btnWriteRequest").addEventListener("click", () => {
+                clearEntryForm();
+                openEntryModal();
+            });
+
+            // FAB & 모달
+            $("#btnFab").addEventListener("click", () => {
+                clearEntryForm();
+                openEntryModal();
+            });
+            $("#entryClose").addEventListener("click", closeEntryModal);
+            $("#entryModal").addEventListener("click", e => {
+                if (e.target === $("#entryModal")) closeEntryModal();
+            });
+            $("#btnClearForm").addEventListener("click", () => {
+                clearEntryForm();
+                toast("입력 내용을 초기화했습니다.");
+            });
+            $("#btnSaveEntry").addEventListener("click", saveEntry);
+            $("#btnDeleteEntry").addEventListener("click", deleteCurrentEntry);
+
+            // 삭제 모달
+            $("#btnDeleteCancel").addEventListener("click", closeDeleteModal);
+            $("#deleteClose").addEventListener("click", closeDeleteModal);
+            $("#btnDeleteOk").addEventListener("click", performDelete);
+            $("#deleteModal").addEventListener("click", e => {
+                if (e.target === $("#deleteModal")) closeDeleteModal();
+            });
+
+            // 테이블 상태/수정/삭제 이벤트 위임
+            $("#tbody").addEventListener("change", e => {
+                const sel = e.target.closest("select[data-role='status']");
+                if (!sel) return;
+                const tr = sel.closest("tr[data-id]");
+                if (!tr) return;
+                const id = tr.getAttribute("data-id");
+                const rec = state.data.records.find(r => r.id === id);
+                if (!rec) return;
+                rec.status = sel.value;
+                rec.updatedAt = nowIso();
+                renderStats();
+                try { localStorage.setItem(BACKUP_KEY, JSON.stringify(state.data)); } catch (_) { }
+                saveToServer();
+            });
+
+            $("#tbody").addEventListener("click", e => {
+                const role = e.target.getAttribute("data-role");
+                if (!role) return;
+                const tr = e.target.closest("tr[data-id]");
+                if (!tr) return;
+                const id = tr.getAttribute("data-id");
+                
+                if (role === "edit") {
+                    fillEntryForm(id);
+                    openEntryModal();
+                } else if (role === "delete") {
+                    openDeleteModal(id);
+                } else if (role === "copy") {
+                    // 복사 로직 변경: 클립보드 복사 -> 입력창에 내용 채워 넣고 열기 (신규 등록)
+                    const rec = state.data.records.find(r => r.id === id);
+                    if (rec) {
+                        // 1. 값 채우기 (fillEntryForm과 유사하지만 editingId 설정 안함)
+                        $("#fCategory").value = rec.category;
+                        $("#fService").value = rec.service;
+                        $("#fName").value = rec.name;
+
+                        // 요청자 처리
+                        const sel = $("#fRequesterSelect");
+                        const custom = $("#fRequesterCustom");
+                        if (REQUESTERS.includes(rec.requester)) {
+                            sel.value = rec.requester;
+                            custom.style.display = "none";
+                            custom.value = "";
+                        } else if (rec.requester) {
+                            sel.value = "__custom__";
+                            custom.style.display = "block";
+                            custom.value = rec.requester;
+                        } else {
+                            sel.value = "";
+                            custom.style.display = "none";
+                            custom.value = "";
+                        }
+
+                        $("#fEmail").value = rec.email;
+                        $("#fContact").value = rec.contact;
+                        $("#fPhone").value = rec.phone;
+                        $("#fPassword").value = rec.password;
+                        $("#fMasterPassword").value = rec.masterPassword;
+                        $("#fRequestDate").value = rec.requestDate || "";
+                        $("#fStartDate").value = rec.startDate || "";
+                        $("#fEndDate").value = rec.endDate || "";
+                        $("#fStatus").value = rec.status;
+
+                        // 2. 신규 등록 모드로 설정 (editingId = null)
+                        state.editingId = null; 
+                        $("#entryModeLabel").textContent = "신규 등록 (복사)";
+                        $("#btnDeleteEntry").style.display = "none";
+
+                        // 3. 모달 열기
+                        openEntryModal();
+                        toast("선택한 항목을 복사하여 입력창을 열었습니다.");
+                    }
+                }
+            });
+
+            // 최초 서버 데이터 시도 로드
+            loadFromServer();
+        });
+    </script>
+</body>
+
+</html>

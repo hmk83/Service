@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Drum Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .font-roboto {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* 테마별 배경색 변수 - JS로 제어 */
+        .theme-infant {
+            background-color: #FEE500;
+            color: #191919;
+        }
+
+        .theme-elementary {
+            background-color: #0064FF;
+            color: white;
+        }
+
+        .theme-senior {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .video-aspect {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 비율 */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .video-aspect iframe,
+        .video-aspect img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 재생 버튼 오버레이 */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .video-aspect:hover .play-overlay {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .play-icon {
+            width: 60px;
+            height: 40px;
+            background: rgba(255, 0, 0, 0.9);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .video-aspect:hover .play-icon {
+            transform: scale(1.1);
+            background: red;
+        }
+
+        /* 탭 활성화 스타일 */
+        .tab-active {
+            font-weight: 800;
+            opacity: 1;
+            border-bottom: 4px solid currentColor;
+            border-radius: 2px;
+        }
+
+        .tab-inactive {
+            opacity: 0.5;
+            font-weight: 400;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-inactive:hover {
+            opacity: 0.8;
+        }
+
+        /* 로딩 스피너 */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 드롭다운 옵션 간격 조정 */
+        select option {
+            padding: 8px 4px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen transition-colors duration-300 theme-infant flex flex-col" id="mainBody">
+
+    <header class="w-full mx-auto px-8 sm:px-12 pt-0 pb-0">
+
+        <div class="flex justify-end items-end mb-2 text-xs sm:text-sm pb-1">
+            <div class="flex gap-4 pb-1">
+                <a href="https://smartdrum.co.kr/" target="_blank"
+                    class="hover:underline flex items-center gap-1 font-roboto">
+                    스마트드럼 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+                <a href="https://snsmartdrum.co.kr/" target="_blank"
+                    class="hover:underline flex items-center gap-1 font-roboto">
+                    시니어스마트드럼 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-end gap-4 mt-2">
+
+            <div class="flex items-center gap-3 self-start md:self-end pb-4">
+                <button id="adminTriggerBtn" class="text-3xl transition-transform active:scale-95 focus:outline-none">
+                    <i class="fa-solid fa-drum text-red-500"></i>
+                </button>
+                <div class="flex flex-col items-start">
+                    <h1 class="text-2xl font-roboto font-bold tracking-wide leading-none">Smart Drum</h1>
+                    <div class="text-[10px] font-roboto tracking-[0.1em] uppercase mt-0.5 opacity-80">
+                        Teacher Video Support Center
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-6 text-sm sm:text-base self-end w-full md:w-auto justify-end pb-0">
+                <button onclick="switchTab('infant')" id="tab-infant"
+                    class="tab-active flex items-center gap-1.5 pb-3 transition-all">
+                    <span>👶</span> 유아드럼
+                </button>
+                <button onclick="switchTab('elementary')" id="tab-elementary"
+                    class="tab-inactive flex items-center gap-1.5 pb-3 transition-all">
+                    <span>🏫</span> 초등드럼
+                </button>
+                <button onclick="switchTab('senior')" id="tab-senior"
+                    class="tab-inactive flex items-center gap-1.5 pb-3 transition-all">
+                    <span>👴</span> 시니어드럼
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="w-full mx-auto px-8 sm:px-12 mt-6 mb-8">
+        <div id="controls-standard" class="flex flex-col sm:flex-row justify-end gap-3">
+            <select id="categorySelect" onchange="filterVideos()"
+                class="text-black p-2 rounded shadow w-full sm:w-40 outline-none h-12">
+                <option value="all">전체 카테고리</option>
+            </select>
+            <div class="relative w-full sm:w-60 h-12">
+                <input type="text" id="searchInputStandard" onkeyup="filterVideos()" placeholder="제목 검색..."
+                    class="w-full h-full p-2 pl-3 pr-10 rounded text-black outline-none shadow">
+                <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-gray-400"></i>
+            </div>
+        </div>
+
+        <div id="controls-senior" class="hidden flex-col xl:flex-row justify-end items-end gap-3">
+            <div class="flex flex-wrap gap-2 justify-end">
+                <button onclick="setSeniorFilter('all')"
+                    class="senior-filter-btn bg-white/20 hover:bg-white/40 px-3 py-1.5 rounded-full text-sm transition h-8"
+                    data-filter="all">전체보기</button>
+                <button onclick="setSeniorFilter('trot')"
+                    class="senior-filter-btn bg-white/10 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm transition h-8"
+                    data-filter="trot">트로트·가요</button>
+                <button onclick="setSeniorFilter('folk')"
+                    class="senior-filter-btn bg-white/10 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm transition h-8"
+                    data-filter="folk">가곡·민요</button>
+                <button onclick="setSeniorFilter('classic')"
+                    class="senior-filter-btn bg-white/10 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm transition h-8"
+                    data-filter="classic">클래식</button>
+                <button onclick="setSeniorFilter('other')"
+                    class="senior-filter-btn bg-white/10 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm transition h-8"
+                    data-filter="other">기타음악</button>
+                <button onclick="setSeniorFilter('warmup')"
+                    class="senior-filter-btn bg-white/10 hover:bg-white/30 px-3 py-1.5 rounded-full text-sm transition h-8"
+                    data-filter="warmup">준비운동</button>
+            </div>
+
+            <div class="relative w-full sm:w-60 h-12 flex-shrink-0">
+                <input type="text" id="searchInputSenior" onkeyup="filterVideos()" placeholder="제목 검색..."
+                    class="w-full h-full p-2 pl-3 pr-10 rounded text-black outline-none shadow">
+                <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-gray-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <main class="w-full mx-auto px-8 sm:px-12 pb-20 flex-grow">
+        <div id="loadingIndicator" class="hidden justify-center py-10">
+            <div class="loader"></div>
+        </div>
+
+        <div id="demoModeAlert"
+            class="hidden max-w-2xl mx-auto mb-6 bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 rounded shadow-md"
+            role="alert">
+            <p class="font-bold"><i class="fa-solid fa-triangle-exclamation"></i> 주의 (Preview Mode)</p>
+            <p class="text-sm">현재 PHP 서버를 찾을 수 없어 <strong>브라우저 임시 저장소(Local Storage)</strong>를 사용 중입니다. 실제 서버에 업로드하면
+                정상적으로 <code>db.json</code> 파일에 저장됩니다.</p>
+        </div>
+
+        <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+
+        <div id="noDataMessage" class="hidden text-center py-20 text-xl opacity-70">
+            <i class="fa-solid fa-video-slash text-4xl mb-4 block"></i>
+            등록된 영상이 없습니다.
+        </div>
+    </main>
+
+    <footer class="w-full text-center py-6 text-xs opacity-60 border-t border-white/10 mt-auto">
+        copyrightⓒ2008 JUEUNEDU. All rights reserved.
+    </footer>
+
+    <div id="toast"
+        class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+        메시지 내용
+    </div>
+
+    <div id="passwordModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+        <div class="bg-white text-black p-6 rounded-lg shadow-xl w-80">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-lock text-red-500"></i> 관리자 접근
+            </h3>
+            <p class="text-sm text-gray-600 mb-2">관리자 비밀번호를 입력하세요.</p>
+            <input type="password" id="adminPasswordInput"
+                class="w-full border p-2 rounded mb-4 focus:outline-none focus:border-blue-500" placeholder="Password">
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('passwordModal')"
+                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">취소</button>
+                <button onclick="checkAdminPassword()"
+                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="fullscreenVideoModal" class="fixed inset-0 bg-black z-[90] hidden flex-col items-center justify-center">
+        <button onclick="closeFullscreenVideo()"
+            class="absolute top-4 right-4 text-white/80 hover:text-white text-4xl z-[100] transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="w-full h-full p-4 md:p-10 flex items-center justify-center">
+            <div class="w-full max-w-7xl aspect-video bg-black shadow-2xl relative" id="fullscreenVideoContainer">
+            </div>
+        </div>
+    </div>
+
+    <div id="welcomeModal"
+        class="fixed inset-0 w-full h-full bg-black/80 hidden items-start justify-center pt-32 z-[100]">
+        <div
+            class="bg-white p-0 rounded-lg shadow-2xl max-w-md w-full mx-4 overflow-hidden flex flex-col relative max-h-[90vh]">
+            <div class="relative w-full flex justify-center bg-gray-100">
+                <img src="https://senior100.co.kr/wp-content/uploads/2025/11/freepik__retouch__78404.jpeg" alt="Welcome"
+                    class="max-w-full max-h-[60vh] aspect-square object-cover">
+            </div>
+            <div class="p-4 bg-white flex justify-center">
+                <button onclick="closeWelcomeModal()"
+                    class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors text-lg">
+                    입장하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[60]">
+        <div class="bg-white text-black p-6 rounded-lg shadow-xl w-full max-w-lg mx-4">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-blue-500"></i> 영상 정보 수정
+            </h3>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-bold mb-1">구분</label>
+                    <select id="editSection" class="w-full border p-2 rounded bg-gray-5">
+                        <option value="infant">👶 유아드럼</option>
+                        <option value="elementary">🏫 초등드럼</option>
+                        <option value="senior">👴 시니어드럼</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">카테고리</label>
+                    <input type="text" id="editCategory" class="w-full border p-2 rounded" placeholder="카테고리">
+                    <select id="editSeniorCategory" class="w-full border p-2 rounded hidden">
+                        <option value="trot">트로트·가요</option>
+                        <option value="folk">가곡·민요</option>
+                        <option value="classic">클래식</option>
+                        <option value="other">기타음악</option>
+                        <option value="warmup">준비운동</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-1">제목</label>
+                <input type="text" id="editTitle" class="w-full border p-2 rounded" placeholder="영상 제목">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-1">유튜브/비메오 링크</label>
+                <input type="text" id="editUrl" class="w-full border p-2 rounded" placeholder="YouTube or Vimeo URL">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-bold mb-1">만료일</label>
+                <input type="date" id="editExpiry" class="w-full border p-2 rounded">
+            </div>
+
+            <input type="hidden" id="editIndex">
+
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('editModal')"
+                    class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">취소</button>
+                <button onclick="saveEditVideo()"
+                    class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold">수정 저장</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="fixed inset-0 bg-gray-100 text-black hidden z-50 overflow-y-auto">
+        <div class="max-w-6xl mx-auto p-4 sm:p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fa-solid fa-gear"></i> 영상 관리자 모드</h2>
+                <button onclick="closeAdminPanel()"
+                    class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">나가기</button>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-8">
+                <h3 class="text-lg font-bold mb-4 border-b pb-2">신규 영상 등록</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-1">구분</label>
+                        <select id="newSection" class="w-full border p-2 rounded">
+                            <option value="infant">👶 유아드럼</option>
+                            <option value="elementary">🏫 초등드럼</option>
+                            <option value="senior">👴 시니어드럼</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">카테고리</label>
+                        <div id="categoryInputWrapper">
+                            <input type="text" id="newCategory" class="w-full border p-2 rounded"
+                                placeholder="예: 동요, 기초">
+                        </div>
+                        <select id="seniorCategorySelect" class="w-full border p-2 rounded hidden">
+                            <option value="trot">트로트·가요</option>
+                            <option value="folk">가곡·민요</option>
+                            <option value="classic">클래식</option>
+                            <option value="other">기타음악</option>
+                            <option value="warmup">준비운동</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-1">만료일</label>
+                        <input type="date" id="newExpiry" class="w-full border p-2 rounded" value="2100-12-31">
+                    </div>
+                </div>
+
+                <div class="mb-2 text-sm text-gray-500">
+                    <i class="fa-solid fa-circle-info"></i> 유튜브 또는 비메오(Vimeo) 링크를 입력하세요. 자동으로 썸네일과 플레이어가 생성됩니다.
+                </div>
+
+                <div id="newVideoInputs" class="space-y-3 mb-4">
+                    <div class="flex flex-col sm:flex-row gap-2 video-input-row">
+                        <input type="text" class="flex-1 border p-2 rounded title-input" placeholder="영상 제목">
+                        <input type="text" class="flex-1 border p-2 rounded url-input"
+                            placeholder="유튜브 또는 비메오 링크 (URL)">
+                        <button onclick="removeInputRow(this)"
+                            class="bg-red-100 text-red-500 p-2 rounded hover:bg-red-200" title="삭제"><i
+                                class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="addInputRow()"
+                        class="px-4 py-2 bg-blue-50 text-blue-600 rounded border border-blue-200 hover:bg-blue-100">
+                        <i class="fa-solid fa-plus"></i> 입력칸 추가
+                    </button>
+                    <button onclick="saveNewVideos()"
+                        class="flex-1 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold shadow">
+                        선택된 조건으로 영상 일괄 등록
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">등록된 영상 목록</h3>
+                    <div class="text-sm text-gray-500" id="totalCount">총 0개</div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left border-collapse">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="p-3 w-20">순서</th>
+                                <th class="p-3 w-24">구분</th>
+                                <th class="p-3 w-24">카테고리</th>
+                                <th class="p-3">제목 / 링크</th>
+                                <th class="p-3 w-24">만료일</th>
+                                <th class="p-3 text-right w-40">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminVideoList" class="divide-y">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 설정 및 상태 ---
+        const DB_FILENAME = 'db.json';
+        const LOAD_API = './load.php?filename=' + DB_FILENAME;
+        const SAVE_API = './save.php';
+
+        // 데이터 상태
+        let allVideos = [];
+        let currentTab = 'infant';
+        let seniorFilter = 'all';
+        let isAdmin = false;
+        let isDemoMode = false;
+
+        // 기본 데이터 (초기화 시 사용)
+        const DEFAULT_VIDEOS = [
+            { id: 'infant-4', section: 'infant', category: '04주차', title: "네모의 꿈", url: 'https://youtu.be/getynu2wQbM?si=ZbcZ_1uR7FHvCy2p', expiry: '2100-12-31' },
+            { id: 'infant-5', section: 'infant', category: '05주차', title: "멋진 밴드의 모습을 볼까요?", url: 'https://www.youtube.com/watch?v=Fya7eS_kNTc&t=6s', expiry: '2100-12-31' },
+            { id: 'infant-6', section: 'infant', category: '06주차', title: "놀람교향곡", url: 'https://youtu.be/l2bfx2vpWMo', expiry: '2100-12-31' },
+            { id: 'infant-7', section: 'infant', category: '07주차', title: "우리는 꿈꾸는 새싹 들어보기", url: 'https://youtu.be/gDsX-SWsC3I', expiry: '2100-12-31' },
+            { id: 'infant-8', section: 'infant', category: '08주차', title: "놀자 노래를 들어볼까요?", url: 'https://youtu.be/nv_8uK46UC0', expiry: '2100-12-31' },
+            { id: 'infant-13', section: 'infant', category: '13주차', title: "fill-in(필인) 영상 시청", url: 'https://youtu.be/vgjL-FnJ2OI', expiry: '2100-12-31' },
+            { id: 'infant-14', section: 'infant', category: '14주차', title: "호두까기인형", url: 'https://youtu.be/dr9xhEPIoWc', expiry: '2100-12-31' },
+            { id: 'infant-15', section: 'infant', category: '15주차', title: "펑크란 무엇일까요?", url: 'https://youtu.be/9TYbw6FWMPs', expiry: '2100-12-31' },
+            { id: 'infant-16', section: 'infant', category: '16주차', title: "횡단보도", url: 'https://youtu.be/L8rnm53sPGQ?si=m0zSX_r-j0Z5ly1z', expiry: '2100-12-31' },
+            { id: 'infant-18', section: 'infant', category: '18주차', title: "터키행진곡", url: 'https://youtu.be/5KSpva4vZtg', expiry: '2100-12-31' },
+            { id: 'infant-21', section: 'infant', category: '21주차', title: "돌과물", url: 'https://youtu.be/J7OqW49ODFE', expiry: '2100-12-31' },
+            { id: 'infant-22', section: 'infant', category: '22주차', title: "캐논 변주곡", url: 'https://youtu.be/SjYecEQFL0U', expiry: '2100-12-31' },
+            { id: 'infant-26-1', section: 'infant', category: '26주차', title: "피터와 늑대의 줄거리", url: 'https://youtu.be/HYZt8KMGc9k', expiry: '2100-12-31' },
+            { id: 'infant-26-2', section: 'infant', category: '26주차', title: "피터와 늑대의 악기", url: 'https://youtu.be/WlB9kgk7My4?si=WdcuezkVHqksG5CH', expiry: '2100-12-31' },
+            { id: 'infant-28', section: 'infant', category: '28주차', title: "두 친구와 곰", url: 'https://youtu.be/TBkWRzqmKwA', expiry: '2100-12-31' },
+            { id: 'infant-29', section: 'infant', category: '29주차', title: "열 꼬마 인디언", url: 'https://youtu.be/VS_yGMxJnO8', expiry: '2100-12-31' },
+            { id: 'infant-30', section: 'infant', category: '30주차', title: "카르멘 서곡", url: 'https://youtu.be/ddYhQoFxs4Y', expiry: '2100-12-31' },
+            { id: 'infant-32', section: 'infant', category: '32주차', title: "ONLY ONE", url: 'https://youtu.be/0Ul7cmFCUQQ?si=ohQrb1JmjDqDz7Q7', expiry: '2100-12-31' },
+            { id: 'infant-34', section: 'infant', category: '34주차', title: "신세계로부터", url: 'https://youtu.be/mJjk7vbVaOY', expiry: '2100-12-31' },
+            { id: 'infant-38', section: 'infant', category: '38주차', title: "베토벤 바이러스", url: 'https://smartdrum.co.kr/drumtheory', expiry: '2100-12-31' },
+            { id: 'infant-40', section: 'infant', category: '40주차', title: "바나나 차차", url: 'https://youtu.be/lHTqUBIr5Gk', expiry: '2100-12-31' },
+
+            // Elementary
+            { id: 'elem-4', section: 'elementary', category: '04주차', title: "네모의꿈", url: 'https://youtu.be/getynu2wQbM', expiry: '2100-12-31' },
+            { id: 'elem-6', section: 'elementary', category: '06주차', title: "놀람교향곡", url: 'https://youtu.be/l2bfx2vpWMo', expiry: '2100-12-31' },
+            { id: 'elem-7', section: 'elementary', category: '07주차', title: "친구가 되는 멋진 방법", url: 'https://youtu.be/M_Wrj3m38_U', expiry: '2100-12-31' },
+            { id: 'elem-8', section: 'elementary', category: '08주차', title: "두 친구와 곰을 들어볼까요?", url: 'https://youtu.be/3X4nTkqQHEc', expiry: '2100-12-31' },
+            { id: 'elem-11', section: 'elementary', category: '11주차', title: "광고에서 만나는 하이든 트럼펫 협주곡", url: 'https://youtu.be/Gbrji9Rol1Q', expiry: '2100-12-31' },
+            { id: 'elem-12', section: 'elementary', category: '12주차', title: "fill-in(필인) 영상 시청", url: 'https://youtu.be/vgjL-FnJ2OI', expiry: '2100-12-31' },
+            { id: 'elem-15', section: 'elementary', category: '15주차', title: "호두까기인형", url: 'https://youtu.be/dr9xhEPIoWc', expiry: '2100-12-31' },
+            { id: 'elem-19', section: 'elementary', category: '19주차', title: "터키행진곡", url: 'https://youtu.be/5KSpva4vZtg', expiry: '2100-12-31' },
+            { id: 'elem-22', section: 'elementary', category: '22주차', title: "하모니카 소리 들어보기", url: 'https://youtu.be/qUJ7SQND9jc', expiry: '2100-12-31' },
+            { id: 'elem-23', section: 'elementary', category: '23주차', title: "카르멘 서곡 들어보기", url: 'https://youtu.be/ddYhQoFxs4Y', expiry: '2100-12-31' },
+            { id: 'elem-26', section: 'elementary', category: '26주차', title: "아름다운 나라", url: 'https://youtu.be/2U8STbV8XK8', expiry: '2100-12-31' },
+            { id: 'elem-27', section: 'elementary', category: '27주차', title: "신세계로부터", url: 'https://youtu.be/mJjk7vbVaOY', expiry: '2100-12-31' },
+            { id: 'elem-29', section: 'elementary', category: '29주차', title: "셔플", url: 'https://youtu.be/1YF5dedOdUA', expiry: '2100-12-31' },
+            { id: 'elem-30', section: 'elementary', category: '30주차', title: "전통 아리랑", url: 'https://youtu.be/hKFxLkcqEpI', expiry: '2100-12-31' },
+            { id: 'elem-31', section: 'elementary', category: '31주차', title: "베토벤 월광소나타 3악장", url: 'https://youtu.be/CtjzTYnNDGM', expiry: '2100-12-31' },
+            { id: 'elem-34', section: 'elementary', category: '34주차', title: "가을바람", url: 'https://youtu.be/Tlr93ehTf3M', expiry: '2100-12-31' },
+            { id: 'elem-35-1', section: 'elementary', category: '35주차', title: "아이네 클라이네 나흐트 뮤직", url: 'https://youtu.be/czBSj6_6rkE', expiry: '2100-12-31' },
+            { id: 'elem-35-2', section: 'elementary', category: '35주차', title: "디스코 리듬", url: 'https://youtu.be/NA05uC-T4eQ', expiry: '2100-12-31' },
+            { id: 'elem-37', section: 'elementary', category: '37주차', title: "골골송", url: 'https://youtu.be/tUD-gFGttPk', expiry: '2100-12-31' },
+            { id: 'elem-38', section: 'elementary', category: '38주차', title: "가을 길", url: 'https://youtu.be/H_A6ywlTOck', expiry: '2100-12-31' },
+            { id: 'elem-39-1', section: 'elementary', category: '39주차', title: "BTS 아리랑", url: 'https://youtu.be/vwc5zTayVJw', expiry: '2100-12-31' },
+            { id: 'elem-39-2', section: 'elementary', category: '39주차', title: "축혼행진곡", url: 'https://youtu.be/2vQTgbw0AlM', expiry: '2100-12-31' },
+
+            // Senior - Trot
+            { id: 'senior-trot-1', section: 'senior', category: 'trot', title: "찐이야", url: 'https://youtu.be/dNUncvc6mcM?si=GFkluGvApERX7fLD', expiry: '2100-12-31' },
+            { id: 'senior-trot-2', section: 'senior', category: 'trot', title: "사랑의 트위스트", url: 'https://youtu.be/NMaNBfCtaH8?si=fYVUjxjesg-RNZUP', expiry: '2100-12-31' },
+            { id: 'senior-trot-3', section: 'senior', category: 'trot', title: "내 나이가 어때서", url: 'https://youtu.be/4lL6-UMN3aA?si=S1Yjonq8v_Y1Y2Uy', expiry: '2100-12-31' },
+            { id: 'senior-trot-4', section: 'senior', category: 'trot', title: "동백아가씨", url: 'https://youtu.be/LJLgMbuARzg?si=M9-xoTgE1aeKSXws', expiry: '2100-12-31' },
+            { id: 'senior-trot-5', section: 'senior', category: 'trot', title: "별빛 같은 나의 사랑아", url: 'https://www.youtube.com/watch?v=i5IBnij5eHI', expiry: '2100-12-31' },
+            { id: 'senior-trot-6', section: 'senior', category: 'trot', title: "어머나", url: 'https://youtu.be/tonkh2XaXrs?si=YzLaIctYqg6v-AhT', expiry: '2100-12-31' },
+            { id: 'senior-trot-7', section: 'senior', category: 'trot', title: "뿐이고", url: 'https://youtu.be/qff-ULX6Q1c?si=DyqpzYxIbzWfPCkW', expiry: '2100-12-31' },
+            { id: 'senior-trot-8', section: 'senior', category: 'trot', title: "막걸리 한잔", url: 'https://youtu.be/JuZ9EmRLmzc?si=eUAUi3C4NCj4za3u', expiry: '2100-12-31' },
+            { id: 'senior-trot-9', section: 'senior', category: 'trot', title: "잘 있거라 부산항", url: 'https://youtu.be/AmzXxQ--w90?si=44zUKflGWXPzTNEl', expiry: '2100-12-31' },
+            { id: 'senior-trot-10', section: 'senior', category: 'trot', title: "무조건", url: 'https://youtu.be/hhmYe6EEc5M?si=k_K78l3U72RxW6ru', expiry: '2100-12-31' },
+            { id: 'senior-trot-11', section: 'senior', category: 'trot', title: "곤드레 만드레", url: 'https://youtu.be/w9r5zS5n468?si=ijPFqkS6wP0RL03S', expiry: '2100-12-31' },
+            { id: 'senior-trot-12', section: 'senior', category: 'trot', title: "샤방샤방", url: 'https://youtu.be/4XrMvAQCHmY?si=tZeJr9APTmNf4tAz', expiry: '2100-12-31' },
+            { id: 'senior-trot-13', section: 'senior', category: 'trot', title: "홍시(울 엄마)", url: 'https://youtu.be/4xe83cFS1Ts?si=zOmFc3orMVhcX5Za', expiry: '2100-12-31' },
+            { id: 'senior-trot-14', section: 'senior', category: 'trot', title: "고장난 벽시계", url: 'https://youtu.be/llF96uYFukQ?si=2gg90iqQGVRats0Q', expiry: '2100-12-31' },
+            { id: 'senior-trot-15', section: 'senior', category: 'trot', title: "사랑은 아무나 하나", url: 'https://youtu.be/6LcNF_1vghY?si=ouNDu0CHIoYNrm8C', expiry: '2100-12-31' },
+            { id: 'senior-trot-16', section: 'senior', category: 'trot', title: "테스형!", url: 'https://youtu.be/8cNz9awcVqg?si=cQuKD_Catcfebfa1', expiry: '2100-12-31' },
+            { id: 'senior-trot-17', section: 'senior', category: 'trot', title: "짝사랑", url: 'https://youtu.be/MvfJ6Dkzp9E?si=bl3GHae0t-ErOIQ0', expiry: '2100-12-31' },
+            { id: 'senior-trot-18', section: 'senior', category: 'trot', title: "다 함께 차차차", url: 'https://youtu.be/xnKsDmx4HbM?si=rEwwOsM_iP-lk4la', expiry: '2100-12-31' },
+            { id: 'senior-trot-19', section: 'senior', category: 'trot', title: "동반자", url: 'https://youtu.be/QsSI_qHbyFM?si=Za8TFBaAy1bCrbML', expiry: '2100-12-31' },
+            { id: 'senior-trot-20', section: 'senior', category: 'trot', title: "보라빛 엽서", url: 'https://youtu.be/p-l4J6AX3hI?si=Be66Jo9UQOS_E6pQ', expiry: '2100-12-31' },
+            { id: 'senior-trot-21', section: 'senior', category: 'trot', title: "아모르파티", url: 'https://youtu.be/OzAZIxkBZso?si=7DaabX-x2dxK4nvV', expiry: '2100-12-31' },
+            { id: 'senior-trot-22', section: 'senior', category: 'trot', title: "아파트", url: 'https://youtu.be/WvP1g7eic0U', expiry: '2100-12-31' },
+
+            // Senior - Folk
+            { id: 'senior-folk-1', section: 'senior', category: 'folk', title: "반달", url: 'https://youtu.be/jDUwlJOOt-Q?si=IF1Pt2XIDeteDSlQ', expiry: '2100-12-31' },
+            { id: 'senior-folk-2', section: 'senior', category: 'folk', title: "아리랑", url: 'https://www.youtube.com/watch?v=3Y1_UcxpSZA', expiry: '2100-12-31' },
+            { id: 'senior-folk-3', section: 'senior', category: 'folk', title: "군밤타령", url: 'https://youtu.be/HKRzRnpWQYI?si=H0icr92jJLb6edTu', expiry: '2100-12-31' },
+            { id: 'senior-folk-4', section: 'senior', category: 'folk', title: "천안삼거리", url: 'https://youtu.be/wWFhy1UmHSE?si=ppI_gD0BGEbiO5Nm', expiry: '2100-12-31' },
+            { id: 'senior-folk-5', section: 'senior', category: 'folk', title: "도라지타령", url: 'https://youtu.be/o36IFUfTCMg?si=vv5cTq3bTQqhpFwd', expiry: '2100-12-31' },
+            { id: 'senior-folk-6', section: 'senior', category: 'folk', title: "성주풀이", url: 'https://youtu.be/JP_YvzJE-aI?si=MTHiF20dC_wtLP4k', expiry: '2100-12-31' },
+            { id: 'senior-folk-7', section: 'senior', category: 'folk', title: "진도아리랑", url: 'https://youtu.be/InyaAPmAgkM?si=Nj3KNX_4uE4Nk0zI', expiry: '2100-12-31' },
+            { id: 'senior-folk-8', section: 'senior', category: 'folk', title: "늴리리야", url: 'https://youtu.be/AdtdBVXdKmQ?si=30wfPnkPFGFe6ziG', expiry: '2100-12-31' },
+            { id: 'senior-folk-9', section: 'senior', category: 'folk', title: "새타령", url: 'https://youtu.be/6nsuA2Qf9Fo?si=Y-yw4HjfqgfUz6As', expiry: '2100-12-31' },
+            { id: 'senior-folk-10', section: 'senior', category: 'folk', title: "옹헤야", url: 'https://youtu.be/O7X4pdo3cZk?si=XfEgazybbOmY6s5Y', expiry: '2100-12-31' },
+            { id: 'senior-folk-11', section: 'senior', category: 'folk', title: "고향의 봄", url: 'https://youtu.be/0wY2wn3__O0?si=8-AnecxG9CLY2ISZ', expiry: '2100-12-31' },
+            { id: 'senior-folk-12', section: 'senior', category: 'folk', title: "섬집아기", url: 'https://youtu.be/dK0fFigLisg?si=0BZc12eCZT46P6zZ', expiry: '2100-12-31' },
+            { id: 'senior-folk-13', section: 'senior', category: 'folk', title: "오빠 생각", url: 'https://youtu.be/16dHv_NZKYQ?si=VCrBwm3wdpP3wxnB', expiry: '2100-12-31' },
+            { id: 'senior-folk-14', section: 'senior', category: 'folk', title: "엄마야 누나야", url: 'https://youtu.be/8iZc4sDAxFM?si=bxlUS-mHUtWx_813', expiry: '2100-12-31' },
+            { id: 'senior-folk-15', section: 'senior', category: 'folk', title: "태평가", url: 'https://youtu.be/_uZVyPHSIxY?si=_GwAifSaURoTcXzV', expiry: '2100-12-31' },
+            { id: 'senior-folk-16', section: 'senior', category: 'folk', title: "편지", url: 'https://youtu.be/0b8xBhK2Kio?si=pBK50dAQmnanmxBR', expiry: '2100-12-31' },
+            { id: 'senior-folk-17', section: 'senior', category: 'folk', title: "고향생각", url: 'https://youtu.be/QNAA2ybE1Sk?si=Ur_66W7Ku0eGrIFq', expiry: '2100-12-31' },
+            { id: 'senior-folk-18', section: 'senior', category: 'folk', title: "아름다운 나라", url: 'https://youtu.be/2U8STbV8XK8?si=R5g807TD65qsfbxT', expiry: '2100-12-31' },
+            { id: 'senior-folk-19', section: 'senior', category: 'folk', title: "밀양아리랑", url: 'https://youtu.be/tt2UW_NUC3g?si=vO2F0TrRzvllHLrq', expiry: '2100-12-31' },
+            { id: 'senior-folk-20', section: 'senior', category: 'folk', title: "오돌또기", url: 'https://youtu.be/8nXUUaJF0fY?si=T51iHiA32JfnT9MF', expiry: '2100-12-31' },
+            { id: 'senior-folk-21', section: 'senior', category: 'folk', title: "강원도아리랑", url: 'https://youtu.be/d8udhpqvocA?si=ql8HT2Eos8tymb_c', expiry: '2100-12-31' },
+
+            // Senior - Classic
+            { id: 'senior-classic-1', section: 'senior', category: 'classic', title: "아이네 클라이네 나흐트 뮤직", url: 'https://youtu.be/czBSj6_6rkE?si=iOx7JPxLMW46KSxI', expiry: '2100-12-31' },
+            { id: 'senior-classic-2', section: 'senior', category: 'classic', title: "월광소나타", url: 'https://youtu.be/CtjzTYnNDGM?si=KmGne3oDBnnp8ngZ', expiry: '2100-12-31' },
+            { id: 'senior-classic-3', section: 'senior', category: 'classic', title: "카르멘서곡", url: 'https://youtu.be/SjIxHyfoYUA?si=Uij7ONcyepFSoV4G', expiry: '2100-12-31' },
+            { id: 'senior-classic-4', section: 'senior', category: 'classic', title: "놀람교향곡", url: 'https://youtu.be/d6-YMmiBpkw?si=qJmOh_myhyps5lob', expiry: '2100-12-31' },
+            { id: 'senior-classic-5', section: 'senior', category: 'classic', title: "겨울", url: 'https://youtu.be/4eqeQb6iUIE?si=_fKmoUn7hRVurePo', expiry: '2100-12-31' },
+            { id: 'senior-classic-6', section: 'senior', category: 'classic', title: "터키행진곡", url: 'https://youtu.be/5KSpva4vZtg?si=bQB-fISTLR7EMe9n', expiry: '2100-12-31' },
+            { id: 'senior-classic-7', section: 'senior', category: 'classic', title: "라데츠키행진곡", url: 'https://youtu.be/0rQTe4Nu0nI?si=MhXcDNn6Wbfojs3_', expiry: '2100-12-31' },
+            { id: 'senior-classic-8', section: 'senior', category: 'classic', title: "동물의 사육제", url: 'https://youtu.be/hvTAQBh45kc?si=f18cQdTNnbiBS_Zq', expiry: '2100-12-31' },
+            { id: 'senior-classic-9', section: 'senior', category: 'classic', title: "축혼행진곡", url: 'https://youtu.be/2vQTgbw0AlM?si=zw_kiRjJOKx-BgDJ', expiry: '2100-12-31' },
+            { id: 'senior-classic-10', section: 'senior', category: 'classic', title: "호두까기인형", url: 'https://youtu.be/lGvucG6UW10?si=vPtcxLgYqEs20rJP', expiry: '2100-12-31' },
+            { id: 'senior-classic-11', section: 'senior', category: 'classic', title: "캐논변주곡", url: 'https://youtu.be/SjYecEQFL0U?si=oKYYRYmDgzvPDxJo', expiry: '2100-12-31' },
+            { id: 'senior-classic-12', section: 'senior', category: 'classic', title: "피터와 늑대", url: 'https://youtu.be/u_daR5tx6Gw?si=qsK8OXAW5WkOug0c', expiry: '2100-12-31' },
+            { id: 'senior-classic-13', section: 'senior', category: 'classic', title: "신세계로부터", url: 'https://youtu.be/mJjk7vbVaOY?si=6gIgbEnkIgmglF4_', expiry: '2100-12-31' },
+            { id: 'senior-classic-14', section: 'senior', category: 'classic', title: "베토벤바이러스", url: 'https://youtu.be/aN8JqXkwWTM?si=Mlna91w7QmFMi43R', expiry: '2100-12-31' },
+            { id: 'senior-classic-15', section: 'senior', category: 'classic', title: "사탕요정의 춤", url: 'https://youtu.be/qVFwbX4xg7U?si=2oftxLsI_FM3ne0c', expiry: '2100-12-31' },
+            { id: 'senior-classic-16', section: 'senior', category: 'classic', title: "윌리엄텔서곡", url: 'https://youtu.be/j3T8-aeOrbg?si=owH-1lxTh7pUXcp7', expiry: '2100-12-31' },
+            { id: 'senior-classic-17', section: 'senior', category: 'classic', title: "아름답고 푸른 도나우강", url: 'https://youtu.be/xTxUmg0bjaw?si=qytVk4sWyfb5gcWE', expiry: '2100-12-31' },
+            { id: 'senior-classic-18', section: 'senior', category: 'classic', title: "트럼펫 협주곡", url: 'https://youtu.be/58vkAIlm8z0?si=_iQh0jUl-3gi6c7g', expiry: '2100-12-31' },
+            { id: 'senior-classic-19', section: 'senior', category: 'classic', title: "오펜바흐 캉캉", url: 'https://youtu.be/L-cZXdbAgmQ?si=PPEULn19ymleLDKw', expiry: '2100-12-31' },
+            { id: 'senior-classic-20', section: 'senior', category: 'classic', title: "엘리제를 위하여", url: 'https://youtu.be/n4YZKJQKFFk?si=ou1PVrksFYyAd4qB', expiry: '2100-12-31' },
+
+            // Senior - Other
+            { id: 'senior-other-1', section: 'senior', category: 'other', title: "가서 제자 삼으라", url: 'https://youtu.be/3Wn4zPNEGYY?si=Kj3MRlDcoxGp1hJ-', expiry: '2100-12-31' },
+            { id: 'senior-other-2', section: 'senior', category: 'other', title: "내게 강 같은 평화", url: 'https://youtu.be/jYLD20e5BYY?si=JKSw0EzQDuZgnFj0', expiry: '2100-12-31' },
+            { id: 'senior-other-3', section: 'senior', category: 'other', title: "주 하나님 지으신 모든 세계", url: 'https://youtu.be/IhJHSXc3iDg?si=OOBnVwSvAeo2MDN0', expiry: '2100-12-31' },
+            { id: 'senior-other-4', section: 'senior', category: 'other', title: "야곱의 축복", url: 'https://youtu.be/SBCMXMeNFBY?si=VOxxEuG8NmU3ee3Q', expiry: '2100-12-31' },
+            { id: 'senior-other-5', section: 'senior', category: 'other', title: "내 영혼이 은총 입어 죄에서 자유를 얻게함은", url: 'https://youtu.be/jLuhZ5o_yUM?si=nzKMp3xFswULkaiF', expiry: '2100-12-31' },
+            { id: 'senior-other-6', section: 'senior', category: 'other', title: "예수보다 더 귀한 것은 없네", url: 'https://youtu.be/oIhXUOFC9Sw?si=is_Y6JFdt1Pj7NQQ', expiry: '2100-12-31' },
+            { id: 'senior-other-7', section: 'senior', category: 'other', title: "주의 친절한 팔에 안기세", url: 'https://youtu.be/jbN_FoNk7mM?si=v2nxmV5naDaJWD5m', expiry: '2100-12-31' },
+            { id: 'senior-other-8', section: 'senior', category: 'other', title: "예수 사랑하심은", url: 'https://youtu.be/3XQ8NlJOBr4?si=Lrk23rcaqha0SrDo', expiry: '2100-12-31' },
+            { id: 'senior-other-9', section: 'senior', category: 'other', title: "예수 십자가에 흘린 피로써", url: 'https://youtu.be/MD1qBxf3KbA?si=9s_oF46N8VFQvvhH', expiry: '2100-12-31' },
+            { id: 'senior-other-10', section: 'senior', category: 'other', title: "슬픈 마음 있는 사람", url: 'https://youtu.be/G0Lj_gDVw0E?si=h7EO4iGPNEceFmib', expiry: '2100-12-31' },
+            { id: 'senior-other-11', section: 'senior', category: 'other', title: "전선을 간다(육군 군가)", url: 'https://youtu.be/zETSzPtkKcg?si=NLA39BED2gfZbepJ', expiry: '2100-12-31' },
+            { id: 'senior-other-12', section: 'senior', category: 'other', title: "앵카송(해군 군가)", url: 'https://youtu.be/aJz-Zz0snEs?si=426YActxUc3T46z7', expiry: '2100-12-31' },
+            { id: 'senior-other-13', section: 'senior', category: 'other', title: "빨간마후라(공군 군가)", url: 'https://youtu.be/hlKOdn0tEeM?si=7k3tOEJXjWHY1-2j', expiry: '2100-12-31' },
+            { id: 'senior-other-14', section: 'senior', category: 'other', title: "팔각모 사나이(해병대 군가)", url: 'https://youtu.be/6mPEJJsJvko?si=LMCJbX8eBVle6Xsv', expiry: '2100-12-31' },
+            { id: 'senior-other-15', section: 'senior', category: 'other', title: "주와 같이 길 가는 것", url: 'https://youtu.be/L3yTtn11FM0?si=3BH2pFLWuHAUzhHD', expiry: '2100-12-31' },
+            { id: 'senior-other-16', section: 'senior', category: 'other', title: "마귀들과 싸울지라", url: 'https://youtu.be/yWXWmgP_g00?si=HBevQZiQBcFJ1pro', expiry: '2100-12-31' },
+            { id: 'senior-other-17', section: 'senior', category: 'other', title: "내가 매일 기쁘게", url: 'https://youtu.be/Vv_kXSYyW-g?si=aOStYpMH18qLHtdQ', expiry: '2100-12-31' },
+            { id: 'senior-other-18', section: 'senior', category: 'other', title: "주의 약속하신 말씀 위에서", url: 'https://youtu.be/qND6gt3L7gc?si=NK8C1C4nGlLmww4I', expiry: '2100-12-31' },
+            { id: 'senior-other-19', section: 'senior', category: 'other', title: "변찮는 주님의 사랑과", url: 'https://youtu.be/wDCBqQrX5Tw?si=kcXVYQmCTzgHZIZs', expiry: '2100-12-31' },
+
+            // Senior - Warmup
+            { id: 'senior-warmup-1', section: 'senior', category: 'warmup', title: "드럼스틱을 활용한 준비운동", url: 'https://vimeo.com/1093926157', expiry: '2100-12-31' },
+            { id: 'senior-warmup-2', section: 'senior', category: 'warmup', title: "첫번째 준비운동", url: 'https://youtu.be/-JWyAuNiEYI?si=Pl2c7L5nebKU9TQf', expiry: '2100-12-31' },
+            { id: 'senior-warmup-3', section: 'senior', category: 'warmup', title: "두번째 준비운동", url: 'https://youtu.be/XhztrXDZqW0?si=RyLn490KKqYqIjqX', expiry: '2100-12-31' },
+            { id: 'senior-warmup-4', section: 'senior', category: 'warmup', title: "세번째 준비운동", url: 'https://www.youtube.com/watch?v=h4_V_iISWRU', expiry: '2100-12-31' },
+            { id: 'senior-warmup-5', section: 'senior', category: 'warmup', title: "네번째 준비운동", url: 'https://www.youtube.com/watch?v=Fzzo_sHW3xE&t=51s', expiry: '2100-12-31' },
+            { id: 'senior-warmup-6', section: 'senior', category: 'warmup', title: "다섯번째 준비운동", url: 'https://youtu.be/s6UoNWYpPTo?si=sMMU_Vk_Bf6sfWYk', expiry: '2100-12-31' },
+            { id: 'senior-warmup-7', section: 'senior', category: 'warmup', title: "여섯번째 준비운동", url: 'https://youtu.be/1bMuuF48Zjs?si=8S77Duo8oy69ohRc', expiry: '2100-12-31' },
+            { id: 'senior-warmup-8', section: 'senior', category: 'warmup', title: "일곱번째 준비운동", url: 'https://www.youtube.com/watch?v=01bQ3Hr81I0&t=100s', expiry: '2100-12-31' }
+        ];
+
+        // 관리자 트리거 상태
+        let clickCount = 0;
+        let clickTimer = null;
+
+        // --- 웰컴 모달 기능 ---
+        function checkWelcomeModal() {
+            const lastDate = localStorage.getItem('lastWelcomeModalDate');
+            const today = new Date().toISOString().split('T')[0];
+
+            if (lastDate !== today) {
+                const modal = document.getElementById('welcomeModal');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+
+            // 오늘 날짜 저장
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem('lastWelcomeModalDate', today);
+        }
+
+        // --- 초기화 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            setupEventListeners();
+            checkWelcomeModal(); // 웰컴 모달 체크
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(input => {
+                if (!input.value) input.value = '2100-12-31';
+            });
+        });
+
+        function setupEventListeners() {
+            // 관리자 모드 트리거
+            const triggerBtn = document.getElementById('adminTriggerBtn');
+            triggerBtn.addEventListener('click', () => {
+                clickCount++;
+                if (clickTimer) clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => { clickCount = 0; }, 2000);
+
+                if (clickCount === 3) {
+                    showToast('관리자 모드 진입까지 2번 남았습니다.');
+                } else if (clickCount >= 5) {
+                    clickCount = 0;
+                    document.getElementById('passwordModal').classList.replace('hidden', 'flex');
+                    document.getElementById('adminPasswordInput').value = '';
+                    document.getElementById('adminPasswordInput').focus();
+                }
+            });
+
+            // 관리자 신규 등록 섹션 변경
+            document.getElementById('newSection').addEventListener('change', (e) => toggleCategoryInput(e.target.value, 'categoryInputWrapper', 'seniorCategorySelect'));
+
+            // 수정 모달 섹션 변경
+            document.getElementById('editSection').addEventListener('change', (e) => toggleCategoryInput(e.target.value, 'editCategory', 'editSeniorCategory', true));
+        }
+
+        function toggleCategoryInput(val, textId, selectId, isEdit = false) {
+            const isSenior = val === 'senior';
+            const textEl = document.getElementById(textId);
+            const selectEl = document.getElementById(selectId);
+
+            // isEdit일 경우 textId는 input 자체일 수도 있고 wrapper일 수도 있음
+            const textWrapper = isEdit ? textEl : textEl;
+
+            if (isSenior) {
+                textWrapper.classList.add('hidden');
+                selectEl.classList.remove('hidden');
+            } else {
+                textWrapper.classList.remove('hidden');
+                selectEl.classList.add('hidden');
+            }
+        }
+
+        // --- 데이터 통신 ---
+        async function loadData() {
+            const loader = document.getElementById('loadingIndicator');
+            const grid = document.getElementById('videoGrid');
+            const noData = document.getElementById('noDataMessage');
+
+            loader.classList.remove('hidden');
+            loader.classList.add('flex');
+            grid.innerHTML = '';
+            noData.classList.add('hidden');
+
+            try {
+                const res = await fetch(LOAD_API);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                const json = await res.json();
+
+                if (json.success) {
+                    allVideos = Array.isArray(json.data) ? json.data : [];
+                    if (allVideos.length === 0) allVideos = [...DEFAULT_VIDEOS];
+                    isDemoMode = false;
+                } else {
+                    allVideos = [...DEFAULT_VIDEOS];
+                }
+            } catch (err) {
+                console.warn('Backend issue, using LocalStorage', err);
+                isDemoMode = true;
+                document.getElementById('demoModeAlert').classList.remove('hidden');
+                const saved = localStorage.getItem('smart_drum_db');
+                if (saved) {
+                    allVideos = JSON.parse(saved);
+                    // 로컬스토리지도 비어있으면 기본값 사용
+                    if (allVideos.length === 0) allVideos = [...DEFAULT_VIDEOS];
+                } else {
+                    allVideos = [...DEFAULT_VIDEOS];
+                }
+            } finally {
+                loader.classList.remove('flex');
+                loader.classList.add('hidden');
+                renderUI();
+            }
+        }
+
+        async function saveData() {
+            if (isDemoMode) {
+                localStorage.setItem('smart_drum_db', JSON.stringify(allVideos));
+                showToast('저장되었습니다 (데모 모드)');
+                renderUI();
+                if (isAdmin) renderAdminList();
+                return;
+            }
+
+            try {
+                const payload = {
+                    filename: DB_FILENAME,
+                    content: allVideos
+                };
+                const res = await fetch(SAVE_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+                if (json.success) {
+                    showToast('저장되었습니다.');
+                    renderUI();
+                    if (isAdmin) renderAdminList();
+                } else {
+                    alert('저장 실패: ' + json.message);
+                }
+            } catch (err) {
+                alert('서버 통신 오류: ' + err);
+            }
+        }
+
+        // --- UI 렌더링 ---
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.getElementById('mainBody').className = `min-h-screen transition-colors duration-300 flex flex-col theme-${tabName}`;
+
+            ['infant', 'elementary', 'senior'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tabName) btn.classList.replace('tab-inactive', 'tab-active');
+                else btn.classList.replace('tab-active', 'tab-inactive');
+            });
+
+            const stdControls = document.getElementById('controls-standard');
+            const snrControls = document.getElementById('controls-senior');
+
+            if (tabName === 'senior') {
+                stdControls.classList.add('hidden');
+                snrControls.classList.remove('hidden');
+                snrControls.classList.add('flex');
+                seniorFilter = 'all';
+                updateSeniorFilterBtns();
+            } else {
+                stdControls.classList.remove('hidden');
+                stdControls.classList.add('flex');
+                snrControls.classList.add('hidden');
+                snrControls.classList.remove('flex');
+            }
+
+            document.getElementById('searchInputStandard').value = '';
+            document.getElementById('searchInputSenior').value = '';
+            renderUI();
+        }
+
+        function renderUI() {
+            if (currentTab !== 'senior') updateCategorySelect();
+            filterVideos();
+        }
+
+        function updateCategorySelect() {
+            const select = document.getElementById('categorySelect');
+            const currentVal = select.value;
+            const categories = new Set();
+            allVideos.forEach(v => {
+                if (v.section === currentTab && v.category) categories.add(v.category);
+            });
+            select.innerHTML = '<option value="all">전체 카테고리</option>';
+            Array.from(categories).sort().forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                if (cat === currentVal) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function updateSeniorFilterBtns() {
+            document.querySelectorAll('.senior-filter-btn').forEach(btn => {
+                if (btn.dataset.filter === seniorFilter) {
+                    btn.classList.add('bg-white', 'text-black', 'font-bold');
+                    btn.classList.remove('bg-white/10', 'bg-white/20');
+                } else {
+                    btn.classList.remove('bg-white', 'text-black', 'font-bold');
+                    btn.classList.add('bg-white/10');
+                }
+            });
+        }
+
+        function setSeniorFilter(filter) {
+            seniorFilter = filter;
+            updateSeniorFilterBtns();
+            filterVideos();
+        }
+
+        function filterVideos() {
+            const grid = document.getElementById('videoGrid');
+            const noData = document.getElementById('noDataMessage');
+            const today = new Date().toISOString().split('T')[0];
+
+            let filtered = allVideos.filter(v => v.section === currentTab);
+            if (!isAdmin) {
+                filtered = filtered.filter(v => !v.expiry || v.expiry >= today);
+            }
+
+            const keyword = currentTab === 'senior'
+                ? document.getElementById('searchInputSenior').value.toLowerCase()
+                : document.getElementById('searchInputStandard').value.toLowerCase();
+
+            if (currentTab === 'senior') {
+                if (seniorFilter !== 'all') filtered = filtered.filter(v => v.category === seniorFilter);
+            } else {
+                const catSelect = document.getElementById('categorySelect').value;
+                if (catSelect !== 'all') filtered = filtered.filter(v => v.category === catSelect);
+            }
+
+            if (keyword) filtered = filtered.filter(v => v.title.toLowerCase().includes(keyword));
+
+            grid.innerHTML = '';
+            if (filtered.length === 0) noData.classList.remove('hidden');
+            else {
+                noData.classList.add('hidden');
+                filtered.forEach(video => {
+                    grid.appendChild(createVideoCard(video));
+                });
+
+                // 비메오 썸네일 비동기 로드 호출
+                updateVimeoThumbnails();
+            }
+        }
+
+        // --- 핵심: 유튜브/비메오 오류 해결 및 통합을 위한 Facade 패턴 적용 ---
+        function createVideoCard(video) {
+            const div = document.createElement('div');
+            let cardBg = 'bg-white text-black';
+            if (currentTab === 'senior') cardBg = 'bg-gray-800 text-white border border-gray-700';
+
+            div.className = `${cardBg} rounded-lg overflow-hidden shadow-lg transform transition hover:-translate-y-1`;
+
+            const videoInfo = getVideoInfo(video.url);
+            let thumbUrl = '';
+            let clickAction = '';
+            let playIcon = '<i class="fa-solid fa-play"></i>';
+            let fullscreenBtn = '';
+            let imgDataAttrs = '';
+            let imgClass = 'w-full h-full object-cover';
+
+            if (videoInfo) {
+                if (videoInfo.type === 'youtube') {
+                    thumbUrl = `https://img.youtube.com/vi/${videoInfo.id}/hqdefault.jpg`;
+                    clickAction = `onclick="playVideo('${video.id}', '${videoInfo.id}', 'youtube')"`;
+                    fullscreenBtn = `
+                        <button onclick="openFullscreenVideo(event, '${videoInfo.id}', 'youtube')" 
+                            class="absolute top-2 right-2 text-white bg-black/50 hover:bg-black/70 rounded-lg p-2 transition-colors z-20" 
+                            title="전체화면으로 재생">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    `;
+                } else if (videoInfo.type === 'vimeo') {
+                    // 비메오는 초기에 플레이스홀더를 보여주고, JS로 나중에 업데이트합니다.
+                    thumbUrl = 'https://placehold.co/600x400/00ADEF/FFFFFF?text=Vimeo+Video';
+                    imgDataAttrs = `data-vimeo-id="${videoInfo.id}"`;
+                    imgClass += ' vimeo-thumb'; // 나중에 식별하기 위한 클래스
+
+                    clickAction = `onclick="playVideo('${video.id}', '${videoInfo.id}', 'vimeo')"`;
+                    fullscreenBtn = `
+                        <button onclick="openFullscreenVideo(event, '${videoInfo.id}', 'vimeo')" 
+                            class="absolute top-2 right-2 text-white bg-black/50 hover:bg-black/70 rounded-lg p-2 transition-colors z-20" 
+                            title="전체화면으로 재생">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                    `;
+                }
+            } else {
+                // Non-Video Link Handling
+                thumbUrl = 'https://placehold.co/600x400/EEE/31343C?text=External+Link';
+                clickAction = `onclick="window.open('${video.url}', '_blank')"`;
+                playIcon = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+            }
+
+            const seniorCatMap = { 'trot': '트로트·가요', 'folk': '가곡·민요', 'classic': '클래식', 'other': '기타음악', 'warmup': '준비운동' };
+            const displayCat = (video.section === 'senior' && seniorCatMap[video.category]) ? seniorCatMap[video.category] : video.category;
+
+            div.innerHTML = `
+                <div class="video-aspect" id="video-container-${video.id}" ${clickAction}>
+                    ${fullscreenBtn}
+                    <img src="${thumbUrl}" alt="${video.title}" loading="lazy" class="${imgClass}" ${imgDataAttrs}>
+                    <div class="play-overlay">
+                        <div class="play-icon">${playIcon}</div>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <div class="text-base mb-2 flex justify-between items-center">
+                        <span class="font-bold bg-blue-100 text-blue-800 px-2 py-1 rounded shadow-sm">${displayCat}</span>
+                        ${video.expiry < new Date().toISOString().split('T')[0] ? '<span class="text-red-500 font-bold">만료됨</span>' : ''}
+                    </div>
+                    <h3 class="font-bold text-2xl leading-tight" title="${video.title}">${video.title}</h3>
+                </div>
+            `;
+            return div;
+        }
+
+        // 비메오 썸네일 비동기 업데이트
+        function updateVimeoThumbnails() {
+            const vimeoImages = document.querySelectorAll('img.vimeo-thumb');
+            vimeoImages.forEach(async img => {
+                // 이미 로드된 경우 패스
+                if (img.dataset.loaded === 'true') return;
+
+                const videoId = img.dataset.vimeoId;
+                if (!videoId) return;
+
+                try {
+                    // Vimeo oEmbed API 사용
+                    const response = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${videoId}`);
+                    const data = await response.json();
+
+                    if (data.thumbnail_url) {
+                        img.src = data.thumbnail_url;
+                        img.dataset.loaded = 'true'; // 중복 요청 방지
+                    }
+                } catch (error) {
+                    console.error('Vimeo thumbnail fetch error:', error);
+                }
+            });
+        }
+
+        function playVideo(containerId, videoId, type) {
+            const container = document.getElementById(`video-container-${containerId}`);
+            let iframeSrc = '';
+
+            if (type === 'youtube') {
+                iframeSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${location.origin}`;
+            } else if (type === 'vimeo') {
+                iframeSrc = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+            }
+
+            container.innerHTML = `
+                <iframe 
+                    src="${iframeSrc}" 
+                    title="Video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            `;
+            // onclick 이벤트 제거 (중복 실행 방지)
+            container.onclick = null;
+        }
+
+        function getVideoInfo(url) {
+            if (!url) return null;
+
+            // YouTube
+            if (url.includes('youtu.be/') || url.includes('youtube.com/') || url.includes('youtube-nocookie.com/')) {
+                let id = '';
+                if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0];
+                else if (url.includes('v=')) id = url.split('v=')[1].split('&')[0];
+                else if (url.includes('embed/')) id = url.split('embed/')[1].split('?')[0];
+                return { type: 'youtube', id: id };
+            }
+
+            // Vimeo
+            if (url.includes('vimeo.com/')) {
+                // https://vimeo.com/123456789
+                // https://vimeo.com/channels/staffpicks/123456789
+                const matches = url.match(/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/);
+                if (matches && matches[1]) {
+                    return { type: 'vimeo', id: matches[1] };
+                }
+            }
+
+            return null;
+        }
+
+        // --- 전체화면 비디오 기능 ---
+        function openFullscreenVideo(event, videoId, type) {
+            event.stopPropagation(); // 카드 클릭 이벤트 전파 방지
+            const modal = document.getElementById('fullscreenVideoModal');
+            const container = document.getElementById('fullscreenVideoContainer');
+
+            let iframeSrc = '';
+            if (type === 'youtube') {
+                iframeSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&origin=${location.origin}`;
+            } else if (type === 'vimeo') {
+                iframeSrc = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+            }
+
+            container.innerHTML = `
+                <iframe 
+                    src="${iframeSrc}" 
+                    class="w-full h-full rounded-lg"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        }
+
+        function closeFullscreenVideo() {
+            const modal = document.getElementById('fullscreenVideoModal');
+            const container = document.getElementById('fullscreenVideoContainer');
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            container.innerHTML = ''; // 비디오 중지
+            document.body.style.overflow = ''; // 스크롤 복원
+        }
+
+        // ESC 키로 전체화면 닫기
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape") {
+                const modal = document.getElementById('fullscreenVideoModal');
+                if (!modal.classList.contains('hidden')) {
+                    closeFullscreenVideo();
+                }
+            }
+        });
+
+        // --- 관리자 기능 ---
+        function checkAdminPassword() {
+            if (document.getElementById('adminPasswordInput').value === '3323') {
+                isAdmin = true;
+                closeModal('passwordModal');
+                openAdminPanel();
+                document.getElementById('adminPasswordInput').value = '';
+            } else {
+                alert('비밀번호가 일치하지 않습니다.');
+            }
+        }
+
+        function openAdminPanel() {
+            document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('block');
+            renderAdminList();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('adminPanel').classList.remove('block');
+            isAdmin = false;
+            loadData();
+        }
+
+        function renderAdminList() {
+            const tbody = document.getElementById('adminVideoList');
+            document.getElementById('totalCount').textContent = `총 ${allVideos.length}개`;
+            tbody.innerHTML = '';
+
+            // 순서대로 출력 (사용자에게 보이는 순서)
+            allVideos.forEach((video, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 border-b";
+
+                const sectionMap = { 'infant': '👶 유아', 'elementary': '🏫 초등', 'senior': '👴 시니어' };
+                const isFirst = index === 0;
+                const isLast = index === allVideos.length - 1;
+
+                tr.innerHTML = `
+                    <td class="p-3 text-center">
+                        <div class="flex flex-col gap-1">
+                            <button onclick="moveVideo(${index}, -1)" class="text-xs bg-gray-200 hover:bg-gray-300 rounded px-2 py-0.5 ${isFirst ? 'invisible' : ''}">▲</button>
+                            <button onclick="moveVideo(${index}, 1)" class="text-xs bg-gray-200 hover:bg-gray-300 rounded px-2 py-0.5 ${isLast ? 'invisible' : ''}">▼</button>
+                        </div>
+                    </td>
+                    <td class="p-3 text-sm">${sectionMap[video.section] || video.section}</td>
+                    <td class="p-3 text-sm text-gray-600">${video.category}</td>
+                    <td class="p-3 font-medium">
+                        <div class="truncate max-w-xs text-sm">${video.title}</div>
+                        <div class="text-xs text-blue-400 truncate max-w-xs cursor-pointer hover:underline" onclick="window.open('${video.url}')">${video.url}</div>
+                    </td>
+                    <td class="p-3 text-xs">${video.expiry}</td>
+                    <td class="p-3 text-right">
+                        <button onclick="openEditModal(${index})" class="bg-blue-100 text-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-200 mr-1">수정</button>
+                        <button onclick="deleteVideo(${index})" class="bg-red-100 text-red-600 px-3 py-1 rounded text-xs hover:bg-red-200">삭제</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 순서 변경 기능 ---
+        function moveVideo(index, direction) {
+            // direction: -1 (up/prev), 1 (down/next)
+            if (direction === -1 && index > 0) {
+                [allVideos[index], allVideos[index - 1]] = [allVideos[index - 1], allVideos[index]];
+            } else if (direction === 1 && index < allVideos.length - 1) {
+                [allVideos[index], allVideos[index + 1]] = [allVideos[index + 1], allVideos[index]];
+            }
+            saveData(); // 변경 즉시 저장
+        }
+
+        // --- 수정 기능 ---
+        function openEditModal(index) {
+            const video = allVideos[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editSection').value = video.section;
+            document.getElementById('editTitle').value = video.title;
+            document.getElementById('editUrl').value = video.url;
+            document.getElementById('editExpiry').value = video.expiry;
+
+            // 카테고리 세팅
+            toggleCategoryInput(video.section, 'editCategory', 'editSeniorCategory', true);
+            if (video.section === 'senior') {
+                document.getElementById('editSeniorCategory').value = video.category;
+            } else {
+                document.getElementById('editCategory').value = video.category;
+            }
+
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+        }
+
+        function saveEditVideo() {
+            const index = parseInt(document.getElementById('editIndex').value);
+            const section = document.getElementById('editSection').value;
+            let category = '';
+
+            if (section === 'senior') {
+                category = document.getElementById('editSeniorCategory').value;
+            } else {
+                category = document.getElementById('editCategory').value.trim();
+                if (!category) return alert('카테고리를 입력해주세요.');
+            }
+
+            const title = document.getElementById('editTitle').value.trim();
+            const url = document.getElementById('editUrl').value.trim();
+            const expiry = document.getElementById('editExpiry').value;
+
+            if (!title || !url) return alert('제목과 링크는 필수입니다.');
+
+            // 데이터 업데이트
+            allVideos[index] = {
+                ...allVideos[index],
+                section, category, title, url, expiry
+            };
+
+            closeModal('editModal');
+            saveData(); // 즉시 저장
+        }
+
+        // --- 삭제 기능 ---
+        function deleteVideo(index) {
+            if (confirm('정말 삭제하시겠습니까? 복구할 수 없습니다.')) {
+                allVideos.splice(index, 1);
+                saveData(); // 즉시 저장
+            }
+        }
+
+        // --- 신규 등록 기능 ---
+        function addInputRow() {
+            const container = document.getElementById('newVideoInputs');
+            const row = document.createElement('div');
+            row.className = "flex flex-col sm:flex-row gap-2 video-input-row";
+            row.innerHTML = `
+                <input type="text" class="flex-1 border p-2 rounded title-input" placeholder="영상 제목">
+                <input type="text" class="flex-1 border p-2 rounded url-input" placeholder="유튜브 또는 비메오 링크 (URL)">
+                <button onclick="removeInputRow(this)" class="bg-red-100 text-red-500 p-2 rounded hover:bg-red-200" title="삭제"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeInputRow(btn) {
+            const rows = document.querySelectorAll('.video-input-row');
+            if (rows.length > 1) btn.closest('.video-input-row').remove();
+            else {
+                const row = btn.closest('.video-input-row');
+                row.querySelector('.title-input').value = '';
+                row.querySelector('.url-input').value = '';
+            }
+        }
+
+        function saveNewVideos() {
+            const section = document.getElementById('newSection').value;
+            let category = '';
+            if (section === 'senior') category = document.getElementById('seniorCategorySelect').value;
+            else {
+                category = document.getElementById('newCategory').value.trim();
+                if (!category) return alert('카테고리를 입력해주세요.');
+            }
+            const expiry = document.getElementById('newExpiry').value;
+
+            const newItems = [];
+            document.querySelectorAll('.video-input-row').forEach(row => {
+                const title = row.querySelector('.title-input').value.trim();
+                const url = row.querySelector('.url-input').value.trim();
+                if (title && url) {
+                    newItems.push({
+                        id: Date.now() + Math.random().toString(36).substr(2, 9),
+                        section, category, title, url, expiry
+                    });
+                }
+            });
+
+            if (newItems.length === 0) return alert('최소 1개 이상의 영상을 입력해주세요.');
+
+            // 새 영상을 리스트 맨 앞에 추가 (최신순) 혹은 맨 뒤에 (등록순).
+            // 사용자가 순서 변경 가능하므로 여기선 맨 뒤에 추가하겠습니다.
+            allVideos = [...allVideos, ...newItems];
+
+            saveData();
+
+            // 초기화
+            document.getElementById('newCategory').value = '';
+            const inputContainer = document.getElementById('newVideoInputs');
+            inputContainer.innerHTML = '';
+            addInputRow();
+
+            showToast(`${newItems.length}개의 영상이 추가되었습니다.`);
+        }
+
+        // --- 공통 ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+    </script>
+</body>
+
+</html>
