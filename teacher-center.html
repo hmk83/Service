@@ -592,6 +592,8 @@
             loader.classList.add('flex');
             grid.innerHTML = '';
             noData.classList.add('hidden');
+            
+            // 성공 로직을 위해 초기 상태를 hidden으로 설정
             demoAlert.classList.add('hidden');
             errorAlert.classList.add('hidden');
 
@@ -609,15 +611,19 @@
                 // 데이터 구조 확인 (PHP 래퍼가 있는지, 아니면 순수 배열인지)
                 if (Array.isArray(json)) {
                     allVideos = json;
-                    // 성공적으로 로드했으므로 경고 메시지 없음
+                    // 성공 시 토스트 메시지 + 경고창 숨김 보장
+                    showToast('데이터 로드 성공');
+                    demoAlert.classList.add('hidden');
                 } else if (json.success && Array.isArray(json.data)) {
                     allVideos = json.data;
+                    // 성공 시 토스트 메시지 + 경고창 숨김 보장
+                    showToast('데이터 로드 성공');
+                    demoAlert.classList.add('hidden');
                 } else {
                     allVideos = [];
                 }
                 
                 if (allVideos.length === 0) {
-                    // 데이터가 비어있으면 기본값 사용을 고려할 수도 있음
                     console.log("로드된 데이터가 없습니다.");
                 }
 
@@ -628,10 +634,9 @@
                 const saved = localStorage.getItem('smart_drum_db');
                 if (saved) {
                     allVideos = JSON.parse(saved);
-                    demoAlert.classList.remove('hidden'); // 로컬데이터 사용시 알림
+                    demoAlert.classList.remove('hidden'); // 로컬데이터 사용시 알림 표시
                 } else {
                     // 정말 아무것도 없으면 에러 표시 후 기본값 사용
-                    // errorAlert.classList.remove('hidden'); // 사용자 혼란 방지를 위해 에러 숨김
                     demoAlert.classList.remove('hidden');
                     allVideos = [...DEFAULT_VIDEOS];
                 }
