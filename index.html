@@ -1,184 +1,113 @@
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
-<style>
-    /* 위젯 내부 스타일 */
-    .custom-widget-wrapper {
-        width: 100%;
-        display: flex;
-        justify-content: center; /* 가로 중앙 정렬 */
-        align-items: center;     /* 세로 중앙 정렬 */
-        font-family: 'Noto Sans KR', sans-serif;
-        padding: 40px 20px; /* 위아래 여백 확보 */
-    }
-
-    .glass-morphism {
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-    }
-    .highlight-box {
-        background: linear-gradient(145deg, #fffcf0 0%, #fff8e1 100%);
-        border: 2px solid #fbbf24;
-    }
-    .support-button {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-    }
-    .support-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
-    }
-    @keyframes pulse-soft {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.02); }
-    }
-    .animate-pulse-soft {
-        animation: pulse-soft 2s infinite ease-in-out;
-    }
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in {
-        animation: fadeInDown 0.8s ease-out forwards;
-    }
-</style>
-
-<div class="custom-widget-wrapper">
-
-    <div class="glass-morphism max-w-2xl w-full rounded-[2.5rem] p-8 md:p-12 text-center animate-fade-in relative overflow-hidden">
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주은쌤 - 리뉴얼 안내</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Kakao Specific Colors */
+        .bg-kakao-yellow { background-color: #FEE500; }
+        .text-kakao-brown { color: #3C1E1E; }
+        .bg-kakao-brown { background-color: #3C1E1E; }
         
-        <div class="absolute top-0 left-0 w-full h-2.5 bg-gradient-to-r from-amber-400 via-indigo-600 to-rose-400"></div>
-
-        <div class="mb-10 pt-4">
-            <div class="flex justify-center mb-5">
-                <span class="inline-flex items-center px-5 py-2 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 animate-pulse-soft">
-                    <span class="w-2.5 h-2.5 bg-indigo-500 rounded-full mr-2.5 shadow-[0_0_8px_rgba(79,70,229,0.5)]"></span>
-                    BRAND RENEWAL NOTICE
-                </span>
-            </div>
-            <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-5 leading-tight tracking-tight">
-                시니어100 <span class="text-indigo-600">→ 주은쌤</span><br>
-                새롭게 다시 시작합니다
-            </h1>
-            <div class="bg-gray-50 rounded-2xl py-3 px-6 inline-block">
-                <p class="text-gray-600 text-sm md:text-base font-medium">
-                    서비스 이용에 불편을 드려 진심으로 사과드립니다.<br>
-                    더욱 알찬 콘텐츠와 편리한 환경으로 보답하겠습니다.
-                </p>
-            </div>
-        </div>
-
-        <div class="mb-10">
-            <a href="https://hmk83.github.io/Service/teacher-center.html" target="_blank" 
-               class="support-button group relative inline-flex flex-col items-center justify-center w-full bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-[1.5rem] p-6 md:p-8 overflow-hidden transition-all active:scale-95">
-                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all"></div>
-                
-                <div class="flex items-center justify-center mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    <span class="text-2xl md:text-3xl font-black tracking-tight">스마트드럼 영상지원센터</span>
-                </div>
-                <p class="text-indigo-100 text-sm md:text-base font-medium opacity-90">
-                    영상 강의 및 학습 지원이 필요하신 분은 클릭해주세요
-                </p>
-                <div class="mt-4 flex items-center text-xs font-bold bg-white/20 px-4 py-1.5 rounded-full">
-                    지금 바로 입장하기
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </a>
-        </div>
-
-        <div class="highlight-box rounded-[2rem] p-8 mb-10 shadow-sm relative">
-            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-6 py-1 rounded-full text-xs font-bold shadow-lg">
-                서비스 일시 중단 안내
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="flex items-center text-amber-800 mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span class="text-xl font-bold">점검 및 리뉴얼 일정</span>
-                </div>
-                <div class="text-center">
-                    <p class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight leading-none">
-                        1월 15일(목) 16:00 <span class="text-gray-300 font-light mx-2">~</span> 1월 18일(일)
-                    </p>
-                
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-10">
-            <p class="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase mb-4">Grand Open Countdown</p>
-            <div class="grid grid-cols-4 gap-4 max-w-sm mx-auto" id="countdown">
-                <div class="bg-gray-900 text-white p-4 rounded-2xl shadow-inner">
-                    <span id="days" class="block text-2xl font-black">00</span>
-                    <span class="text-[9px] uppercase font-bold text-gray-500">Days</span>
-                </div>
-                <div class="bg-gray-900 text-white p-4 rounded-2xl shadow-inner">
-                    <span id="hours" class="block text-2xl font-black">00</span>
-                    <span class="text-[9px] uppercase font-bold text-gray-500">Hours</span>
-                </div>
-                <div class="bg-gray-900 text-white p-4 rounded-2xl shadow-inner">
-                    <span id="minutes" class="block text-2xl font-black">00</span>
-                    <span class="text-[9px] uppercase font-bold text-gray-500">Mins</span>
-                </div>
-                <div class="bg-gray-900 text-white p-4 rounded-2xl shadow-inner">
-                    <span id="seconds" class="block text-2xl font-black">00</span>
-                    <span class="text-[9px] uppercase font-bold text-gray-500">Secs</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-400">
-            <p>Copyright © 주은쌤 All Rights Reserved.</p>
-            <div class="flex items-center font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-lg">
-                <span class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-2"></span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // 목표 일시: 2026년 1월 19일 00:00 (월요일 정시 오픈)
-    const targetDate = new Date(2026, 0, 19, 0, 0, 0).getTime();
-
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
-
-        const dEl = document.getElementById("days");
-        const hEl = document.getElementById("hours");
-        const mEl = document.getElementById("minutes");
-        const sEl = document.getElementById("seconds");
-
-        if (!dEl || !hEl || !mEl || !sEl) return;
-
-        if (distance < 0) {
-            document.getElementById("countdown").innerHTML = `
-                <div class='col-span-4 text-indigo-600 font-black py-4 text-2xl animate-bounce'>
-                    🎉 주은쌤 그랜드 오픈!
-                </div>`;
-            return;
+        /* Smooth fade in animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        /* Countdown circle animation */
+        .countdown-circle {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-kakao-yellow flex items-center justify-center min-h-screen font-sans selection:bg-black selection:text-white">
 
-        dEl.innerText = days.toString().padStart(2, '0');
-        hEl.innerText = hours.toString().padStart(2, '0');
-        mEl.innerText = minutes.toString().padStart(2, '0');
-        sEl.innerText = seconds.toString().padStart(2, '0');
-    }
+    <!-- Main Container -->
+    <div class="fade-in max-w-md w-full mx-4 bg-white rounded-2xl shadow-xl overflow-hidden text-center relative">
+        
+        <!-- Top Banner / Icon Area -->
+        <div class="bg-gray-50 pt-10 pb-6 px-6 border-b border-gray-100">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-kakao-yellow text-kakao-brown mb-4 shadow-sm">
+                <i class="fa-solid fa-sync fa-2x animate-spin-slow" style="animation-duration: 3s;"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 break-keep">
+                홈페이지 리뉴얼 안내
+            </h1>
+        </div>
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-</script>
+        <!-- Content Area -->
+        <div class="p-8">
+            <p class="text-lg text-gray-700 mb-2 font-medium">
+                <span class="font-bold text-gray-900">시니어100</span>이<br>
+                <span class="font-bold text-blue-600">주은쌤</span>으로 새롭게 태어났습니다!
+            </p>
+            <p class="text-gray-500 text-sm mb-8">
+                더 나은 서비스를 위해 페이지를 이동합니다.
+            </p>
+
+            <!-- Countdown Timer -->
+            <div class="flex flex-col items-center justify-center mb-8">
+                <div class="text-5xl font-bold text-kakao-brown font-mono" id="countdown">
+                    3
+                </div>
+                <p class="text-xs text-gray-400 mt-2">초 뒤 자동으로 이동합니다</p>
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="redirectNow()" class="w-full bg-kakao-brown hover:bg-black text-yellow-400 font-bold py-4 px-6 rounded-xl transition duration-300 transform hover:scale-[1.02] active:scale-95 shadow-md flex items-center justify-center gap-2">
+                <span>새로운 홈페이지로 바로 이동</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 py-3 text-xs text-gray-400">
+            Wait for redirection to jueunssam.com
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const targetUrl = "https://jueunssam.com";
+        let timeLeft = 3;
+        const countdownElement = document.getElementById('countdown');
+
+        // Redirect Function
+        function redirectNow() {
+            window.location.href = targetUrl;
+        }
+
+        // Countdown Logic
+        const timerId = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+
+            // Add a little visual pop effect when number changes
+            countdownElement.style.transform = "scale(1.2)";
+            setTimeout(() => {
+                countdownElement.style.transform = "scale(1)";
+            }, 100);
+
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                redirectNow();
+            }
+        }, 1000);
+
+        // Optional: Preload the target page (if supported) purely for speed
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = targetUrl;
+        document.head.appendChild(link);
+    </script>
+</body>
+</html>
