@@ -52,7 +52,7 @@
 
     <button class="btn" id="mainBtn" onclick="sendSignal()">
         <div class="loader" id="spinner"></div>
-        <span class="icon" id="btnIcon">💼</span>
+        <span class="icon" id="btnIcon">🚘</span>
         <span id="btnText">퇴근하기</span>
     </button>
 
@@ -134,8 +134,8 @@
 
             // 5초 뒤 복귀
             setTimeout(() => {
-                icon.innerText = "💼";
-                text.innerText = "변경하기";
+                icon.innerText = "🚘";
+                text.innerText = "퇴근하기";
                 btn.style.background = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
                 btn.disabled = false;
                 msg.innerText = "대기 중...";
