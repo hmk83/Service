@@ -47,13 +47,13 @@
 </head>
 <body>
 
-    <h1>상태 변경 테스트</h1>
-    <p>버튼을 누르면 '업무' 상태로 변경합니다.</p>
+    <h1>퇴근</h1>
+    <p>버튼을 누르면 '퇴근' 상태로 변경합니다.</p>
 
     <button class="btn" id="mainBtn" onclick="sendSignal()">
         <div class="loader" id="spinner"></div>
         <span class="icon" id="btnIcon">💼</span>
-        <span id="btnText">변경하기</span>
+        <span id="btnText">퇴근하기</span>
     </button>
 
     <div class="status" id="statusMsg">대기 중...</div>
@@ -129,7 +129,7 @@
             icon.style.display = "block";
             text.innerText = "완료됨";
             btn.style.background = "#4CD964"; // 녹색
-            msg.innerText = "🎉 정상적으로 처리되었습니다!";
+            msg.innerText = "🎉 정상적으로 퇴근이 처리되었습니다!";
             msg.style.color = "#4CD964";
 
             // 5초 뒤 복귀
