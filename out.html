@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>업무 상태 변경 리모컨</title>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; margin: 0; text-align: center;
+        }
+        h1 { color: #333; margin-bottom: 5px; font-size: 24px; }
+        p { color: #666; margin-bottom: 40px; font-size: 14px; }
+        
+        .btn {
+            width: 220px; height: 220px;
+            border-radius: 50%; border: none;
+            font-size: 24px; font-weight: 800; color: white;
+            cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); /* 파란색 계열 */
+            position: relative; overflow: hidden;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+        
+        .icon { font-size: 50px; margin-bottom: 10px; display: block; }
+        
+        /* 로딩 애니메이션 */
+        .loader {
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top: 5px solid white;
+            width: 30px; height: 30px;
+            animation: spin 1s linear infinite;
+            display: none; margin-bottom: 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .status { margin-top: 30px; font-weight: bold; color: #444; min-height: 24px; padding: 0 20px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <h1>상태 변경 테스트</h1>
+    <p>버튼을 누르면 '업무' 상태로 변경합니다.</p>
+
+    <button class="btn" id="mainBtn" onclick="sendSignal()">
+        <div class="loader" id="spinner"></div>
+        <span class="icon" id="btnIcon">💼</span>
+        <span id="btnText">변경하기</span>
+    </button>
+
+    <div class="status" id="statusMsg">대기 중...</div>
+
+    <script>
+        // =================================================
+        const SECRET_KEY = "hmg_checkout_secret_key_1234"; 
+        // =================================================
+
+        let pollInterval;
+
+        function sendSignal() {
+            const btn = document.getElementById('mainBtn');
+            const icon = document.getElementById('btnIcon');
+            const text = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const msg = document.getElementById('statusMsg');
+            
+            // UI 변경 (로딩 중)
+            btn.disabled = true;
+            icon.style.display = "none";
+            spinner.style.display = "block";
+            text.innerText = "처리 중...";
+            msg.innerText = "📡 맥북에 명령 전송 중...";
+            msg.style.color = "#007AFF";
+
+            // 신호 전송 (타임스탬프 포함)
+            const now = new Date().getTime();
+            const url = `https://dweet.io/dweet/for/${SECRET_KEY}?cmd=checkout&t=${now}`;
+
+            fetch(url)
+            .then(() => {
+                msg.innerText = "⏳ 맥북 작업 중... (결과 대기)";
+                // 결과 확인을 위한 폴링 시작 (2초마다 확인)
+                pollInterval = setInterval(checkResult, 2000);
+            })
+            .catch(() => {
+                resetBtn("❌ 전송 실패", "red");
+            });
+        }
+
+        function checkResult() {
+            // 맥북이 보낸 완료 신호('done')가 있는지 확인
+            fetch(`https://dweet.io/get/latest/dweet/for/${SECRET_KEY}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.with && data.with.length > 0) {
+                    const content = data.with[0].content;
+                    
+                    // 성공 신호 감지
+                    if (content.cmd === "done" && content.status === "success") {
+                        clearInterval(pollInterval);
+                        successBtn();
+                    }
+                    // 실패 신호 감지
+                    else if (content.cmd === "done" && content.status === "fail") {
+                        clearInterval(pollInterval);
+                        resetBtn("❌ 맥북에서 오류 발생", "red");
+                    }
+                }
+            });
+        }
+
+        function successBtn() {
+            const btn = document.getElementById('mainBtn');
+            const text = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const icon = document.getElementById('btnIcon');
+            const msg = document.getElementById('statusMsg');
+
+            spinner.style.display = "none";
+            icon.innerText = "✅";
+            icon.style.display = "block";
+            text.innerText = "완료됨";
+            btn.style.background = "#4CD964"; // 녹색
+            msg.innerText = "🎉 정상적으로 처리되었습니다!";
+            msg.style.color = "#4CD964";
+
+            // 5초 뒤 복귀
+            setTimeout(() => {
+                icon.innerText = "💼";
+                text.innerText = "변경하기";
+                btn.style.background = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
+                btn.disabled = false;
+                msg.innerText = "대기 중...";
+                msg.style.color = "#444";
+            }, 5000);
+        }
+
+        function resetBtn(message, color) {
+            const btn = document.getElementById('mainBtn');
+            const spinner = document.getElementById('spinner');
+            const icon = document.getElementById('btnIcon');
+            const text = document.getElementById('btnText');
+            const msg = document.getElementById('statusMsg');
+
+            spinner.style.display = "none";
+            icon.style.display = "block";
+            text.innerText = "변경하기";
+            btn.disabled = false;
+            msg.innerText = message;
+            msg.style.color = color;
+        }
+    </script>
+</body>
+</html>
