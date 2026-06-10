@@ -1,0 +1,2942 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주은에듀테크 디자인 리뉴얼 워크샵</title>
+    <script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;ri=AAATkgARY29tLmdvb2dsZS5DaHJvbWUA7Gh0dHBzOi8vY2hhdGdwdC5jb20vYmFja2VuZC1hcGkvZXN0dWFyeS9jb250ZW50P2lkPWZpbGVfMDAwMDAwMDA1ZTEwNzIwOTgzY2FhM2I4YTgzZWE0N2UmZm49anVldW5zc2FtX3JvYWRtYXBfcmVzcG9uc2l2ZV92My5odG1sJmNkPWF0dGFjaG1lbnQmdHM9NDk0NzE3JnA9ZnMmY2lkPTEmc2lnPTIzY2FkZDI0Njg4ZTNmN2U3OWM2MTZhZTRmMjk3NmRhOGU2ZTBlZGNiMzNlMjRkYTMyMTI2Y2QzZjQwMDRjODYmdj0w"></script><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* 1. 글로벌 셋업 */
+        * {
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #06090F; 
+            color: #FFFFFF; 
+        }
+
+        /* 배경 조명 효과 */
+        .bg-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-glow.blue { width: 800px; height: 800px; background: #3182F6; top: -10%; right: -10%; }
+        .bg-glow.orange { width: 700px; height: 700px; background: #C87020; bottom: -10%; left: -10%; }
+        .bg-glow.yellow { width: 600px; height: 600px; background: #FFC107; top: 40%; left: 30%; opacity: 0.1; }
+
+        /* 2. 슬라이더 엔진 (가로 스와이프) */
+        .slider-viewport {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        .slider-track {
+            display: flex;
+            width: 1800vw; /* 18장 슬라이드로 확장 */
+            height: 100vh;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .slide-wrapper {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 3. 메인 콘텐츠 카드 (강제 중앙 정렬 적용) */
+        .slide-content {
+            width: min(1280px, calc(100vw - 40px), calc((100vh - 40px) * 1.7778));
+            aspect-ratio: 16 / 9;
+            min-height: min(720px, calc(100vh - 40px));
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 36px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+            position: relative;
+            padding: clamp(36px, 5vw, 80px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        /* 표지 슬라이드는 박스 없이 투명하게 */
+        .cover-slide .slide-content {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            overflow: visible;
+        }
+
+        /* 4. 타이포그래피 */
+        h1 { font-size: 56px; font-weight: 800; line-height: 1.4; letter-spacing: -1.5px; margin-bottom: 30px; color: #FFFFFF; }
+        h2 { font-size: 48px; font-weight: 800; line-height: 1.3; letter-spacing: -1px; margin-bottom: 16px; color: #FFFFFF; }
+        p { font-size: 22px; color: #A1A1AA; line-height: 1.6; word-break: keep-all; font-weight: 400; }
+        
+        .color-blue { color: #3182F6 !important; }
+        .color-orange { color: #FF8A00 !important; }
+        .color-yellow { color: #FFC107 !important; }
+
+        .badge { background: rgba(255, 138, 0, 0.15); color: #FF8A00; padding: 10px 24px; border-radius: 100px; font-weight: 700; font-size: 18px; margin-bottom: 24px; display: inline-block; letter-spacing: 2px; border: 1px solid rgba(255, 138, 0, 0.2); }
+        .presenter-info { margin-top: 20px; font-size: 15px; color: #8B95A1; font-weight: 400; letter-spacing: 0.5px; }
+
+        /* 5. 레이아웃 콤포넌트 */
+        .agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-width: 900px; margin-top: 50px; }
+        .agenda-item { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 36px 40px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; text-align: left; border: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s; }
+        .agenda-item:hover { border-color: #3182F6; background: rgba(49, 130, 246, 0.05); }
+        .agenda-item .num { font-family: 'Poppins'; font-size: 32px; font-weight: 800; color: #3182F6; }
+        .agenda-item .desc { font-size: 26px; font-weight: 700; color: #F9FAFB; }
+
+        .section-num { font-family: 'Poppins'; font-size: 120px; font-weight: 900; color: rgba(255,255,255,0.05); margin-bottom: -20px; line-height: 1; }
+
+        .tag-wrap { display: flex; gap: 10px; margin-top: 10px; justify-content: center; margin-bottom: 30px;}
+        .tag-wrap span { background: rgba(255, 255, 255, 0.05); color: #D1D5DB; font-size: 15px; font-weight: 500; padding: 6px 20px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.08); }
+
+        /* ================================================
+           피아노 비교 슬라이드 전용 스타일
+           ================================================ */
+
+        /* 탭 버튼 */
+        .ptab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#6B7280; font-size:11px; font-weight:600; padding:5px 13px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; white-space:nowrap; }
+        .ptab:hover { color:#D1D5DB; border-color:rgba(255,255,255,0.2); }
+        .ptab.ptab-active { background:rgba(49,130,246,0.15); border-color:rgba(49,130,246,0.4); color:#3182F6; }
+
+        /* 슬라이드 컨테이너: 16:9 비율 해제, 화면 전체 활용 */
+        .piano-compare-slide {
+            aspect-ratio: unset !important;
+            width: calc(100vw - 40px) !important;         /* 세 번째 min() 제약 해제 */
+            max-width: none !important;
+            height: calc(100vh - 40px) !important;
+            min-height: unset !important;
+            overflow: hidden !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            padding: 20px 28px !important;                /* 좌우 여백 최소화 */
+            gap: 10px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* 헤더 행 */
+        .piano-header {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; flex-shrink: 0;
+        }
+
+        /* 이미지 영역: 남은 공간 모두 차지 */
+        .piano-img-area {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* 각 컬럼 */
+        .piano-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .piano-col-asis {
+            width: 100%;
+            transition: width 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: width;
+        }
+        .piano-col-tobe {
+            width: 0;
+            opacity: 0;
+            transition: width 0.55s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease 0.15s;
+            will-change: width, opacity;
+        }
+
+        /* 비교 상태일 때 가로 너비 분할 */
+        .piano-img-area.compare-mode .piano-col-asis {
+            width: calc(50% - 8px);
+        }
+        .piano-img-area.compare-mode .piano-col-tobe {
+            width: calc(50% - 8px);
+            opacity: 1;
+        }
+
+        /* 배지 */
+        .piano-badge { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+        .asis-badge span { background:rgba(239,68,68,0.15); color:#EF4444; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(239,68,68,0.3); }
+        .tobe-badge span { background:rgba(49,130,246,0.15); color:#3182F6; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(49,130,246,0.3); }
+        .piano-badge em { font-style:normal; font-size:11px; color:#6B7280; white-space:nowrap; }
+
+        /* 이미지 래퍼 + 이미지 */
+        .piano-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:14px; }
+        #pianoAsIsImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.2); }
+        #pianoToBeImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(49,130,246,0.35); border-radius:14px; box-shadow:0 0 32px rgba(49,130,246,0.2); background:rgba(0,0,0,0.1); min-width:200px; }
+
+        /* 설명 텍스트 박스 */
+        .piano-desc-box {
+            display: block !important; width: 100%; flex-shrink: 0;
+            height: 140px; /* 고정 공간을 유지하여 이미지 영역의 레이아웃 시프트를 방지 */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                        visibility 0.45s;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 12px; text-align: left;
+            box-sizing: border-box;
+            padding: 12px 22px !important;
+            animation: none !important;
+        }
+        .piano-desc-box.show-desc {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .piano-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:8px; letter-spacing:0.5px; }
+        .piano-desc-body  { font-size:22px; color:#E5E7EB; line-height:1.8; word-break:keep-all; }
+
+        /* 타이핑 자판 커서 효과 */
+        .typing-cursor::after {
+            content: '|';
+            animation: cursorBlink 0.8s infinite;
+            color: #FFC107;
+            margin-left: 6px;
+            font-weight: 300;
+        }
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ================================================
+           드럼 비교 슬라이드 전용 스타일
+           ================================================ */
+        .drum-compare-slide {
+            aspect-ratio: unset !important;
+            width: calc(100vw - 40px) !important;
+            max-width: none !important;
+            height: calc(100vh - 40px) !important;
+            min-height: unset !important;
+            overflow: hidden !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            padding: 20px 28px !important;
+            gap: 10px !important;
+            box-sizing: border-box !important;
+        }
+
+        .drum-header {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; flex-shrink: 0;
+        }
+
+        .dtab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#6B7280; font-size:11px; font-weight:600; padding:5px 13px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; white-space:nowrap; }
+        .dtab:hover { color:#D1D5DB; border-color:rgba(255,255,255,0.2); }
+        .dtab.dtab-active { background:rgba(255,138,0,0.15); border-color:rgba(255,138,0,0.4); color:#FF8A00; }
+
+        .drum-img-area {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .drum-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .drum-col-asis {
+            width: 100%;
+            transition: width 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: width;
+        }
+        .drum-col-tobe {
+            width: 0;
+            opacity: 0;
+            transition: width 0.55s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease 0.15s;
+            will-change: width, opacity;
+        }
+
+        /* 비교 상태일 때 가로 너비 분할 */
+        .drum-img-area.compare-mode .drum-col-asis {
+            width: calc(50% - 8px);
+        }
+        .drum-img-area.compare-mode .drum-col-tobe {
+            width: calc(50% - 8px);
+            opacity: 1;
+        }
+
+        .drum-badge { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+        .drum-badge em { font-style:normal; font-size:11px; color:#6B7280; white-space:nowrap; }
+        .drum-badge.asis-badge span { background:rgba(239,68,68,0.15); color:#EF4444; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(239,68,68,0.3); }
+        .drum-badge.tobe-badge span { background:rgba(255,138,0,0.15); color:#FF8A00; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(255,138,0,0.3); }
+
+        .drum-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:14px; }
+        #drumAsIsImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.2); }
+        #drumToBeImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(255,138,0,0.35); border-radius:14px; box-shadow:0 0 32px rgba(255,138,0,0.2); background:rgba(0,0,0,0.1); min-width:200px; }
+
+        .drum-desc-box {
+            display: block !important; width: 100%; flex-shrink: 0;
+            height: 140px; /* 고정 공간을 유지하여 이미지 영역의 레이아웃 시프트를 방지 */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                        visibility 0.45s;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 12px; text-align: left;
+            box-sizing: border-box;
+            padding: 12px 22px !important;
+            animation: none !important;
+        }
+        .drum-desc-box.show-desc {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .drum-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:8px; letter-spacing:0.5px; }
+        .drum-desc-body  { font-size:22px; color:#E5E7EB; line-height:1.8; word-break:keep-all; }
+
+        .image-placeholder { width: 100%; max-width: 800px; background: #0B0F19; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.2s ease; position: relative; z-index: 50; overflow: hidden; display: block; }
+        .image-placeholder:hover { border-color: rgba(255, 255, 255, 0.3); transform: scale(1.02); }
+
+        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 1100px; margin-top: 40px; }
+        .summary-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 40px 30px; text-align: left; display: flex; flex-direction: column; gap: 16px; }
+        .summary-card i { font-size: 40px; }
+        .summary-card h3 { font-size: 24px; color: #FFF; font-weight: 700; line-height: 1.3;}
+        .summary-card p { font-size: 16px; color: #A1A1AA; line-height: 1.6; word-break: keep-all;}
+        .update-notice { margin-top: 40px; padding: 14px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
+
+        /* 외부 링크 버튼 (주은쌤 2.0) */
+        .btn-external-link {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: linear-gradient(135deg, #FFC107 0%, #FF8A00 100%);
+            color: #191F28; font-size: 20px; font-weight: 800;
+            padding: 20px 48px; border-radius: 100px; text-decoration: none;
+            box-shadow: 0 20px 40px rgba(255, 193, 7, 0.3); transition: all 0.3s ease;
+            margin-top: 50px;
+        }
+        .btn-external-link:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(255, 193, 7, 0.5); color: #000; }
+
+        /* 로드맵 */
+        .roadmap-container { width: 100%; max-width: 1100px; position: relative; margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .roadmap-line { position: absolute; top: 45px; left: 5%; right: 5%; height: 2px; background: linear-gradient(90deg, #3182F6 0%, #FFC107 100%); opacity: 0.3; z-index: 1; }
+        .roadmap-step { position: relative; z-index: 2; width: 15%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .roadmap-dot { width: 90px; height: 90px; border-radius: 50%; background: #0B0F19; border: 3px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #FFF; transition: all 0.3s; }
+        .roadmap-step:hover .roadmap-dot { border-color: #FFC107; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2); }
+        .roadmap-content h3 { font-size: 18px; color: #FFF; margin-bottom: 8px; font-weight: 700; }
+        .roadmap-content p { font-size: 14px; color: #8B95A1; line-height: 1.4; }
+
+        /* 상세 페이지 레이아웃 */
+        .detail-layout { display: flex; gap: 60px; width: 100%; max-width: 1100px; align-items: center; text-align: left; }
+        .detail-text { flex: 1.2; }
+        .detail-text h2 { font-size: 56px; margin-bottom: 24px; color: #FFC107; }
+        .detail-text ul { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+        .detail-text li { font-size: 20px; color: #D1D5DB; display: flex; align-items: flex-start; gap: 15px; }
+        .detail-text li i { color: #FFC107; margin-top: 5px; }
+        .detail-visual { flex: 1; background: rgba(255,255,255,0.03); border-radius: 30px; aspect-ratio: 1; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 120px; color: rgba(255,193,7,0.1); }
+        /* 이미지 사용 시 래퍼 오버라이드 */
+        .detail-img-wrap { padding: 0; overflow: hidden; background: transparent; border-color: rgba(255,255,255,0.08); }
+        .detail-img { width: 100%; height: 100%; object-fit: cover; border-radius: 30px; display: block; }
+
+
+        /* 5-1. 공통 슬라이드 애니메이션 */
+        @keyframes slideFadeUp {
+            from { opacity: 0; transform: translateY(28px) scale(0.98); filter: blur(8px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes softPop {
+            0% { opacity: 0; transform: scale(0.86); filter: blur(8px); }
+            70% { opacity: 1; transform: scale(1.04); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes roadLineGrow {
+            from { transform: scaleX(0); opacity: 0; }
+            to { transform: scaleX(1); opacity: 0.55; }
+        }
+        @keyframes roadPulse {
+            0%, 100% { box-shadow: 0 0 0 rgba(255, 193, 7, 0); }
+            50% { box-shadow: 0 0 28px rgba(255, 193, 7, 0.28); }
+        }
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .slide-wrapper .slide-content > * {
+            opacity: 0;
+            transform: translateY(22px);
+        }
+        .slide-wrapper.active .slide-content > * {
+            animation: slideFadeUp 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .slide-wrapper.active .slide-content > *:nth-child(1) { animation-delay: 0.05s; }
+        .slide-wrapper.active .slide-content > *:nth-child(2) { animation-delay: 0.13s; }
+        .slide-wrapper.active .slide-content > *:nth-child(3) { animation-delay: 0.21s; }
+        .slide-wrapper.active .slide-content > *:nth-child(4) { animation-delay: 0.29s; }
+        .slide-wrapper.active .slide-content > *:nth-child(5) { animation-delay: 0.37s; }
+
+        /* 표지 슬라이드 — 공통 slideFadeUp 예외 처리 */
+        /* cover-year-wrap: 자체 yearAppear 애니메이션 사용 */
+        .cover-slide .slide-content > .cover-year-wrap {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: yearAppear 0.6s cubic-bezier(0.16,1,0.3,1) both !important;
+        }
+        /* cover-reveal: JS가 .show 추가 전까지 무조건 숨김 + 콘텐츠 공간을 차지하지 않음 */
+        .cover-slide .slide-content > .cover-reveal {
+            opacity: 0 !important;
+            max-height: 0 !important;
+            overflow: hidden !important;
+            animation: none !important;
+            pointer-events: none;
+            margin-top: 0 !important;
+        }
+        .cover-slide .slide-content > .cover-reveal.show {
+            opacity: 1 !important;
+            max-height: 500px !important;
+            overflow: visible !important;
+            margin-top: 28px !important;
+            pointer-events: auto;
+            transition: max-height 0.9s cubic-bezier(0.16,1,0.3,1),
+                        opacity 0.6s ease 0.2s,
+                        margin-top 0.9s cubic-bezier(0.16,1,0.3,1) !important;
+            animation: none !important;
+        }
+        .cover-reveal.show > *:nth-child(1) { animation: revealContent 0.7s 0.1s  cubic-bezier(0.16,1,0.3,1) both; }
+        .cover-reveal.show > *:nth-child(2) { animation: revealContent 0.7s 0.22s cubic-bezier(0.16,1,0.3,1) both; }
+        .cover-reveal.show > *:nth-child(3) { animation: revealContent 0.7s 0.34s cubic-bezier(0.16,1,0.3,1) both; }
+        .cover-reveal.show > *:nth-child(4) { animation: revealContent 0.7s 0.46s cubic-bezier(0.16,1,0.3,1) both; }
+
+        .slide-wrapper.active .agenda-item,
+        .slide-wrapper.active .summary-card,
+        .slide-wrapper.active .detail-text li,
+        .slide-wrapper.active .tag-wrap span {
+            opacity: 0;
+            animation: slideFadeUp 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .slide-wrapper.active .agenda-item:nth-child(1),
+        .slide-wrapper.active .summary-card:nth-child(1),
+        .slide-wrapper.active .detail-text li:nth-child(1),
+        .slide-wrapper.active .tag-wrap span:nth-child(1) { animation-delay: 0.24s; }
+        .slide-wrapper.active .agenda-item:nth-child(2),
+        .slide-wrapper.active .summary-card:nth-child(2),
+        .slide-wrapper.active .detail-text li:nth-child(2),
+        .slide-wrapper.active .tag-wrap span:nth-child(2) { animation-delay: 0.34s; }
+        .slide-wrapper.active .agenda-item:nth-child(3),
+        .slide-wrapper.active .summary-card:nth-child(3),
+        .slide-wrapper.active .detail-text li:nth-child(3),
+        .slide-wrapper.active .tag-wrap span:nth-child(3) { animation-delay: 0.44s; }
+        .slide-wrapper.active .agenda-item:nth-child(4) { animation-delay: 0.54s; }
+
+        .slide-wrapper.active .section-num,
+        .slide-wrapper.active .detail-visual,
+        .slide-wrapper.active .image-placeholder,
+        .slide-wrapper.active .btn-external-link {
+            animation: softPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .slide-wrapper.active .detail-visual i,
+        .slide-wrapper.active .image-placeholder i {
+            animation: floatIcon 2.4s ease-in-out infinite;
+        }
+
+        /* 로드맵 전용 애니메이션 */
+        .roadmap-slide .slide-content { overflow: hidden; }
+        .roadmap-title-kicker { font-family: 'Poppins'; font-size: 14px; color: #FFC107; letter-spacing: 4px; font-weight: 800; margin-bottom: 12px; }
+        .roadmap-line { transform-origin: left center; transform: scaleX(0); opacity: 0; }
+        .roadmap-step { opacity: 0; transform: translateY(28px) scale(0.94); }
+        .roadmap-date {
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(255, 193, 7, 0.12);
+            border: 1px solid rgba(255, 193, 7, 0.22);
+            color: #FFC107;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+        }
+        .roadmap-content .roadmap-desc { margin-top: 6px; color: #8B95A1; }
+        .roadmap-notice {
+            margin-top: 26px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: -0.2px;
+        }
+        .slide-wrapper.active .roadmap-line { animation: roadLineGrow 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards; }
+        .slide-wrapper.active .roadmap-step { animation: softPop 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(2) { animation-delay: 0.45s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(3) { animation-delay: 0.60s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(4) { animation-delay: 0.75s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(5) { animation-delay: 0.90s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(6) { animation-delay: 1.05s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(7) { animation-delay: 1.20s; }
+        .slide-wrapper.active .roadmap-dot { animation: roadPulse 2.2s ease-in-out infinite; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(2) .roadmap-dot { animation-delay: 1.05s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(3) .roadmap-dot { animation-delay: 1.20s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(4) .roadmap-dot { animation-delay: 1.35s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(5) .roadmap-dot { animation-delay: 1.50s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(6) .roadmap-dot { animation-delay: 1.65s; }
+        .slide-wrapper.active .roadmap-step:nth-of-type(7) .roadmap-dot { animation-delay: 1.80s; }
+
+        .step-date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0 18px;
+            padding: 9px 18px;
+            border-radius: 999px;
+            background: rgba(255, 193, 7, 0.12);
+            border: 1px solid rgba(255, 193, 7, 0.24);
+            color: #FFC107;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+        }
+
+        /* 6. 내비게이션 및 로고 (클릭 방해 차단) */
+        .nav-controls { position: fixed; bottom: 40px; right: 40px; display: flex; gap: 16px; z-index: 99999; }
+        .btn-nav { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: #FFF; font-size: 20px; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.2s ease; }
+        .btn-nav:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .btn-nav.disabled { opacity: 0.3; pointer-events: none; }
+
+        /* 로고: 마우스 이벤트 완전히 무시, 이미지 에러시 숨김 처리 */
+        .logo-container { position: absolute; bottom: 52px; left: 0; right: 0; transform: none; margin: 0 auto; width: max-content; min-width: 160px; }
+        .cover-slide .logo-container { display: flex; justify-content: center; align-items: center; width: 100%; min-width: 0; }
+        .cover-slide .logo-container img { width: auto; max-width: 180px; height: 34px; object-position: center; }
+
+        /* 노트북/PC 해상도 최적화 */
+        @media (max-width: 1440px), (max-height: 860px) {
+            h1 { font-size: clamp(42px, 4.3vw, 56px); }
+            h2 { font-size: clamp(36px, 3.4vw, 48px); }
+            p { font-size: clamp(18px, 1.6vw, 22px); }
+            .section-num { font-size: clamp(84px, 9vw, 120px); }
+            .agenda-item { padding: 28px 28px; }
+            .agenda-item .desc { font-size: clamp(20px, 2vw, 26px); }
+            .summary-card { padding: 28px 24px; }
+            .summary-card h3 { font-size: clamp(20px, 2vw, 24px); }
+            .detail-layout { gap: 36px; }
+            .detail-text h2 { font-size: clamp(42px, 4vw, 56px); }
+            .detail-text li { font-size: clamp(17px, 1.5vw, 20px); }
+            .roadmap-container { max-width: 100%; gap: 10px; }
+            .roadmap-step { width: 16%; }
+            .roadmap-dot { width: 78px; height: 78px; font-size: 24px; }
+            .roadmap-line { top: 39px; }
+            .nav-controls { bottom: 22px; right: 22px; }
+        }
+
+        @media (max-width: 1280px), (max-height: 760px) {
+            .slide-content { width: min(1220px, calc(100vw - 28px), calc((100vh - 28px) * 1.7778)); padding: clamp(28px, 4vw, 56px); border-radius: 28px; }
+            .agenda-grid, .summary-grid { gap: 16px; }
+            .tag-wrap { gap: 8px; margin-bottom: 22px; }
+            .image-placeholder { max-width: 720px; }
+            .detail-layout { gap: 26px; }
+            .detail-visual { border-radius: 24px; font-size: 100px; }
+            .roadmap-content h3 { font-size: 16px; }
+            .roadmap-content p { font-size: 13px; }
+            .roadmap-date { font-size: 12px; padding: 5px 10px; }
+            .logo-container { bottom: 34px; }
+            .cover-slide .logo-container img { max-width: 160px; height: 30px; }
+        }
+
+        @media (max-width: 1100px), (max-height: 680px) {
+            .slide-content { width: min(1080px, calc(100vw - 24px), calc((100vh - 24px) * 1.7778)); padding: 24px 28px; }
+            .agenda-item { padding: 22px 20px; border-radius: 18px; }
+            .summary-card { padding: 22px 18px; border-radius: 18px; }
+            .summary-card p { font-size: 14px; }
+            .update-notice, .step-date-badge { font-size: 14px; padding: 8px 14px; }
+            .detail-layout { gap: 20px; }
+            .detail-text ul { gap: 14px; }
+            .detail-text li { gap: 10px; }
+            .roadmap-container { margin-top: 26px; }
+            .roadmap-dot { width: 68px; height: 68px; font-size: 21px; }
+            .roadmap-line { top: 34px; }
+            .btn-nav { width: 48px; height: 48px; font-size: 18px; }
+        }
+
+        /* 7. 모달 (피아노/드럼 전용) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(6, 9, 15, 0.98); backdrop-filter: blur(10px); z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 48px 0 130px; gap: 0; overflow: hidden; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .btn-close-modal { position: fixed; top: 16px; right: 28px; background: transparent; border: none; color: #A1A1AA; font-size: 32px; cursor: pointer; transition: color 0.2s; z-index: 300000; }
+        .btn-close-modal:hover { color: #FFF; }
+        .modal-monitor-container { width: 90vw; max-width: 90vw; flex: 1 1 0; min-height: 0; }
+        .modal-image-box { width: 100%; border-radius: 16px; background: #08090c; border: 1px solid rgba(255,255,255,0.07); box-shadow: 0 20px 50px rgba(0,0,0,0.8); overflow: hidden; position: relative; }
+        /* 하단 버튼 고정 — 최상단 레이어 */
+        .modal-action-bar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 200000; }
+        .modal-btn-row { display: flex; align-items: center; gap: 10px; }
+        .modal-status-text { font-family: 'Poppins'; font-size: 13px; color: #8B95A1; font-weight: 500; letter-spacing: 2px; text-align: center; }
+        .btn-magic-toggle { background: #3182F6; color: #FFFFFF; font-size: 16px; font-weight: 700; padding: 14px 44px; border-radius: 100px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-width: 240px; transition: all 0.25s; box-shadow: 0 8px 24px rgba(49,130,246,0.4); }
+        .btn-magic-toggle:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(49,130,246,0.55); }
+        .btn-magic-toggle.tobe-style { background: linear-gradient(135deg, #FF8A00, #FFC107); box-shadow: 0 8px 24px rgba(255,138,0,0.4); }
+        .btn-magic-toggle.tobe-style:hover { box-shadow: 0 14px 32px rgba(255,138,0,0.55); }
+        .btn-prev-image { background: rgba(255,255,255,0.08); color: #A1A1AA; font-size: 15px; font-weight: 600; padding: 14px 22px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
+        .btn-prev-image:hover { background: rgba(255,255,255,0.14); color: #FFF; }
+        .btn-prev-image:disabled { opacity: 0.25; pointer-events: none; }
+
+        /* ================================================
+           이미지 비교 뷰어 (좌: AS-IS | 우: TO-BE)
+           ================================================ */
+        .img-compare-wrap {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+            background: #08090c;
+            position: relative;
+            gap: 6px; /* 패널 사이 간격 */
+        }
+
+        /* 공통 패널 */
+        .img-panel {
+            overflow: hidden;
+            position: relative;
+            flex-shrink: 0;
+            border-radius: 16px; /* 모든 모서리 곡선 */
+            transition: width 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .img-panel img {
+            width: 100%;
+            height: auto;
+            max-height: calc(100vh - 160px); /* 상단48 + 하단130 - 여유 */
+            object-fit: contain;
+            display: block;
+            border-radius: 14px;
+        }
+
+        /* 좌측: AS-IS */
+        .img-panel-asis { width: 100%; }
+        .img-panel-asis.split { width: 50%; }
+
+        /* 우측: TO-BE (처음에는 숨김, 클릭 시 확장) */
+        .img-panel-tobe { width: 0; }
+        .img-panel-tobe.revealed { width: 50%; }
+
+        /* 패널 라벨 */
+        .panel-label {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px 18px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            backdrop-filter: blur(8px);
+            z-index: 20;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .label-asis {
+            background: rgba(0,0,0,0.55);
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .label-tobe {
+            background: rgba(0,0,0,0.55);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* 중앙 구분선 */
+        .compare-divider {
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.4) 20%, rgba(255,255,255,0.4) 80%, transparent 100%);
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.4s 0.55s;
+            pointer-events: none;
+            z-index: 30;
+        }
+        .compare-divider.visible { opacity: 1; }
+
+        /* ============================================================
+           랭킹 대시보드
+           ============================================================ */
+        .rank-dashboard {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            padding: 20px 24px 22px;
+            min-width: 0;
+        }
+
+        /* 탭 */
+        .rank-tabs {
+            display: flex;
+            gap: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 100px;
+            padding: 4px;
+        }
+        .rank-tab {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #8B95A1;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 10px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .rank-tab.active {
+            background: #FFC107;
+            color: #0B0F19;
+            box-shadow: 0 4px 14px rgba(255,193,7,0.35);
+        }
+        .rank-tab:not(.active):hover { color: #FFF; }
+
+        /* 패널 */
+        .rank-panel { display: none; flex-direction: column; gap: 0; height: 298px; overflow: hidden; }
+        .rank-panel.active { display: flex; }
+        /* 학원 순위 히어로 카드 */
+        .rank-hero {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(255,193,7,0.1) 0%, rgba(255,138,0,0.06) 100%);
+            border: 1px solid rgba(255,193,7,0.2);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+        .rank-hero-crown { font-size: 22px; flex-shrink: 0; }
+        .rank-hero-info { flex: 1; min-width: 0; }
+        .rank-hero-label { font-size: 10px; color: #8B95A1; letter-spacing: 1px; font-weight: 600; }
+        .rank-hero-name { font-size: 14px; font-weight: 700; color: #F3F4F6; }
+        .rank-hero-rank-num {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+            color: #FFC107;
+            flex-shrink: 0;
+        }
+        .rank-hero-rank-num small { font-size: 13px; font-weight: 500; color: #8B95A1; }
+        /* 섹션 라벨 */
+        .rank-section-label {
+            font-size: 11px;
+            color: #8B95A1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 6px;
+            padding: 0 2px;
+            flex-shrink: 0;
+        }
+        /* 등수 표시 (20등, 114등) */
+        .rank-place {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #D1D5DB;
+            text-align: right;
+            flex-shrink: 0;
+            min-width: 34px;
+        }
+        .rank-place-unit { font-size: 11px; color: #8B95A1; flex-shrink: 0; margin-right: 2px; }
+
+
+        /* 랭킹 리스트 */
+        .rank-list { display: flex; flex-direction: column; gap: 7px; }
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: background 0.2s;
+            animation: rankSlideIn 0.5s ease both;
+        }
+        .rank-item.gold   { border-color: rgba(255,193,7,0.25); background: rgba(255,193,7,0.05); }
+        .rank-item.silver { border-color: rgba(192,192,192,0.2); background: rgba(192,192,192,0.04); }
+        .rank-item.bronze { border-color: rgba(205,127,50,0.2);  background: rgba(205,127,50,0.04); }
+
+        @keyframes rankSlideIn {
+            from { opacity: 0; transform: translateX(18px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .rank-item:nth-child(1) { animation-delay: 0.05s; }
+        .rank-item:nth-child(2) { animation-delay: 0.13s; }
+        .rank-item:nth-child(3) { animation-delay: 0.21s; }
+        .rank-item:nth-child(4) { animation-delay: 0.29s; }
+        .rank-item:nth-child(5) { animation-delay: 0.37s; }
+
+        .rank-pos { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
+        .rank-num { font-size: 13px; font-weight: 700; color: #8B95A1; }
+
+        .rank-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #E5E7EB;
+            width: 90px;
+            flex-shrink: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .rank-name small {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 10px;
+            color: #8B95A1;
+            font-weight: 400;
+        }
+
+        /* 바 */
+        .rank-bar-wrap {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .rank-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #3182F6, #7BB8FF);
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .rank-bar.accent { background: linear-gradient(90deg, #FFC107, #FF8A00); }
+        .rank-bar.nation { background: linear-gradient(90deg, #A78BFA, #7C3AED); }
+
+        /* 점수 */
+        .rank-score {
+            font-family: 'Poppins', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #F3F4F6;
+            width: 60px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .rank-unit { font-size: 11px; color: #8B95A1; flex-shrink: 0; }
+
+        /* ============================================================
+           표지 슬라이드 — 연도 카운팅 애니메이션
+           ============================================================ */
+        .cover-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            text-align: center;
+        }
+        .cover-year-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            animation: yearAppear 0.6s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        @keyframes yearAppear {
+            from { opacity: 0; transform: scale(0.75) translateY(30px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .cover-year {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(80px, 14vw, 180px);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -4px;
+            background: linear-gradient(135deg, #FFFFFF 30%, rgba(255,255,255,0.45));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cover-year.reached {
+            background: linear-gradient(135deg, #FFC107 0%, #FF8A00 60%, #FFD54F 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 0 32px rgba(255,193,7,0.6));
+        }
+        .cover-year-label {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: clamp(28px, 4vw, 56px);
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
+        }
+        /* cover-reveal 기본 레이아웃 (숨김은 위의 !important 오버라이드가 담당) */
+        .cover-reveal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            opacity: 0;
+            transform: translateY(24px);
+            pointer-events: none;
+            margin-top: 28px;
+        }
+        @keyframes revealContent {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+          /* ======================================================
+             음악 이론 E-Learning 데모 컴포넌트 (태블릿 스타일 화이트 테마)
+             ====================================================== */
+          .elearn-demo {
+              flex: 1;
+              background: #FFFFFF;
+              border: 1.5px solid #E5E8EB;
+              border-radius: 28px;
+              padding: 0;
+              position: relative;
+              overflow: hidden;
+              min-height: 380px;
+              align-self: stretch;
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+          }
+          .elearn-phase {
+              position: absolute;
+              top: 0; left: 0; width: 100%; height: 100%;
+              padding: 22px 24px;
+              display: flex; flex-direction: column; gap: 12px;
+              opacity: 0;
+              transform: scale(0.96) translateY(10px);
+              pointer-events: none;
+              transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+                          transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+              box-sizing: border-box;
+              overflow-y: auto;
+              color: #333D4B;
+          }
+          .elearn-phase.active {
+              opacity: 1;
+              transform: scale(1) translateY(0);
+              pointer-events: auto;
+          }
+          /* 헤더 */
+          .elearn-header {
+              display: flex; justify-content: space-between; align-items: center;
+              border-bottom: 1.5px solid #F2F4F6;
+              padding-bottom: 10px;
+              margin-bottom: 4px;
+          }
+          .elearn-badge {
+              background: rgba(49, 130, 246, 0.08); color: #3182F6;
+              font-size: 12px; font-weight: 700; padding: 5px 12px;
+              border-radius: 100px; border: 1.5px solid rgba(49, 130, 246, 0.15);
+              display: flex; align-items: center; gap: 6px;
+          }
+          .elearn-qnum { font-size: 12px; color: #8B95A1; font-weight: 700; }
+          /* 문제 */
+          .elearn-question {
+              font-size: 15px; color: #191F28; line-height: 1.6;
+              font-weight: 700;
+              text-align: left;
+          }
+          .elearn-staff {
+              margin-top: 10px;
+              background: #F8F9FA;
+              border-radius: 14px; padding: 10px;
+              border: 1.5px solid #E5E8EB;
+          }
+          /* 보기 */
+          .elearn-options {
+              display: flex; flex-direction: column; gap: 8px;
+              margin-top: 4px;
+          }
+          .elearn-opt {
+              background: #FFFFFF;
+              border: 1.5px solid #E5E8EB;
+              border-radius: 12px; padding: 10px 16px;
+              font-size: 13.5px; color: #333D4B; cursor: pointer;
+              display: flex; align-items: center; gap: 10px;
+              transition: all 0.2s ease;
+              font-weight: 500;
+              text-align: left;
+          }
+          .elearn-opt.elearn-selected {
+              background: #3182F6;
+              border-color: #3182F6;
+              color: #FFFFFF;
+              font-weight: 700;
+              box-shadow: 0 4px 12px rgba(49, 130, 246, 0.25);
+              transform: scale(0.98);
+          }
+          .elearn-opt.elearn-selected .opt-sub {
+              color: rgba(255, 255, 255, 0.85);
+          }
+          .elearn-opt.elearn-hover {
+              background: #F2F4F6;
+              border-color: #D1D5DB;
+          }
+          .opt-sub { margin-left: auto; font-size: 11px; color: #8B95A1; }
+          /* 채점 로딩 */
+          .elearn-grading {
+              display: flex; gap: 8px; justify-content: center;
+              align-items: center; margin-top: 12px;
+          }
+          .grading-dot {
+              width: 10px; height: 10px; border-radius: 50%;
+              background: #3182F6;
+              animation: dotPulse 1s infinite ease-in-out;
+          }
+          .grading-dot:nth-child(2) { animation-delay: 0.2s; }
+          .grading-dot:nth-child(3) { animation-delay: 0.4s; }
+          @keyframes dotPulse {
+              0%,80%,100% { opacity: 0.3; transform: scale(0.8); }
+              40% { opacity: 1; transform: scale(1.25); }
+          }
+          /* 결과 페이즈 */
+          .elearn-phase#ephase3 {
+              justify-content: flex-start;
+              align-items: stretch;
+          }
+          .elearn-result-wrap {
+              display: flex; flex-direction: column; align-items: center;
+              gap: 10px; text-align: center; width: 100%;
+          }
+          .elearn-result-icon {
+              font-size: 56px; line-height: 1;
+              filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.25));
+              animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+          }
+          .elearn-result-icon.correct { color: #2DCA73; }
+          .elearn-result-icon.wrong   { color: #EF4444; }
+          .elearn-result-label {
+              font-size: 26px; font-weight: 900; color: #2DCA73;
+              letter-spacing: -0.5px;
+          }
+          .elearn-result-answer {
+              font-size: 15px; color: #3182F6; font-weight: 700;
+              background: rgba(49,130,246,0.08); border: 1.5px solid rgba(49,130,246,0.18);
+              border-radius: 10px; padding: 8px 20px;
+          }
+          .elearn-result-exp {
+              font-size: 13px; color: #4E5968; line-height: 1.6;
+              background: #F8F9FA;
+              border-radius: 12px; padding: 12px 18px;
+              border: 1.5px solid #E5E8EB;
+              width: 100%;
+              text-align: left;
+          }
+          .elearn-score-row {
+              display: flex; gap: 8px; justify-content: center;
+              width: 100%;
+          }
+          .elearn-score-pill {
+              font-size: 12.5px; font-weight: 700; padding: 6px 16px;
+              border-radius: 100px; display: inline-flex; align-items: center; gap: 6px;
+          }
+          .elearn-score-pill.correct { background: rgba(34,197,94,0.08); color: #22C55E; border: 1.5px solid rgba(34,197,94,0.18); }
+          .elearn-score-pill.wrong   { background: rgba(239,68,68,0.08);  color: #EF4444; border: 1.5px solid rgba(239,68,68,0.18); }
+          .elearn-score-pill.total   { background: rgba(255,193,7,0.08);  color: #B7791F; border: 1.5px solid rgba(255,193,7,0.18); }
+
+          /* 결과 페이지 하단 피드백 추가 영역 */
+          .elearn-feedback-card {
+              background: #F0F6FF;
+              border: 1.5px solid rgba(49, 130, 246, 0.15);
+              border-radius: 14px;
+              padding: 10px 16px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              text-align: left;
+              width: 100%;
+              box-sizing: border-box;
+          }
+          .elearn-feedback-card img {
+              width: 40px; height: 40px;
+              border-radius: 50%;
+              background: #fff;
+              border: 1.5px solid rgba(49, 130, 246, 0.1);
+              object-fit: cover;
+              flex-shrink: 0;
+          }
+          .elearn-feedback-text { flex: 1; min-width: 0; }
+          .elearn-feedback-text h4 {
+              font-size: 12.5px; font-weight: 700; color: #191F28; margin-bottom: 2px;
+          }
+          .elearn-feedback-text p {
+              font-size: 11.5px; color: #4E5968; line-height: 1.4;
+          }
+          .elearn-reward-row {
+              display: flex; justify-content: space-between; align-items: center;
+              background: #FFF9E6; border: 1.5px solid rgba(255, 193, 7, 0.25);
+              border-radius: 14px; padding: 10px 16px; width: 100%;
+              box-sizing: border-box;
+          }
+          .elearn-reward-badge {
+              font-size: 12px; font-weight: 800; color: #B7791F;
+              display: flex; align-items: center; gap: 6px;
+          }
+          .elearn-reward-point {
+              font-family: 'Poppins'; font-size: 14px; font-weight: 800; color: #FF8A00;
+              display: flex; align-items: center; gap: 4px;
+          }
+          .elearn-next-btn {
+              background: linear-gradient(135deg, #3182F6 0%, #1d4ed8 100%);
+              color: #FFFFFF; font-size: 14px; font-weight: 800;
+              padding: 12px 24px; border-radius: 12px; border: none;
+              cursor: pointer; display: flex; align-items: center; justify-content: center;
+              gap: 8px; width: 100%; box-shadow: 0 4px 12px rgba(49, 130, 246, 0.2);
+              transition: all 0.2s;
+              box-sizing: border-box;
+          }
+          .elearn-next-btn:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 6px 16px rgba(49, 130, 246, 0.3);
+          }
+
+          /* B2B 보고서 PHASE4 업그레이드 */
+          .elearn-report-header {
+              font-size: 14px; font-weight: 800; color: #191F28;
+              display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px;
+              border-bottom: 1.5px solid #F2F4F6;
+              padding-bottom: 10px;
+          }
+          .report-row { display: flex; align-items: center; gap: 10px; }
+          .report-label { font-size: 12px; color: #4E5968; font-weight: 700; width: 52px; flex-shrink: 0; }
+          .report-bar-wrap { flex: 1; height: 8px; background: #E5E8EB; border-radius: 100px; overflow: hidden; position: relative; }
+          .report-bar {
+              height: 100%; width: 0; border-radius: 100px;
+              background: var(--rc, #3182F6);
+              transition: width 1s cubic-bezier(0.16,1,0.3,1);
+          }
+          .report-bar.animated { width: var(--rw, 0); }
+          .report-pct { font-size: 11px; color: #4E5968; font-weight: 700; width: 30px; text-align: right; flex-shrink: 0; }
+          .report-pct.rpt-warn   { color: #FF8A00; font-weight: 800; }
+          .report-pct.rpt-danger { color: #EF4444; font-weight: 800; }
+          
+          .elearn-report-tip {
+              font-size: 11.5px; color: #4E5968;
+              background: #F8F9FA;
+              border: 1.5px solid #E5E8EB;
+              border-radius: 12px; padding: 10px 14px;
+              display: flex; gap: 8px; align-items: flex-start; line-height: 1.5;
+              text-align: left;
+              box-sizing: border-box;
+          }
+          .elearn-report-tip i { color: #FF8A00; flex-shrink: 0; margin-top: 2px; }
+
+          /* 리포트 하단 추천 학습 영역 추가 */
+          .elearn-recom-title {
+              font-size: 12px; font-weight: 800; color: #191F28;
+              text-align: left; margin-top: 6px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px;
+          }
+          .elearn-recom-list {
+              display: flex; flex-direction: column; gap: 6px; width: 100%;
+          }
+          .elearn-recom-item {
+              background: #F8F9FA; border: 1.5px solid #E5E8EB;
+              border-radius: 10px; padding: 8px 12px;
+              display: flex; align-items: center; justify-content: space-between;
+              font-size: 11.5px; color: #333D4B;
+              text-align: left;
+              box-sizing: border-box;
+          }
+          .elearn-recom-tag {
+              font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+              white-space: nowrap;
+          }
+          .elearn-recom-tag.review { background: rgba(239,68,68,0.08); color: #EF4444; border: 1px solid rgba(239,68,68,0.18); }
+          .elearn-recom-tag.next   { background: rgba(49,130,246,0.08); color: #3182F6; border: 1px solid rgba(49,130,246,0.18); }
+          
+          .elearn-calendar-row {
+              display: flex; justify-content: space-between; align-items: center;
+              background: #F8F9FA; border: 1px solid #E5E8EB;
+              border-radius: 12px; padding: 8px 12px; width: 100%;
+              box-sizing: border-box;
+              margin-top: 4px;
+          }
+          .elearn-calendar-days {
+              display: flex; gap: 5px;
+          }
+          .elearn-day-dot {
+              width: 18px; height: 18px; border-radius: 50%;
+              background: #E5E8EB; font-size: 9.5px; font-weight: 800; color: #8B95A1;
+              display: flex; align-items: center; justify-content: center;
+          }
+          .elearn-day-dot.active {
+              background: #3182F6; color: #fff;
+          }
+
+         /* ====== B2B 분석 리포트 데모 (STEP 05) ====== */
+         .b2b-demo {
+             flex: 1; background: rgba(8,12,24,0.9);
+             border: 1px solid rgba(255,255,255,0.1);
+             border-radius: 24px; overflow: hidden;
+             display: flex; flex-direction: column;
+             position: relative; min-height: 300px;
+             align-self: stretch;
+         }
+         .b2b-header {
+             background: linear-gradient(135deg, rgba(49,130,246,0.15) 0%, rgba(255,193,7,0.06) 100%);
+             border-bottom: 1px solid rgba(255,255,255,0.07);
+             padding: 12px 16px;
+             display: flex; justify-content: space-between; align-items: center;
+             flex-shrink: 0;
+         }
+         .b2b-student-name {
+             font-size: 14px; font-weight: 800; color: #F3F4F6;
+             display: flex; align-items: center; gap: 8px;
+         }
+         .b2b-student-name i { color: #3182F6; font-size: 12px; }
+         .b2b-level-badge {
+             font-size: 10px; font-weight: 700;
+             background: rgba(255,193,7,0.15); color: #FFC107;
+             border: 1px solid rgba(255,193,7,0.3);
+             border-radius: 100px; padding: 3px 10px;
+         }
+         .b2b-body {
+             flex: 1; display: flex; gap: 0; overflow: hidden;
+         }
+         /* 좌측: 주간/월간 상승 차트 */
+         .b2b-left {
+             flex: 1; padding: 12px 14px;
+             border-right: 1px solid rgba(255,255,255,0.06);
+             display: flex; flex-direction: column; gap: 8px;
+         }
+         .b2b-chart-label {
+             font-size: 10px; font-weight: 700; color: #8B95A1;
+             letter-spacing: 0.5px; text-transform: uppercase;
+         }
+         .b2b-line-chart { position: relative; height: 80px; }
+         .b2b-line-chart canvas { width: 100% !important; height: 80px !important; }
+         .b2b-legend {
+             display: flex; gap: 12px;
+         }
+         .b2b-legend-item {
+             display: flex; align-items: center; gap: 5px;
+             font-size: 10px; color: #8B95A1;
+         }
+         .b2b-legend-dot {
+             width: 8px; height: 3px; border-radius: 100px;
+         }
+         /* 우측: 방사형 그래프 */
+         .b2b-right {
+             width: 140px; flex-shrink: 0;
+             padding: 12px 10px;
+             display: flex; flex-direction: column; align-items: center; gap: 4px;
+         }
+         .b2b-radar-label {
+             font-size: 10px; font-weight: 700; color: #8B95A1;
+             letter-spacing: 0.5px; text-transform: uppercase;
+         }
+         .b2b-radar-wrap { position: relative; }
+         .b2b-radar-wrap svg { overflow: visible; }
+         /* 하단: 요약 지표종목 */
+         .b2b-stats {
+             display: flex; gap: 0;
+             border-top: 1px solid rgba(255,255,255,0.06);
+             flex-shrink: 0;
+         }
+         .b2b-stat-item {
+             flex: 1; padding: 8px 10px; text-align: center;
+             border-right: 1px solid rgba(255,255,255,0.06);
+         }
+         .b2b-stat-item:last-child { border-right: none; }
+         .b2b-stat-val {
+             font-family: 'Poppins', sans-serif;
+             font-size: 16px; font-weight: 800; color: #F3F4F6;
+             line-height: 1;
+         }
+         .b2b-stat-val.up { color: #22C55E; }
+         .b2b-stat-val.warn { color: #FF8A00; }
+         .b2b-stat-key { font-size: 9px; color: #6B7280; margin-top: 2px; }
+
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow blue"></div>
+    <div class="bg-glow orange"></div>
+    <div class="bg-glow yellow"></div>
+
+    <div class="slider-viewport">
+        <div class="slider-track" id="sliderTrack">
+            
+            <!-- 슬라이드 1: 표지 -->
+            <div class="slide-wrapper cover-slide" id="coverSlide">
+                <div class="slide-content cover-content">
+                    <!-- 연도 카운터 -->
+                    <div class="cover-year-wrap">
+                        <span class="cover-year" id="coverYearNum">2008</span>
+                        <span class="cover-year-label">년</span>
+                    </div>
+                    <!-- 2026 도달 후 나타나는 나머지 요소 -->
+                    <div class="cover-reveal" id="coverReveal">
+                        <h1 id="typingTitle" data-text="서비스의 새로운 변화가 시작됩니다."></h1>
+                        <p class="presenter-info" id="presenterInfo" style="opacity: 0; transition: opacity 0.8s ease;">발표자 | 콘텐츠개발팀 현명규 과장</p>
+                    </div>
+                </div>
+                <!-- 로고: 슬라이드 하단 고정 (텍스트와 겹치지 않도록 독립 배치) -->
+                <div class="logo-container">
+                    <img src="https://jueun-edu.com/jueun-edu-logo.png" alt="주은에듀테크" onerror="this.style.display='none'">
+                </div>
+            </div>
+
+            <!-- 슬라이드 2: 목차 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <h2>Session Overview</h2>
+                    <p>이번 워크샵에서 확인할 핵심 변화 4가지</p>
+                    <div class="agenda-grid">
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(2)">
+                            <div class="num">01</div>
+                            <div class="desc">스마트피아노 리뉴얼</div>
+                            <div style="font-size:13px;color:#3182F6;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
+                        </div>
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(4)">
+                            <div class="num color-orange">02</div>
+                            <div class="desc">스마트드럼 리뉴얼</div>
+                            <div style="font-size:13px;color:#FF8A00;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
+                        </div>
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(7)">
+                            <div class="num color-yellow">03</div>
+                            <div class="desc">주은쌤 플랫폼 고도화</div>
+                            <div style="font-size:13px;color:#FFC107;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
+                        </div>
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(19)">
+                            <div class="num" style="color:#8B95A1;">04</div>
+                            <div class="desc">Live Demo &amp; 리뷰</div>
+                            <div style="font-size:13px;color:#8B95A1;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 슬라이드 3: 피아노 표지 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="section-num">01</div>
+                    <h2><span class="color-blue">스마트피아노</span> 리뉴얼</h2>
+                    <p>우주를 담은 새로운 게이미피케이션 디자인</p>
+                </div>
+            </div>
+
+            <!-- 슬라이드 4: 피아노 비교 (단계별 스텝) -->
+            <div class="slide-wrapper">
+                <div class="slide-content piano-compare-slide">
+
+                    <!-- 헤더: 제목 + 탭 -->
+                    <div class="piano-header">
+                        <h2 style="margin:0; font-size:clamp(18px,2.2vw,28px);">스마트피아노 <span class="color-blue">리뉴얼</span></h2>
+                        <div id="pianoTabs" style="display:flex; gap:6px;">
+                            <button class="ptab ptab-active" onclick="jumpPianoStep(0)">Intro</button>
+                            <button class="ptab" onclick="jumpPianoStep(2)">Lesson Entry</button>
+                            <button class="ptab" onclick="jumpPianoStep(4)">Content Library</button>
+                            <button class="ptab" onclick="jumpPianoStep(6)">Focused Play</button>
+                        </div>
+                    </div>
+
+                    <!-- 이미지 비교 영역 -->
+                    <div id="pianoImgArea" class="piano-img-area">
+
+                        <!-- AS-IS: 처음엔 전체 너비, 비교 시 절반으로 축소 -->
+                        <div id="pianoAsIsCol" class="piano-col piano-col-asis">
+                            <div class="piano-badge asis-badge"><span>AS-IS</span><em>기존</em></div>
+                            <div class="piano-img-wrap">
+                                <img id="pianoAsIsImg" src="202606-images/piano-001.webp" alt="AS-IS">
+                            </div>
+                        </div>
+
+                        <!-- TO-BE: 처음엔 width:0, 다음 클릭 시 슬라이드인 -->
+                        <div id="pianoToBeCol" class="piano-col piano-col-tobe">
+                            <div class="piano-badge tobe-badge"><span>TO-BE</span><em>개선</em></div>
+                            <div class="piano-img-wrap">
+                                <img id="pianoToBeImg" src="202606-images/piano-001-01.webp" alt="TO-BE">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 설명 텍스트 -->
+                    <div id="pianoDesc" class="piano-desc-box">
+                        <div id="pianoDescTitle" class="piano-desc-title">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp; AS-IS / TO-BE &nbsp;·&nbsp; Intro Page
+                        </div>
+                        <div id="pianoDescBody" class="piano-desc-body">
+                            기존의 우주 테마와 친근한 캐릭터 감성은 유지하면서, 3D 오브젝트와 피아노 기반의 게임형 구성을 더해<br>
+                            아이들이 더 쉽고 즐겁게 몰입할 수 있는 인트로 화면으로 개선했습니다.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 슬라이드 8: 드럼 표지 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="section-num">02</div>
+                    <h2><span class="color-orange">스마트드럼</span> 리뉴얼</h2>
+                    <p>비트에 반응하는 다이내믹 네온 인터페이스</p>
+                </div>
+            </div>
+
+            <!-- 슬라이드 9: 드럼 비교 (단계별 스텝) -->
+            <div class="slide-wrapper">
+                <div class="slide-content drum-compare-slide">
+
+                    <!-- 헤더: 제목 + 탭 -->
+                    <div class="drum-header">
+                        <h2 style="margin:0; font-size:clamp(18px,2.2vw,28px);">스마트드럼 <span class="color-orange">리뉴얼</span></h2>
+                        <div id="drumTabs" style="display:flex; gap:6px;">
+                            <button class="dtab dtab-active" onclick="jumpDrumStep(0)">Intro</button>
+                            <button class="dtab" onclick="jumpDrumStep(2)">Age Selection</button>
+                            <button class="dtab" onclick="jumpDrumStep(4)">Class Menu</button>
+                            <button class="dtab" onclick="jumpDrumStep(6)">Weekly Lesson</button>
+                            <button class="dtab" onclick="jumpDrumStep(8)">List Page</button>
+                            <button class="dtab" onclick="jumpDrumStep(10)">Play Screen</button>
+                        </div>
+                    </div>
+
+                    <!-- 이미지 비교 영역 -->
+                    <div id="drumImgArea" class="drum-img-area">
+
+                        <!-- AS-IS: 처음엔 전체 너비, 비교 시 절반으로 축소 -->
+                        <div id="drumAsIsCol" class="drum-col drum-col-asis">
+                            <div class="drum-badge asis-badge"><span>AS-IS</span><em>기존</em></div>
+                            <div class="drum-img-wrap">
+                                <img id="drumAsIsImg" src="202606-images/drum-001.webp" alt="AS-IS">
+                            </div>
+                        </div>
+
+                        <!-- TO-BE: 처음엔 width:0, 다음 클릭 시 슬라이드인 -->
+                        <div id="drumToBeCol" class="drum-col drum-col-tobe">
+                            <div class="drum-badge tobe-badge"><span>TO-BE</span><em>개선</em></div>
+                            <div class="drum-img-wrap">
+                                <img id="drumToBeImg" src="202606-images/drum-001-01.webp" alt="TO-BE">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 설명 텍스트 -->
+                    <div id="drumDesc" class="drum-desc-box">
+                        <div id="drumDescTitle" class="drum-desc-title">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp; AS-IS / TO-BE &nbsp;·&nbsp; 스마트드럼 인트로
+                        </div>
+                        <div id="drumDescBody" class="drum-desc-body">
+                            기존의 단조롭고 정적인 인트로 화면에서 탈피하여, 화려한 네온 비주얼과 드럼 오브제를 결합한 역동적인 스타트 화면으로 리뉴얼했습니다.<br>
+                            사용자가 첫 진입 단계부터 게이미피케이션 요소에 흥미를 느끼고 자연스럽게 몰입할 수 있도록 개선했습니다.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 슬라이드 10: 드럼 요약 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <h2>Next-Gen UI/UX</h2>
+                    <p>스마트드럼 리뉴얼 핵심 요약</p>
+                    <div class="summary-grid">
+                        <div class="summary-card"><i class="fa-solid fa-bolt color-orange"></i><h3>Neon & Snowball</h3><p>화려한 네온 라이팅 배경과 고급스러운 스노우볼 콘셉트 오브제를 결합하여 역동적인 타격감을 시각화했습니다.</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-table-cells-large color-orange"></i><h3>Clean Dashboard</h3><p>복잡했던 기존 레이아웃을 버리고, 가장 깔끔하고 정돈된 대시보드 및 리스트 UI를 새롭게 구축했습니다.</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-music color-orange"></i><h3>Rhythmic Identity</h3><p>리드미컬한 컬러 코딩과 연령별 캐릭터 변주를 통해 웰메이드 타악기 전용 앱의 정체성을 완벽히 확립했습니다.</p></div>
+                    </div>
+                    <div class="update-notice" style="background: rgba(255, 138, 0, 0.1); border: 1px solid rgba(255, 138, 0, 0.2); color: #FF8A00;"><i class="fa-regular fa-calendar-check"></i> 7월 중 적용 목표</div>
+                </div>
+            </div>
+
+            <!-- 슬라이드 9: 주은쌤 표지 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="section-num" style="color: rgba(255,193,7,0.1);">03</div>
+                    <h2><span class="color-yellow">주은쌤 JUEUNSSAM</span></h2>
+                    <p>데이터와 기술로 완성하는 에듀테크 통합 플랫폼</p>
+                </div>
+            </div>
+
+            <!-- 슬라이드 10: 로드맵 -->
+            <div class="slide-wrapper roadmap-slide">
+                <div class="slide-content">
+                    <div class="roadmap-title-kicker">2026 PLATFORM ROADMAP</div>
+                    <h2 style="font-size: 42px;">JUEUNSSAM <span class="color-yellow">FUTURE ROADMAP</span></h2>
+                    <p>대대적인 기능 개편 및 서비스 통합 로드맵</p>
+                    <div class="roadmap-container">
+                        <div class="roadmap-line"></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-server"></i></div><div class="roadmap-content"><h3>01. 서버이전</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">최적화의 시작</p></div></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-user-plus"></i></div><div class="roadmap-content"><h3>02. 학생 등록</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">평가 시스템 기반</p></div></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-trophy"></i></div><div class="roadmap-content"><h3>03. 랭킹 시스템</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">전국 학습 경쟁</p></div></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-file-pen"></i></div><div class="roadmap-content"><h3>04. 평가 시스템</h3><div class="roadmap-date">9월 초</div><p class="roadmap-desc">E-Learning 고도화</p></div></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-chart-pie"></i></div><div class="roadmap-content"><h3>05. 분석 리포트</h3><div class="roadmap-date">9월 초</div><p class="roadmap-desc">데이터 B2B</p></div></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-heart-pulse"></i></div><div class="roadmap-content"><h3>06. 헬스케어</h3><div class="roadmap-date">11월 중</div><p class="roadmap-desc">인지/집중 훈련</p></div></div>
+                    </div>
+                    <p class="roadmap-notice">※ 일정은 내부 사정에 따라 조정될 수 있습니다.</p>
+                </div>
+            </div>
+
+            <!-- 슬라이드 11~16: 상세내용 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="detail-layout">
+                        <div class="detail-text">
+                            <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 01</span>
+                            <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 7월 중</div>
+                            <h2>안정적인 서버 이전</h2>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> AWS 클라우드 기반 인프라 확장을 통한 서비스 안정성 확보</li>
+                                <li><i class="fa-solid fa-check"></i> 기존 대비 10배 이상의 트래픽 처리 및 데이터 로딩 속도 최적화</li>
+                                <li><i class="fa-solid fa-check"></i> 신규 대규모 기능 업데이트를 위한 유연한 시스템 환경 구축</li>
+                            </ul>
+                        </div>
+                        <div class="detail-visual detail-img-wrap">
+                            <img src="202606-images/jueunssam-001.png" alt="안정적인 서버 이전" class="detail-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="detail-layout">
+                        <div class="detail-visual detail-img-wrap">
+                            <img src="202606-images/jueunssam-002.png" alt="학생 등록 관리" class="detail-img">
+                        </div>
+                        <div class="detail-text">
+                            <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 02</span>
+                            <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 7월 중</div>
+                            <h2>학생 등록 관리</h2>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> 학생별 고유 식별 번호 부여를 통한 체계적인 학습 데이터 누적</li>
+                                <li><i class="fa-solid fa-check"></i> 랭킹 및 성취도 평가 시스템 구축을 위한 가장 핵심적인 기본 DB 설계</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="detail-layout">
+                        <div class="detail-text">
+                            <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 03</span>
+                            <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 7월 중</div>
+                            <h2>웹학습 랭킹 대시보드</h2>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> 학원 내, 지역별, 전국 단위 실시간 웹학습 랭킹 대시보드 도입</li>
+                                <li><i class="fa-solid fa-check"></i> 랭킹 데이터를 활용하여 학원 자체 이벤트 기획 및 운영 가능</li>
+                                <li><i class="fa-solid fa-check"></i> <div>학원 정책에 따라 대시보드 노출 ON/OFF 설정 가능<br><span style="font-size: 18px; color: #8B95A1;">(단, 웹학습 자체 랭킹 화면은 유지됨)</span></div></li>
+                            </ul>
+                        </div>
+                        <!-- ====== 랭킹 대시보드 ====== -->
+                        <div class="rank-dashboard" id="rankDashboard">
+                            <!-- 탭 -->
+                            <div class="rank-tabs">
+                                <button class="rank-tab active" data-tab="academy" onclick="switchRankTab(this,'academy')">
+                                    <i class="fa-solid fa-school"></i> 학원 내
+                                </button>
+                                <button class="rank-tab" data-tab="region" onclick="switchRankTab(this,'region')">
+                                    <i class="fa-solid fa-map-location-dot"></i> 지역 · 대구
+                                </button>
+                                <button class="rank-tab" data-tab="nation" onclick="switchRankTab(this,'nation')">
+                                    <i class="fa-solid fa-earth-asia"></i> 전국
+                                </button>
+                            </div>
+
+                            <!-- 학원 내 랭킹 -->
+                            <div class="rank-panel active" id="rank-academy">
+                                <div class="rank-list">
+                                    <div class="rank-item gold">
+                                        <span class="rank-pos">🥇</span>
+                                        <span class="rank-name">김서준</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar" style="--w:94%"></div></div>
+                                        <span class="rank-score" data-target="9420">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item silver">
+                                        <span class="rank-pos">🥈</span>
+                                        <span class="rank-name">이하윤</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar" style="--w:87%"></div></div>
+                                        <span class="rank-score" data-target="8740">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item bronze">
+                                        <span class="rank-pos">🥉</span>
+                                        <span class="rank-name">박지안</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar" style="--w:81%"></div></div>
+                                        <span class="rank-score" data-target="8130">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item">
+                                        <span class="rank-pos rank-num">4</span>
+                                        <span class="rank-name">최민준</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar" style="--w:74%"></div></div>
+                                        <span class="rank-score" data-target="7450">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item">
+                                        <span class="rank-pos rank-num">5</span>
+                                        <span class="rank-name">정수아</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar" style="--w:68%"></div></div>
+                                        <span class="rank-score" data-target="6820">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 지역(대구) 랭킹 -->
+                            <div class="rank-panel" id="rank-region">
+                                <!-- 상단: 학원 순위 -->
+                                <div class="rank-hero">
+                                    <div class="rank-hero-crown">🏆</div>
+                                    <div class="rank-hero-info">
+                                        <div class="rank-hero-label"><i class="fa-solid fa-map-location-dot"></i> 대구 지역 학원 순위</div>
+                                        <div class="rank-hero-name">주은음악학원</div>
+                                    </div>
+                                    <div class="rank-hero-rank-num">1<small>위</small></div>
+                                </div>
+                                <!-- 하단: 학원 아동 대구 내 개인 순위 -->
+                                <div class="rank-section-label"><i class="fa-solid fa-child"></i> 우리 학원 아동 · 대구 지역 개인 순위</div>
+                                <div class="rank-list">
+                                    <div class="rank-item gold">
+                                        <span class="rank-place">20</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">김서준</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar accent" style="--w:94%"></div></div>
+                                        <span class="rank-score" data-target="9420">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item silver">
+                                        <span class="rank-place">47</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">이하윤</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar accent" style="--w:87%"></div></div>
+                                        <span class="rank-score" data-target="8740">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item bronze">
+                                        <span class="rank-place">83</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">박지안</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar accent" style="--w:81%"></div></div>
+                                        <span class="rank-score" data-target="8130">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item">
+                                        <span class="rank-place">156</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">최민준</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar accent" style="--w:74%"></div></div>
+                                        <span class="rank-score" data-target="7450">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item">
+                                        <span class="rank-place">214</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">정수아</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar accent" style="--w:68%"></div></div>
+                                        <span class="rank-score" data-target="6820">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 전국 랭킹 -->
+                            <div class="rank-panel" id="rank-nation">
+                                <!-- 상단: 학원 순위 -->
+                                <div class="rank-hero">
+                                    <div class="rank-hero-crown">🏆</div>
+                                    <div class="rank-hero-info">
+                                        <div class="rank-hero-label"><i class="fa-solid fa-earth-asia"></i> 전국 학원 순위</div>
+                                        <div class="rank-hero-name">주은음악학원</div>
+                                    </div>
+                                    <div class="rank-hero-rank-num">2<small>위</small></div>
+                                </div>
+                                <!-- 하단: 학원 아동 전국 개인 순위 -->
+                                <div class="rank-section-label"><i class="fa-solid fa-child"></i> 우리 학원 아동 · 전국 개인 순위</div>
+                                <div class="rank-list">
+                                    <div class="rank-item gold">
+                                        <span class="rank-place">114</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">김서준</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar nation" style="--w:94%"></div></div>
+                                        <span class="rank-score" data-target="9420">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item silver">
+                                        <span class="rank-place">203</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">이하윤</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar nation" style="--w:87%"></div></div>
+                                        <span class="rank-score" data-target="8740">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item bronze">
+                                        <span class="rank-place">381</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">박지안</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar nation" style="--w:81%"></div></div>
+                                        <span class="rank-score" data-target="8130">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item">
+                                        <span class="rank-place">562</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">최민준</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar nation" style="--w:74%"></div></div>
+                                        <span class="rank-score" data-target="7450">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                    <div class="rank-item">
+                                        <span class="rank-place">847</span><span class="rank-place-unit">등</span>
+                                        <span class="rank-name">정수아</span>
+                                        <div class="rank-bar-wrap"><div class="rank-bar nation" style="--w:68%"></div></div>
+                                        <span class="rank-score" data-target="6820">0</span>
+                                        <span class="rank-unit">점</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="detail-layout">
+                        <!-- ====== 음악 이론 E-Learning 애니메이션 ====== -->
+                        <div class="elearn-demo" id="elearnDemo">
+
+                            <!-- PHASE 1: 문제 화면 -->
+                            <div class="elearn-phase active" id="ephase1">
+                                <div class="elearn-header">
+                                    <span class="elearn-badge"><i class="fa-solid fa-music"></i> 음악 이론</span>
+                                    <span class="elearn-qnum">Q. 3 / 8</span>
+                                </div>
+                                <div class="elearn-question">
+                                    다음 악보에서 표시된 음표의<br>박자를 고르세요.
+                                    <div class="elearn-staff">
+                                        <svg viewBox="0 0 200 70" width="100%" height="60">
+                                            <!-- 오선 -->
+                                            <line x1="10" y1="15" x2="190" y2="15" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="25" x2="190" y2="25" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="35" x2="190" y2="35" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="45" x2="190" y2="45" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="55" x2="190" y2="55" stroke="#CBD5E1" stroke-width="1"/>
+                                            <!-- 음자리표 (간단) -->
+                                            <text x="14" y="50" font-size="40" fill="#333D4B" font-family="serif">𝄞</text>
+                                            <!-- 4/4 박자 -->
+                                            <text x="52" y="38" font-size="14" fill="#333D4B" font-family="serif">4</text>
+                                            <text x="52" y="53" font-size="14" fill="#333D4B" font-family="serif">4</text>
+                                            <!-- 2분음표 (강조) -->
+                                            <ellipse cx="110" cy="35" rx="8" ry="5.5" fill="none" stroke="#3182F6" stroke-width="2"/>
+                                            <line x1="118" y1="35" x2="118" y2="10" stroke="#3182F6" stroke-width="2"/>
+                                            <!-- 물음표 강조 원 -->
+                                            <circle cx="110" cy="35" r="13" fill="none" stroke="rgba(49,130,246,0.2)" stroke-width="1" stroke-dasharray="3,2"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="elearn-options">
+                                    <div class="elearn-opt" id="eopt1">① 온음표 <span class="opt-sub">4박</span></div>
+                                    <div class="elearn-opt" id="eopt2">② 2분음표 <span class="opt-sub">2박</span></div>
+                                    <div class="elearn-opt" id="eopt3">③ 4분음표 <span class="opt-sub">1박</span></div>
+                                    <div class="elearn-opt" id="eopt4">④ 8분음표 <span class="opt-sub">½박</span></div>
+                                </div>
+                            </div>
+
+                            <!-- PHASE 2: 선택 후 채점 -->
+                            <div class="elearn-phase" id="ephase2">
+                                <div class="elearn-header">
+                                    <span class="elearn-badge"><i class="fa-solid fa-check-double"></i> 자동 채점 중</span>
+                                    <span class="elearn-qnum">Q. 3 / 8</span>
+                                </div>
+                                <div class="elearn-question">
+                                    다음 악보에서 표시된 음표의<br>박자를 고르세요.
+                                    <div class="elearn-staff">
+                                        <svg viewBox="0 0 200 70" width="100%" height="60">
+                                            <line x1="10" y1="15" x2="190" y2="15" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="25" x2="190" y2="25" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="35" x2="190" y2="35" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="45" x2="190" y2="45" stroke="#CBD5E1" stroke-width="1"/>
+                                            <line x1="10" y1="55" x2="190" y2="55" stroke="#CBD5E1" stroke-width="1"/>
+                                            <text x="14" y="50" font-size="40" fill="#333D4B" font-family="serif">𝄞</text>
+                                            <text x="52" y="38" font-size="14" fill="#333D4B" font-family="serif">4</text>
+                                            <text x="52" y="53" font-size="14" fill="#333D4B" font-family="serif">4</text>
+                                            <ellipse cx="110" cy="35" rx="8" ry="5.5" fill="none" stroke="#3182F6" stroke-width="2"/>
+                                            <line x1="118" y1="35" x2="118" y2="10" stroke="#3182F6" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="elearn-options">
+                                    <div class="elearn-opt">① 온음표 <span class="opt-sub">4박</span></div>
+                                    <div class="elearn-opt elearn-selected">② 2분음표 <span class="opt-sub">2박</span></div>
+                                    <div class="elearn-opt">③ 4분음표 <span class="opt-sub">1박</span></div>
+                                    <div class="elearn-opt">④ 8분음표 <span class="opt-sub">½박</span></div>
+                                </div>
+                                <div class="elearn-grading"><span class="grading-dot"></span><span class="grading-dot"></span><span class="grading-dot"></span></div>
+                            </div>
+
+                            <!-- PHASE 3: 결과 -->
+                            <div class="elearn-phase" id="ephase3">
+                                <div class="elearn-result-wrap">
+                                    <div class="elearn-result-icon correct"><i class="fa-solid fa-circle-check"></i></div>
+                                    <div class="elearn-result-label">정답!</div>
+                                    <div class="elearn-result-answer">② 2분음표 = <strong>2박</strong></div>
+                                    <div class="elearn-result-exp">
+                                        2분음표(♩)는 온음표의 절반 길이로,<br>4/4박자에서 <strong>2박</strong>을 차지합니다.
+                                    </div>
+                                    
+                                    <!-- 이러닝 피드백 카드 추가 (하단 여백 해소) -->
+                                    <div class="elearn-feedback-card">
+                                        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='40' r='22' fill='%233182F6'/><path d='M12 90 Q50 62 88 90' fill='%233182F6'/></svg>" alt="주은쌤">
+                                        <div class="elearn-feedback-text">
+                                            <h4>주은쌤 피드백 코멘트</h4>
+                                            <p>"서준아, 2분음표의 길이를 완벽하게 이해했구나! 박자를 세는 집중력이 아주 뛰어나네. 아주 멋져!"</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 획득 리워드 배지 추가 (이러닝 디테일) -->
+                                    <div class="elearn-reward-row">
+                                        <div class="elearn-reward-badge">
+                                            🏆 <span>일일 학습 마스터 배지 획득!</span>
+                                        </div>
+                                        <div class="elearn-reward-point">
+                                            <i class="fa-solid fa-coins"></i> <span>+15p</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 액션 버튼 -->
+                                    <button class="elearn-next-btn">
+                                        다음 단계 학습 진행 <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PHASE 4: 분석 리포트 (2열 레이아웃) -->
+                            <div class="elearn-phase" id="ephase4">
+                                <!-- 헤더 -->
+                                <div class="elearn-report-header">
+                                    <i class="fa-solid fa-chart-bar" style="color:#3182F6;"></i> 맞춤형 분석 리포트
+                                    <span style="margin-left:auto;font-size:9.5px;color:#8B95A1;font-weight:700;">김서준 · 음악 이론 2단계</span>
+                                </div>
+                                <!-- 2열: 좌-바차트, 우-레이더 -->
+                                <div style="display:flex;gap:12px;margin-top:2px;">
+                                    <!-- 좌: 가로 바차트 -->
+                                    <div style="flex:1.2;display:flex;flex-direction:column;gap:5px;justify-content:center;">
+                                        <div class="report-row">
+                                            <span class="report-label">음표·박자</span>
+                                            <div class="report-bar-wrap"><div class="report-bar" style="--rw:88%;--rc:#3182F6"></div></div>
+                                            <span class="report-pct">88%</span>
+                                        </div>
+                                        <div class="report-row">
+                                            <span class="report-label">음계·조성</span>
+                                            <div class="report-bar-wrap"><div class="report-bar" style="--rw:72%;--rc:#3182F6"></div></div>
+                                            <span class="report-pct">72%</span>
+                                        </div>
+                                        <div class="report-row">
+                                            <span class="report-label">화음·화성</span>
+                                            <div class="report-bar-wrap"><div class="report-bar" style="--rw:51%;--rc:#FF8A00"></div></div>
+                                            <span class="report-pct rpt-warn">51%</span>
+                                        </div>
+                                        <div class="report-row">
+                                            <span class="report-label">악상기호</span>
+                                            <div class="report-bar-wrap"><div class="report-bar" style="--rw:38%;--rc:#EF4444"></div></div>
+                                            <span class="report-pct rpt-danger">38%</span>
+                                        </div>
+                                        <div class="report-row">
+                                            <span class="report-label">리듬·박자</span>
+                                            <div class="report-bar-wrap"><div class="report-bar" style="--rw:76%;--rc:#3182F6"></div></div>
+                                            <span class="report-pct">76%</span>
+                                        </div>
+                                        <div class="report-row">
+                                            <span class="report-label">독보·시창</span>
+                                            <div class="report-bar-wrap"><div class="report-bar" style="--rw:62%;--rc:#8B5CF6"></div></div>
+                                            <span class="report-pct">62%</span>
+                                        </div>
+                                    </div>
+                                    <!-- 우: 미니 SVG 레이더 차트 -->
+                                    <div style="width:100px;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:center;flex-shrink:0;">
+                                        <div style="font-size:9.5px;color:#4E5968;font-weight:800;">역량 레이더</div>
+                                        <svg id="ep4Radar" width="90" height="90" viewBox="-12 -12 124 124" style="overflow:visible;">
+                                            <polygon id="ep4g5" fill="none" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>
+                                            <polygon id="ep4g4" fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+                                            <polygon id="ep4g3" fill="none" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+                                            <polygon id="ep4g2" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
+                                            <line id="ep4ax0" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                                            <line id="ep4ax1" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                                            <line id="ep4ax2" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                                            <line id="ep4ax3" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                                            <line id="ep4ax4" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                                            <line id="ep4ax5" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                                            <polygon id="ep4data" fill="rgba(49,130,246,0.15)" stroke="#3182F6" stroke-width="1.5" stroke-linejoin="round" points=""/>
+                                            <circle id="ep4d0" r="2.5" fill="#3182F6"/>
+                                            <circle id="ep4d1" r="2.5" fill="#3182F6"/>
+                                            <circle id="ep4d2" r="2.5" fill="#FF8A00"/>
+                                            <circle id="ep4d3" r="2.5" fill="#EF4444"/>
+                                            <circle id="ep4d4" r="2.5" fill="#3182F6"/>
+                                            <circle id="ep4d5" r="2.5" fill="#8B5CF6"/>
+                                            <text id="ep4L0" font-size="7.5" fill="#4E5968" font-weight="700" text-anchor="middle">음표</text>
+                                            <text id="ep4L1" font-size="7.5" fill="#4E5968" font-weight="700" text-anchor="middle">음계</text>
+                                            <text id="ep4L2" font-size="7.5" fill="#4E5968" font-weight="700" text-anchor="middle">화음</text>
+                                            <text id="ep4L3" font-size="7.5" fill="#4E5968" font-weight="700" text-anchor="middle">악상</text>
+                                            <text id="ep4L4" font-size="7.5" fill="#4E5968" font-weight="700" text-anchor="middle">리듬</text>
+                                            <text id="ep4L5" font-size="7.5" fill="#4E5968" font-weight="700" text-anchor="middle">독보</text>
+                                        </svg>
+                                        <div style="font-size:8px;color:#8B95A1;text-align:center;font-weight:600;">6대 능력치</div>
+                                    </div>
+                                </div>
+
+                                <!-- 하단 1: 출석 및 진도 캘린더 (하단 여백 해소) -->
+                                <div class="elearn-calendar-row">
+                                    <span style="font-size: 11.5px; font-weight: 700; color: #4E5968;"><i class="fa-solid fa-fire" style="color:#FF8A00;"></i> 5일 연속 출석 달성!</span>
+                                    <div class="elearn-calendar-days">
+                                        <div class="elearn-day-dot active">월</div>
+                                        <div class="elearn-day-dot active">화</div>
+                                        <div class="elearn-day-dot active">수</div>
+                                        <div class="elearn-day-dot active">목</div>
+                                        <div class="elearn-day-dot active">금</div>
+                                        <div class="elearn-day-dot">토</div>
+                                        <div class="elearn-day-dot">일</div>
+                                    </div>
+                                </div>
+
+                                <!-- 하단 2: 추천 맞춤 학습 리스트 (하단 여백 해소) -->
+                                <div class="elearn-recom-title"><i class="fa-solid fa-star" style="color:#FFC107;"></i> 추천 맞춤 학습</div>
+                                <div class="elearn-recom-list">
+                                    <div class="elearn-recom-item">
+                                        <span>🎹 악상 기호 완전정복 (초급)</span>
+                                        <span class="elearn-recom-tag review">집중 복습</span>
+                                    </div>
+                                    <div class="elearn-recom-item">
+                                        <span>🎹 화음과 화성학 기초 레슨</span>
+                                        <span class="elearn-recom-tag next">선행 학습</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="detail-text">
+                            <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 04</span>
+                            <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 9월 초</div>
+                            <h2>오프라인 교재의<br>E-Learning</h2>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> 기존 종이 교재의 한계를 넘는 완벽한 인터랙티브 E-Learning 전환</li>
+                                <li><i class="fa-solid fa-check"></i> 실시간 자동 채점 및 취약 부분 집중 복습 시스템 구축</li>
+                                <li><i class="fa-solid fa-check"></i> 채점 결과를 기반으로 한 맞춤형 분석 리포트 제공</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="detail-layout">
+                        <div class="detail-text">
+                            <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 05</span>
+                            <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 9월 초</div>
+                            <h2>B2B 분석 리포트 고도화</h2>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> 누적 학습 데이터를 기반으로 한 정밀한 성취도 분석 알고리즘</li>
+                                <li><i class="fa-solid fa-check"></i> 학원 운영 및 상담에 즉시 활용 가능한 비주얼 리포트 생성</li>
+                            </ul>
+                        </div>
+                        <!-- ====== B2B 분석 리포트 고도화 데모 ====== -->
+                        <div class="b2b-demo" id="b2bDemo">
+                            <!-- 헤더: 학생 정보 -->
+                            <div class="b2b-header">
+                                <div class="b2b-student-name">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                    김서준
+                                    <span style="font-size:10px;color:#8B95A1;font-weight:500;">| 음악 이론 2단계</span>
+                                </div>
+                                <div class="b2b-level-badge">🏆 학원 내 1위</div>
+                            </div>
+
+                            <!-- 바디: 좌(라인차트) + 우(방사형) -->
+                            <div class="b2b-body">
+                                <!-- 좌측: 주간/월간 성장 라인차트 -->
+                                <div class="b2b-left">
+                                    <div class="b2b-chart-label"><i class="fa-solid fa-chart-line" style="color:#3182F6;"></i> 학습 성장 추이</div>
+                                    <div class="b2b-line-chart">
+                                        <canvas id="b2bLineChart" width="200" height="80"></canvas>
+                                    </div>
+                                    <div class="b2b-legend">
+                                        <div class="b2b-legend-item"><div class="b2b-legend-dot" style="background:#3182F6;"></div> 주간 점수</div>
+                                        <div class="b2b-legend-item"><div class="b2b-legend-dot" style="background:#FFC107;"></div> 월간 목표</div>
+                                    </div>
+                                    <!-- 주간/월간 변화율 -->
+                                    <div style="display:flex;gap:10px;margin-top:2px;">
+                                        <div style="flex:1;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:7px 10px;text-align:center;">
+                                            <div style="font-size:9px;color:#8B95A1;margin-bottom:2px;">주간 상승</div>
+                                            <div class="b2b-stat-val up" id="b2bWeeklyUp">+0%</div>
+                                        </div>
+                                        <div style="flex:1;background:rgba(49,130,246,0.08);border:1px solid rgba(49,130,246,0.2);border-radius:10px;padding:7px 10px;text-align:center;">
+                                            <div style="font-size:9px;color:#8B95A1;margin-bottom:2px;">월간 상승</div>
+                                            <div class="b2b-stat-val" style="color:#3182F6;" id="b2bMonthlyUp">+0%</div>
+                                        </div>
+                                        <div style="flex:1;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:10px;padding:7px 10px;text-align:center;">
+                                            <div style="font-size:9px;color:#8B95A1;margin-bottom:2px;">목표 달성</div>
+                                            <div class="b2b-stat-val" style="color:#FFC107;" id="b2bGoalPct">0%</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 우측: 방사형 그래프 -->
+                                <div class="b2b-right">
+                                    <div class="b2b-radar-label"><i class="fa-solid fa-chart-radar" style="color:#FFC107;"></i> 역량 분석</div>
+                                    <div class="b2b-radar-wrap">
+                                        <svg id="b2bRadar" width="120" height="120" viewBox="-10 -10 120 120">
+                                            <!-- 배경 오각형 그리드 -->
+                                            <polygon id="rGrid5" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                                            <polygon id="rGrid4" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                                            <polygon id="rGrid3" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                                            <polygon id="rGrid2" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                                            <!-- 축선 -->
+                                            <line id="rAxis0" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                                            <line id="rAxis1" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                                            <line id="rAxis2" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                                            <line id="rAxis3" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                                            <line id="rAxis4" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                                            <!-- 데이터 폴리곤 -->
+                                            <polygon id="rData" fill="rgba(49,130,246,0.25)" stroke="#3182F6" stroke-width="1.5" stroke-linejoin="round" points=""/>
+                                            <!-- 데이터 포인트 -->
+                                            <circle id="rDot0" r="3" fill="#3182F6" cx="50" cy="50"/>
+                                            <circle id="rDot1" r="3" fill="#3182F6" cx="50" cy="50"/>
+                                            <circle id="rDot2" r="3" fill="#3182F6" cx="50" cy="50"/>
+                                            <circle id="rDot3" r="3" fill="#3182F6" cx="50" cy="50"/>
+                                            <circle id="rDot4" r="3" fill="#3182F6" cx="50" cy="50"/>
+                                            <!-- 라벨 -->
+                                            <text id="rLabel0" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">음표</text>
+                                            <text id="rLabel1" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">음계</text>
+                                            <text id="rLabel2" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">화음</text>
+                                            <text id="rLabel3" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">리듬</text>
+                                            <text id="rLabel4" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">실습</text>
+                                        </svg>
+                                    </div>
+                                    <!-- 범례 -->
+                                    <div style="font-size:9px;color:#8B95A1;text-align:center;">음악 역량 레이더</div>
+                                </div>
+                            </div>
+
+                            <!-- 하단 요약 -->
+                            <div class="b2b-stats">
+                                <div class="b2b-stat-item">
+                                    <div class="b2b-stat-val up" id="b2bTotalScore">0</div>
+                                    <div class="b2b-stat-key">총점</div>
+                                </div>
+                                <div class="b2b-stat-item">
+                                    <div class="b2b-stat-val up" id="b2bAccuracy">0%</div>
+                                    <div class="b2b-stat-key">정답률</div>
+                                </div>
+                                <div class="b2b-stat-item">
+                                    <div class="b2b-stat-val warn" id="b2bWeakArea">화음</div>
+                                    <div class="b2b-stat-key">취약 영역</div>
+                                </div>
+                                <div class="b2b-stat-item">
+                                    <div class="b2b-stat-val" style="color:#3182F6;" id="b2bSessions">0회</div>
+                                    <div class="b2b-stat-key">이번 달 학습</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <div class="detail-layout">
+                        <div class="detail-visual detail-img-wrap">
+                            <img src="202606-images/jueunssam-003.png" alt="음악 기반 헬스케어" class="detail-img">
+                        </div>
+                        <div class="detail-text">
+                            <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 06</span>
+                            <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 11월 중</div>
+                            <h2>음악 기반 헬스케어</h2>
+                            <ul>
+                                <li><i class="fa-solid fa-check"></i> 아동의 인지 발달부터 시니어의 치매 예방까지 전 연령을 아우르는 솔루션</li>
+                                <li><i class="fa-solid fa-check"></i> 피아노, 드럼 연주를 연동한 인지 기능 및 집중력 향상 프로그램</li>
+                                <li><i class="fa-solid fa-check"></i> 전문 임상 논문 로직 기반의 인지 기능 측정 및 분석 시스템 도입</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 슬라이드 17: 주은쌤 2.0 업데이트 및 데모 링크 -->
+            <div class="slide-wrapper">
+                <div class="slide-content" style="justify-content: center;">
+                    <div class="badge" style="background: rgba(255, 193, 7, 0.15); color: #FFC107; border-color: rgba(255, 193, 7, 0.2);">LIVE DEMO</div>
+                    <h2 style="font-size: 64px; margin-bottom: 24px;">주은쌤 2.0 <span class="color-yellow">업데이트</span></h2>
+                    <p>데이터와 기술로 완성된 새로운 플랫폼을 직접 경험해 보세요.</p>
+                    
+                    <a href="https://jueunssam.com/wp-content/uploads/JUEUNSSAM2.0/index.html" target="_blank" class="btn-external-link">
+                        주은쌤 2.0 데모 <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 슬라이드 18: 감사합니다 -->
+            <div class="slide-wrapper">
+                <div class="slide-content" style="justify-content: center;">
+                    <div style="width: 120px; height: 120px; border-radius: 60px; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <i class="fa-solid fa-check" style="font-size: 50px; color: #3182F6;"></i>
+                    </div>
+                    <h1 style="font-size: 80px; margin-bottom: 20px;">감사합니다.</h1>
+                    <p style="font-size: 26px;">주은에듀테크의 새로운 변화를 기대해주세요.</p>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- 글로벌 버튼 컨트롤러 -->
+        <div class="nav-controls">
+            <button class="btn-nav" id="btnPrev" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="btn-nav" id="btnNext" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalSlides = 18; // 슬라이드 18장 (피아노 비교 단일 슬라이드로 연개)
+            let currentSlideIndex = 0;
+            const sliderTrack = document.getElementById('sliderTrack');
+            let isScrolling = false;
+
+            function updateNavButtons() {
+                const btnPrev = document.getElementById('btnPrev');
+                const btnNext = document.getElementById('btnNext');
+                if(btnPrev && btnNext) {
+                    btnPrev.classList.toggle('disabled', currentSlideIndex === 0);
+                    btnNext.classList.toggle('disabled', currentSlideIndex === totalSlides - 1);
+                }
+            }
+
+            function updateActiveSlide() {
+                document.querySelectorAll('.slide-wrapper').forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentSlideIndex);
+                });
+            }
+
+            // 전역 스코프 함수 선언 (HTML onclick 연결을 위함)
+            window.goToSlide = function(index) {
+                if (index < 0 || index >= totalSlides) return;
+                currentSlideIndex = index;
+                sliderTrack.style.transform = `translateX(-${currentSlideIndex * 100}vw)`;
+                updateNavButtons();
+                updateActiveSlide();
+                isScrolling = true;
+                setTimeout(() => { isScrolling = false; }, 600); 
+            };
+
+            window.nextSlide = function() {
+                // 피아노 비교 슬라이드(index 3): 스텝 0~7 순환, 8에서 다음 슬라이드
+                if (currentSlideIndex === 3) {
+                    const step = window._pianoStep || 0;
+                    if (step < 7) {
+                        if (typeof window.openPianoCompare === 'function') window.openPianoCompare();
+                        return;
+                    }
+                    // 마지막 스텝(7) 완료 → 다음 슬라이드로, 스텝 리셋
+                    window._pianoStep = 0;
+                    if (typeof window.jumpPianoStep === 'function') {
+                        // 리셋 후 다음 슬라이드
+                        setTimeout(() => {
+                            window.jumpPianoStep(0);
+                        }, 50);
+                    }
+                }
+
+                // 스마트드럼 비교 슬라이드(index 5): 스텝 0~11 순환, 12에서 다음 슬라이드
+                if (currentSlideIndex === 5) {
+                    const step = window._drumStep || 0;
+                    if (step < 11) {
+                        if (typeof window.openDrumCompare === 'function') window.openDrumCompare();
+                        return;
+                    }
+                    // 마지막 스텝(11) 완료 → 다음 슬라이드로, 스텝 리셋
+                    window._drumStep = 0;
+                    if (typeof window.jumpDrumStep === 'function') {
+                        // 리셋 후 다음 슬라이드
+                        setTimeout(() => {
+                            window.jumpDrumStep(0);
+                        }, 50);
+                    }
+                }
+
+                if (currentSlideIndex < totalSlides - 1) goToSlide(currentSlideIndex + 1);
+            };
+            
+            window.prevSlide = function() { 
+                if (currentSlideIndex > 0) goToSlide(currentSlideIndex - 1); 
+                // 이전 슬라이드로 갈 때 드럼/피아노 비교 스텝 상태도 0으로 복원
+                if (currentSlideIndex === 3) window.jumpPianoStep(0);
+                if (currentSlideIndex === 5) window.jumpDrumStep(0);
+            };
+
+
+
+            // 마우스 휠
+            window.addEventListener('wheel', (evt) => {
+                if (isScrolling) return;
+                
+                if (evt.deltaY > 50) nextSlide();
+                else if (evt.deltaY < -50) prevSlide();
+            });
+
+            // 키보드 방향키 통합 제어
+            window.addEventListener('keydown', (evt) => {
+                if (isScrolling) return;
+
+                if (evt.key === 'ArrowRight' || evt.key === ' ') {
+                    evt.preventDefault();
+                    nextSlide();
+                } else if (evt.key === 'ArrowLeft') {
+                    evt.preventDefault();
+                    prevSlide();
+                }
+            });
+
+            updateNavButtons();
+            updateActiveSlide();
+        });
+
+
+
+
+        // ============================================================
+        // 랭킹 대시보드 — 탭 전환 / 숫자 카운팅 / 바 애니메이션
+        // ============================================================
+
+        /* 숫자를 target 까지 카운팅 */
+        function animateCount(el, target, duration) {
+            const start = performance.now();
+            const startVal = 0;
+            const format = (n) => Math.floor(n).toLocaleString('ko-KR');
+            function step(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                // easeOutExpo
+                const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                el.textContent = format(startVal + (target - startVal) * ease);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        /* 현재 활성 패널의 바와 숫자 모두 애니메이션 */
+        function runRankAnimations(panelEl) {
+            // 바 채움
+            panelEl.querySelectorAll('.rank-bar').forEach(bar => {
+                const w = bar.style.getPropertyValue('--w') || '0%';
+                bar.style.width = '0';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => { bar.style.width = w; });
+                });
+            });
+            // 숫자 카운팅
+            panelEl.querySelectorAll('.rank-score').forEach((el, i) => {
+                const target = parseInt(el.dataset.target || '0', 10);
+                el.textContent = '0';
+                setTimeout(() => animateCount(el, target, 1400), i * 80);
+            });
+            // 리스트 아이템 재-애니메이션 (슬라이드인)
+            panelEl.querySelectorAll('.rank-item').forEach(item => {
+                item.style.animation = 'none';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => { item.style.animation = ''; });
+                });
+            });
+        }
+
+        /* 탭 전환 */
+        window.switchRankTab = function(btn, tabId) {
+            // 탭 버튼 활성화
+            document.querySelectorAll('.rank-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            // 패널 전환
+            document.querySelectorAll('.rank-panel').forEach(p => p.classList.remove('active'));
+            const panel = document.getElementById('rank-' + tabId);
+            if (panel) {
+                panel.classList.add('active');
+                runRankAnimations(panel);
+            }
+        };
+
+        /* 슬라이드 진입 시 자동 애니메이션 (IntersectionObserver) */
+        const rankDashboard = document.getElementById('rankDashboard');
+        if (rankDashboard) {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activePanel = rankDashboard.querySelector('.rank-panel.active');
+                        if (activePanel) runRankAnimations(activePanel);
+                    }
+                });
+            }, { threshold: 0.4 });
+            obs.observe(rankDashboard);
+        }
+
+        // ============================================================
+        // 표지 — 2008 → 2026 연도 카운팅 애니메이션
+        // ============================================================
+        (function initCoverAnimation() {
+            const yearEl   = document.getElementById('coverYearNum');
+            const revealEl = document.getElementById('coverReveal');
+            if (!yearEl || !revealEl) return;
+
+            const START_YEAR  = 2008;
+            const END_YEAR    = 2026;
+            const TOTAL_YEARS = END_YEAR - START_YEAR; // 18단계
+            const START_DELAY = 900;   // 페이지 로드 후 시작 대기 (ms)
+            const STEP_FAST   = 60;    // 초반 빠른 속도 (ms/step)
+            const STEP_SLOW   = 180;   // 후반 느린 속도 (ms/step)
+            const SLOWDOWN_AT = 5;     // 마지막 N개는 느리게
+
+            let current = START_YEAR;
+
+            function getDelay(remaining) {
+                return remaining <= SLOWDOWN_AT ? STEP_SLOW : STEP_FAST;
+            }
+
+            function startTypingAnimation() {
+                const titleEl = document.getElementById('typingTitle');
+                const infoEl  = document.getElementById('presenterInfo');
+                if (!titleEl) return;
+
+                const text = titleEl.getAttribute('data-text') || '';
+                titleEl.textContent = '';
+                titleEl.classList.add('typing-cursor');
+
+                let index = 0;
+                function type() {
+                    if (index < text.length) {
+                        titleEl.textContent += text.charAt(index);
+                        index++;
+                        setTimeout(type, 85); // 85ms 타이핑 속도
+                    } else {
+                        // 타이핑 완료 후 커서 제거
+                        setTimeout(() => {
+                            titleEl.classList.remove('typing-cursor');
+                        }, 500);
+                        // 아래 발표자 텍스트 서서히 페이드인
+                        if (infoEl) {
+                            setTimeout(() => {
+                                infoEl.style.opacity = '1';
+                            }, 300);
+                        }
+                    }
+                }
+                // 약간의 대기 후 자판 입력 시작
+                setTimeout(type, 350);
+            }
+
+            function tick() {
+                if (current > END_YEAR) return;
+                yearEl.textContent = current;
+
+                if (current === END_YEAR) {
+                    // 2026 도달 — 황금빛 강조
+                    yearEl.classList.add('reached');
+                    // 0.35초 후 나머지 콘텐츠 reveal
+                    setTimeout(() => {
+                        revealEl.classList.add('show');
+                        startTypingAnimation();
+                    }, 350);
+                    return;
+                }
+
+                current++;
+                const remaining = END_YEAR - current;
+                setTimeout(tick, getDelay(remaining));
+            }
+
+            // 페이지 로드 후 딜레이 뒤에 시작
+            setTimeout(tick, START_DELAY);
+        })();
+
+        /* ========================================================
+           음악 이론 E-Learning 데모 자동 순환 애니메이션
+           ======================================================== */
+        // ====================================================
+        // 피아노 비교 — 단계별 스텝 시스템
+        // Step 0: AS-IS[0] 전체  →  Step 1: 비교[0]+설명
+        // Step 2: AS-IS[1] 전체  →  Step 3: 비교[1]+설명
+        // Step 4~7: 동일, Step 8에서 다음 슬라이드
+        // ====================================================
+        (function() {
+            const pianoData = [
+                {
+                    asis:  '202606-images/piano-001.webp',
+                    tobe:  '202606-images/piano-001-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Intro Page',
+                    body:  '기존의 우주 테마와 친근한 캐릭터 감성은 유지하면서, 3D 오브젝트와 피아노 기반의 게임형 구성을 더해<br>아이들이 더 쉽고 즐겁게 몰입할 수 있는 인트로 화면으로 개선했습니다.'
+                },
+                {
+                    asis:  '202606-images/piano-002.webp',
+                    tobe:  '202606-images/piano-002-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Lesson Entry Experience',
+                    body:  '학생 목록을 단순히 나열하는 방식에서 벗어나, 레슨 정보와 캐릭터 배지를 함께 보여주는 구조로 개선했습니다.<br>선생님은 정보를 빠르게 확인하고, 아이들은 자연스럽게 게임형 학습에 몰입할 수 있습니다.'
+                },
+                {
+                    asis:  '202606-images/piano-003.webp',
+                    tobe:  '202606-images/piano-003-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Content Library Experience',
+                    body:  '교재를 단순히 선택하는 화면에서 벗어나, 학습 콘텐츠를 탐색하는 라이브러리형 화면으로 개선했습니다.<br>큰 표지와 명확한 액션 버튼으로 아이들이 스스로 콘텐츠를 고르고 학습을 시작합니다.'
+                },
+                {
+                    asis:  '202606-images/piano-004.webp',
+                    tobe:  '202606-images/piano-004-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Focused Play Experience',
+                    body:  '다양한 기능이 혼재되어 있던 기존 화면을 정리하고, 악보와 연주 흐름에 집중할 수 있는 구조로 개선했습니다.<br>학습자는 더 쉽게 악보를 읽고 자연스럽게 연주에 몰입할 수 있습니다.'
+                }
+            ];
+
+            // 전역 스텝 (nextSlide에서 접근)
+            window._pianoStep = 0;
+
+            function applyPianoStep(step) {
+                window._pianoStep = step;
+                const itemIdx = Math.min(Math.floor(step / 2), 3);
+                const isCmp   = (step % 2 === 1);
+                const d = pianoData[itemIdx];
+
+                // 탭 하이라이트
+                document.querySelectorAll('.ptab').forEach((t, i) => {
+                    t.classList.toggle('ptab-active', i === itemIdx);
+                });
+
+                // 이미지·설명 교체
+                const asIsImg = document.getElementById('pianoAsIsImg');
+                const toBeImg = document.getElementById('pianoToBeImg');
+                if (asIsImg) asIsImg.src = d.asis;
+                if (toBeImg) toBeImg.src = d.tobe;
+
+                const descTitle = document.getElementById('pianoDescTitle');
+                const descBody  = document.getElementById('pianoDescBody');
+                if (descTitle) descTitle.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp; ' + d.title;
+                if (descBody)  descBody.innerHTML  = d.body;
+
+                const area = document.getElementById('pianoImgArea');
+                const desc = document.getElementById('pianoDesc');
+
+                if (isCmp) {
+                    if (area) area.classList.add('compare-mode');
+                    if (desc) desc.classList.add('show-desc');
+                } else {
+                    if (area) area.classList.remove('compare-mode');
+                    if (desc) desc.classList.remove('show-desc');
+                }
+            }
+
+            // 탭 클릭 → 해당 아이템 AS-IS 스텝으로 점프
+            window.jumpPianoStep = function(step) {
+                applyPianoStep(step);
+            };
+
+            // nextSlide에서 호출: 다음 스텝
+            window.openPianoCompare = function() {
+                applyPianoStep(window._pianoStep + 1);
+            };
+
+            // 초기 상태 적용
+            applyPianoStep(0);
+
+        })();
+
+        // ====================================================
+        // 드럼 비교 — 단계별 스텝 시스템
+        // Step 0: AS-IS[0] 전체  →  Step 1: 비교[0]+설명
+        // Step 2: AS-IS[1] 전체  →  Step 3: 비교[1]+설명
+        // ... Step 10~11, Step 12에서 다음 슬라이드
+        // ====================================================
+        (function() {
+            const drumData = [
+                {
+                    asis:  '202606-images/drum-001.webp',
+                    tobe:  '202606-images/drum-001-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Intro Page Renewal',
+                    body:  '기존의 캐릭터 중심 인트로 화면을 정리하고 네온 무드의 배경과 입체적인 오브제를 더해<br>드럼만의 역동적인 에너지와 브랜드 정체성이 더욱 선명하게 전달되는 시작 화면으로 개선했습니다.'
+                },
+                {
+                    asis:  '202606-images/drum-002.webp',
+                    tobe:  '202606-images/drum-002-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Age Selection Renewal',
+                    body:  '기존의 단순한 연령 선택 화면을 캐릭터 중심의 카드형 UI로 재구성했습니다.<br>유아·초등·중등별 컬러와 캐릭터를 구분해 각 단계의 특징을 직관적으로 전달하고 더 쉽고 자연스럽게 진입할 수 있도록 개선했습니다.'
+                },
+                {
+                    asis:  '202606-images/drum-003.webp',
+                    tobe:  '202606-images/drum-003-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Class Menu Renewal',
+                    body:  '기존의 기능 중심 메뉴를 스노우볼 오브제 기반의 카드형 UI로 개선했습니다.<br>각 콘텐츠의 특징을 직관적으로 보여주고, 더 밝고 정돈된 초등 드럼 메뉴 화면으로 리뉴얼했습니다.'
+                },
+                {
+                    asis:  '202606-images/drum-004.webp',
+                    tobe:  '202606-images/drum-004-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Weekly Lesson Renewal',
+                    body:  '기존의 복잡한 수업 구조를 주차별 리스트 중심의 깔끔한 UI로 정리했습니다.<br>자료·악기·연습 항목을 한 화면에서 쉽게 구분하고, 수업 흐름을 더 직관적으로 확인할 수 있도록 개선했습니다.'
+                },
+                {
+                    asis:  '202606-images/drum-005.webp',
+                    tobe:  '202606-images/drum-005-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; List Page Renewal',
+                    body:  '기존의 어두운 곡 목록 화면을 밝고 정돈된 리스트형 UI로 개선했습니다.<br>난이도 버튼과 검색 기능을 명확하게 배치해 곡 선택과 연습 진입이 더 쉽도록 리뉴얼했습니다.'
+                },
+                {
+                    asis:  '202606-images/drum-006.webp',
+                    tobe:  '202606-images/drum-006-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Play Screen Renewal',
+                    body:  '복잡했던 연주 화면을 정리하고, 악보와 드럼 연주에 집중할 수 있도록 개선했습니다.<br>진행 상태와 주요 버튼을 명확하게 배치해 학습자가 더 쉽게 연주 흐름에 몰입할 수 있도록 리뉴얼했습니다.'
+                }
+            ];
+
+            // 전역 스텝
+            window._drumStep = 0;
+
+            function applyDrumStep(step) {
+                window._drumStep = step;
+                const itemIdx = Math.min(Math.floor(step / 2), 5);
+                const isCmp   = (step % 2 === 1);
+                const d = drumData[itemIdx];
+
+                // 탭 하이라이트
+                document.querySelectorAll('.dtab').forEach((t, i) => {
+                    t.classList.toggle('dtab-active', i === itemIdx);
+                });
+
+                // 이미지·설명 교체
+                const asIsImg = document.getElementById('drumAsIsImg');
+                const toBeImg = document.getElementById('drumToBeImg');
+                if (asIsImg) asIsImg.src = d.asis;
+                if (toBeImg) toBeImg.src = d.tobe;
+
+                const descTitle = document.getElementById('drumDescTitle');
+                const descBody  = document.getElementById('drumDescBody');
+                if (descTitle) descTitle.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp; ' + d.title;
+                if (descBody)  descBody.innerHTML  = d.body;
+
+                const area = document.getElementById('drumImgArea');
+                const desc = document.getElementById('drumDesc');
+
+                if (isCmp) {
+                    if (area) area.classList.add('compare-mode');
+                    if (desc) desc.classList.add('show-desc');
+                } else {
+                    if (area) area.classList.remove('compare-mode');
+                    if (desc) desc.classList.remove('show-desc');
+                }
+            }
+
+            // 탭 클릭 → 해당 아이템 AS-IS 스텝으로 점프
+            window.jumpDrumStep = function(step) {
+                applyDrumStep(step);
+            };
+
+            // nextSlide에서 호출
+            window.openDrumCompare = function() {
+                applyDrumStep(window._drumStep + 1);
+            };
+
+            // 초기 상태 적용
+            applyDrumStep(0);
+        })();
+
+        (function initElearnDemo() {
+            const phases = ['ephase1','ephase2','ephase3','ephase4'];
+            let currentPhase = 0;
+            let demoTimer = null;
+            let isRunning = false;
+
+            // 페이즈 전환 함수
+            function showPhase(idx) {
+                phases.forEach((id, i) => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.toggle('active', i === idx);
+                });
+                const target = document.getElementById(phases[idx]);
+                if (!target) return;
+
+                // PHASE4 진입 시 바차트 + SVG 레이더 애니메이션
+                if (idx === 3) {
+                    setTimeout(() => {
+                        target.querySelectorAll('.report-bar').forEach(b => b.classList.add('animated'));
+                    }, 200);
+                    // 6축 SVG 레이더 애니메이션 (ep4Radar)
+                    setTimeout(() => {
+                        const C = 50, R = 40, N = 6;
+                        const vals = [0.88, 0.72, 0.51, 0.38, 0.76, 0.62];
+                        const angs = Array.from({length:N}, (_,i) => (Math.PI*2*i/N) - Math.PI/2);
+                        const pt = (r,i) => ({ x: C + R*r*Math.cos(angs[i]), y: C + R*r*Math.sin(angs[i]) });
+                        const poly = r => vals.map((_,i)=>{ const p=pt(r,i); return `${p.x},${p.y}`; }).join(' ');
+                        // 그리드
+                        [1,0.75,0.5,0.25].forEach((r,gi)=>{ const el=document.getElementById('ep4g'+(5-gi)); if(el) el.setAttribute('points', poly(r)); });
+                        // 축
+                        angs.forEach((_,i)=>{ const ax=document.getElementById('ep4ax'+i); const p=pt(1,i); if(ax){ax.setAttribute('x1',C);ax.setAttribute('y1',C);ax.setAttribute('x2',p.x);ax.setAttribute('y2',p.y);} });
+                        // 라벨
+                        angs.forEach((_,i)=>{ const lb=document.getElementById('ep4L'+i); const p=pt(1.32,i); if(lb){lb.setAttribute('x',p.x);lb.setAttribute('y',p.y+3);} });
+                        // 데이터 애니메이션
+                        let s=null; const dur=900;
+                        (function frame(ts){
+                            if(!s) s=ts;
+                            const pr = Math.min((ts-s)/dur,1);
+                            const ease = 1-Math.pow(1-pr,3);
+                            const dp = document.getElementById('ep4data');
+                            if(dp) dp.setAttribute('points', vals.map((_,i)=>{ const p=pt(vals[i]*ease,i); return `${p.x},${p.y}`; }).join(' '));
+                            vals.forEach((v,i)=>{ const d=document.getElementById('ep4d'+i); const p=pt(v*ease,i); if(d){d.setAttribute('cx',p.x);d.setAttribute('cy',p.y);} });
+                            if(pr<1) requestAnimationFrame(frame);
+                        })(0);
+                    }, 300);
+                }
+                // PHASE1 진입 시 바 + 레이더 리셋
+                if (idx === 0) {
+                    document.querySelectorAll('#ephase4 .report-bar').forEach(b => b.classList.remove('animated'));
+                    const dp = document.getElementById('ep4data');
+                    if(dp) dp.setAttribute('points','');
+                    for(let i=0;i<6;i++){ const d=document.getElementById('ep4d'+i); if(d){d.setAttribute('cx',50);d.setAttribute('cy',50);} }
+                }
+            }
+
+
+            // PHASE1에서 보기 호버 애니메이션 (자동)
+            function animatePhase1() {
+                const opts = document.querySelectorAll('#ephase1 .elearn-opt');
+                if (!opts.length) return;
+                const hoverSeq = [0, 1, 2, 1]; // 잠깐씩 hover 효과
+                let i = 0;
+                function nextHover() {
+                    opts.forEach(o => o.classList.remove('elearn-hover'));
+                    if (i < hoverSeq.length) {
+                        opts[hoverSeq[i]].classList.add('elearn-hover');
+                        i++;
+                        demoTimer = setTimeout(nextHover, 400);
+                    } else {
+                        // 2번(정답) 선택 → PHASE2로
+                        opts.forEach(o => o.classList.remove('elearn-hover'));
+                        opts[1].classList.add('elearn-selected');
+                        demoTimer = setTimeout(() => {
+                            currentPhase = 1;
+                            showPhase(1);
+                            scheduleNext(1800); // 채점 로딩 1.8초
+                        }, 600);
+                    }
+                }
+                demoTimer = setTimeout(nextHover, 800);
+            }
+
+            // 다음 페이즈 스케줄
+            function scheduleNext(delay) {
+                demoTimer = setTimeout(() => {
+                    currentPhase = (currentPhase + 1) % phases.length;
+                    showPhase(currentPhase);
+                    if (currentPhase === 0) {
+                        // PHASE1: 보기 초기화 후 호버 시퀀스
+                        document.querySelectorAll('#ephase1 .elearn-opt').forEach(o => {
+                            o.classList.remove('elearn-hover','elearn-selected');
+                        });
+                        demoTimer = setTimeout(animatePhase1, 600);
+                    } else if (currentPhase === 2) {
+                        scheduleNext(3000); // 결과 3초 유지
+                    } else if (currentPhase === 3) {
+                        scheduleNext(4500); // 리포트 4.5초 유지
+                    }
+                }, delay);
+            }
+
+            // 슬라이드 진입 감지 후 시작
+            function startDemo() {
+                if (isRunning) return;
+                isRunning = true;
+                currentPhase = 0;
+                showPhase(0);
+                demoTimer = setTimeout(animatePhase1, 1200);
+            }
+
+            function stopDemo() {
+                isRunning = false;
+                if (demoTimer) clearTimeout(demoTimer);
+            }
+
+            // IntersectionObserver로 해당 슬라이드 진입 감지
+            const demoEl = document.getElementById('elearnDemo');
+            if (demoEl) {
+                const obs = new IntersectionObserver((entries) => {
+                    entries.forEach(e => {
+                        if (e.isIntersecting) startDemo();
+                        else stopDemo();
+                    });
+                }, { threshold: 0.5 });
+                obs.observe(demoEl);
+            }
+        })();
+
+        /* ========================================================
+           B2B 분석 리포트 데모 — 라인차트 + 방사형 그래프
+           ======================================================== */
+        (function initB2BDemo() {
+            const demo = document.getElementById('b2bDemo');
+            if (!demo) return;
+
+            // ---- 데이터 ----
+            const weeklyScores = [62, 68, 71, 75, 73, 80, 88];  // 7주 점수
+            const monthlyGoal  = [65, 68, 72, 76, 80, 83, 87];  // 목표 라인
+            const radarValues  = [0.88, 0.72, 0.51, 0.76, 0.82]; // 음표·음계·화음·리듬·실습
+            const weekLabels   = ['5주전','4주전','3주전','2주전','지난주','이번주','목표'];
+
+            // ---- 라인차트 (Canvas) ----
+            function drawLineChart(progress) {
+                const canvas = document.getElementById('b2bLineChart');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                const W = canvas.offsetWidth || 200;
+                const H = 80;
+                canvas.width  = W;
+                canvas.height = H;
+                ctx.clearRect(0, 0, W, H);
+
+                const pad = { t: 8, r: 6, b: 18, l: 6 };
+                const gW = W - pad.l - pad.r;
+                const gH = H - pad.t - pad.b;
+                const n  = weeklyScores.length;
+                const minV = 55, maxV = 95;
+
+                function xPos(i) { return pad.l + (i / (n-1)) * gW; }
+                function yPos(v) { return pad.t + gH - ((v - minV) / (maxV - minV)) * gH; }
+
+                // 배경 그리드
+                ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+                ctx.lineWidth = 1;
+                [60,70,80,90].forEach(v => {
+                    const y = yPos(v);
+                    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+                    ctx.font = '8px Inter, sans-serif';
+                    ctx.fillText(v, 0, y + 3);
+                });
+
+                // 그려야 할 점 수 (progress 0~1)
+                const drawN = Math.max(2, Math.round(progress * (n-1)) + 1);
+
+                // 월간 목표 라인 (점선)
+                ctx.beginPath();
+                ctx.setLineDash([3, 3]);
+                ctx.strokeStyle = 'rgba(255,193,7,0.5)';
+                ctx.lineWidth = 1.5;
+                monthlyGoal.slice(0, drawN).forEach((v, i) => {
+                    i === 0 ? ctx.moveTo(xPos(i), yPos(v)) : ctx.lineTo(xPos(i), yPos(v));
+                });
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // 주간 점수 라인 (그라데이션)
+                const grad = ctx.createLinearGradient(pad.l, 0, W - pad.r, 0);
+                grad.addColorStop(0, '#1d4ed8');
+                grad.addColorStop(1, '#3182F6');
+                ctx.beginPath();
+                ctx.strokeStyle = grad;
+                ctx.lineWidth = 2.5;
+                ctx.lineJoin = 'round';
+                ctx.lineCap  = 'round';
+                weeklyScores.slice(0, drawN).forEach((v, i) => {
+                    i === 0 ? ctx.moveTo(xPos(i), yPos(v)) : ctx.lineTo(xPos(i), yPos(v));
+                });
+                ctx.stroke();
+
+                // 채움 영역
+                ctx.beginPath();
+                weeklyScores.slice(0, drawN).forEach((v, i) => {
+                    i === 0 ? ctx.moveTo(xPos(i), yPos(v)) : ctx.lineTo(xPos(i), yPos(v));
+                });
+                ctx.lineTo(xPos(drawN-1), pad.t + gH);
+                ctx.lineTo(pad.l, pad.t + gH);
+                ctx.closePath();
+                const fillGrad = ctx.createLinearGradient(0, pad.t, 0, pad.t + gH);
+                fillGrad.addColorStop(0, 'rgba(49,130,246,0.2)');
+                fillGrad.addColorStop(1, 'rgba(49,130,246,0)');
+                ctx.fillStyle = fillGrad;
+                ctx.fill();
+
+                // 점
+                weeklyScores.slice(0, drawN).forEach((v, i) => {
+                    ctx.beginPath();
+                    ctx.arc(xPos(i), yPos(v), i === drawN-1 ? 4 : 2.5, 0, Math.PI*2);
+                    ctx.fillStyle = i === drawN-1 ? '#fff' : '#3182F6';
+                    ctx.fill();
+                });
+
+                // 주 라벨
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.font = '7px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                weeklyScores.slice(0, drawN).forEach((v, i) => {
+                    ctx.fillText(weekLabels[i], xPos(i), H - 4);
+                });
+            }
+
+            // ---- 방사형 레이더 차트 (SVG) ----
+            const CX = 50, CY = 50, R = 40;
+            const N = 5;
+            const angles = Array.from({length: N}, (_, i) => (Math.PI * 2 * i / N) - Math.PI / 2);
+
+            function radarPoint(ratio, i) {
+                return {
+                    x: CX + R * ratio * Math.cos(angles[i]),
+                    y: CY + R * ratio * Math.sin(angles[i])
+                };
+            }
+            function polyPts(ratios) {
+                return ratios.map((r, i) => { const p = radarPoint(r, i); return `${p.x},${p.y}`; }).join(' ');
+            }
+
+            function initRadarGrid() {
+                [1, 0.8, 0.6, 0.4].forEach((r, gi) => {
+                    const el = document.getElementById('rGrid' + (5 - gi));
+                    if (el) el.setAttribute('points', polyPts(Array(N).fill(r)));
+                });
+                angles.forEach((_, i) => {
+                    const ax = document.getElementById('rAxis' + i);
+                    const p  = radarPoint(1, i);
+                    if (ax) { ax.setAttribute('x1', CX); ax.setAttribute('y1', CY); ax.setAttribute('x2', p.x); ax.setAttribute('y2', p.y); }
+                    const lbl = document.getElementById('rLabel' + i);
+                    const lp  = radarPoint(1.28, i);
+                    if (lbl) { lbl.setAttribute('x', lp.x); lbl.setAttribute('y', lp.y + 3); }
+                });
+            }
+
+            function drawRadar(progress) {
+                const vals = radarValues.map(v => v * progress);
+                const dataPoly = document.getElementById('rData');
+                if (dataPoly) dataPoly.setAttribute('points', polyPts(vals));
+                vals.forEach((v, i) => {
+                    const dot = document.getElementById('rDot' + i);
+                    const p   = radarPoint(v, i);
+                    if (dot) { dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y); }
+                });
+            }
+
+            // ---- 카운트업 ----
+            function countUp(el, target, suffix, duration) {
+                if (!el) return;
+                let start = null;
+                function step(ts) {
+                    if (!start) start = ts;
+                    const prog = Math.min((ts - start) / duration, 1);
+                    const ease = 1 - Math.pow(1 - prog, 3);
+                    el.textContent = (target === Math.round(target)
+                        ? Math.round(ease * target)
+                        : (ease * target).toFixed(0)) + suffix;
+                    if (prog < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+
+            // ---- 메인 애니메이션 ----
+            let animRunning = false;
+            function resetCounters() {
+                const ids = ['b2bWeeklyUp','b2bMonthlyUp','b2bGoalPct','b2bTotalScore','b2bAccuracy','b2bSessions'];
+                const resets = ['+0%','+0%','0%','0','0%','0회'];
+                ids.forEach((id,i) => { const el=document.getElementById(id); if(el) el.textContent=resets[i]; });
+            }
+            function runAnimation() {
+                if (animRunning) return;
+                animRunning = true;
+                resetCounters();
+                initRadarGrid();
+
+                // canvas 사이즈 재측정 (실제 렌더 너비)
+                const canvas = document.getElementById('b2bLineChart');
+                if (canvas) {
+                    const rect = canvas.getBoundingClientRect();
+                    if (rect.width > 0) { canvas.width = rect.width; canvas.height = 80; }
+                }
+
+                let start = null;
+                const dur = 1600;
+                function frame(ts) {
+                    if (!start) start = ts;
+                    const prog = Math.min((ts - start) / dur, 1);
+                    drawLineChart(prog);
+                    drawRadar(prog);
+                    if (prog < 1) requestAnimationFrame(frame);
+                    else animRunning = false;
+                }
+                requestAnimationFrame(frame);
+
+                // 카운트업
+                setTimeout(() => countUp(document.getElementById('b2bWeeklyUp'),  12, '%', 900), 300);
+                setTimeout(() => countUp(document.getElementById('b2bMonthlyUp'), 34, '%', 900), 500);
+                setTimeout(() => countUp(document.getElementById('b2bGoalPct'),   82, '%', 900), 700);
+                setTimeout(() => countUp(document.getElementById('b2bTotalScore'), 9420, '', 1200), 200);
+                setTimeout(() => countUp(document.getElementById('b2bAccuracy'),   88, '%', 900), 400);
+                setTimeout(() => countUp(document.getElementById('b2bSessions'),   18, '회', 800), 600);
+
+                // 표시 형식 맞추기
+                setTimeout(() => {
+                    const wu = document.getElementById('b2bWeeklyUp');
+                    if (wu && !wu.textContent.startsWith('+')) wu.textContent = '+' + wu.textContent;
+                    const mu = document.getElementById('b2bMonthlyUp');
+                    if (mu && !mu.textContent.startsWith('+')) mu.textContent = '+' + mu.textContent;
+                }, 1350);
+            }
+
+            // IntersectionObserver 감지 — 재진입 시 재실행
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        setTimeout(runAnimation, 200); // 레이아웃 안정 후 실행
+                    } else {
+                        animRunning = false;
+                        resetCounters();
+                        // 레이더 리셋
+                        const dp = document.getElementById('rData');
+                        if(dp) dp.setAttribute('points','');
+                        for(let i=0;i<5;i++){ const d=document.getElementById('rDot'+i); if(d){d.setAttribute('cx',50);d.setAttribute('cy',50);} }
+                    }
+                });
+            }, { threshold: 0.4 });
+            obs.observe(demo);
+        })();
+
+    </script>
+
+
+
+</body>
+</html>
