@@ -97,7 +97,14 @@
             -webkit-backdrop-filter: none !important;
             overflow: visible;
         }
-        .cover-slide.cover-waiting .cover-year-wrap {
+        .cover-slide.cover-waiting .cover-year-wrap,
+        .cover-slide.cover-loading .cover-year-wrap {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none;
+            animation: none !important;
+        }
+        .cover-slide.cover-loading .cover-reveal {
             opacity: 0 !important;
             visibility: hidden !important;
             pointer-events: none;
@@ -160,15 +167,203 @@
             justify-content: center;
         }
         .overview-slide .agenda-item .num {
-            font-size: clamp(34px, 6vh, 56px);
+            font-size: clamp(48px, 7.2vh, 76px);
             line-height: 1;
         }
         .overview-slide .agenda-item .desc {
-            font-size: clamp(26px, 4.4vh, 42px);
+            font-size: clamp(34px, 5.6vh, 58px);
             line-height: 1.14;
         }
 
         .section-num { font-family: 'Poppins'; font-size: 200px; font-weight: 900; color: rgba(255,255,255,0.05); margin-bottom: -10px; line-height: 1; }
+
+        .piano-space-intro {
+            background:
+                radial-gradient(ellipse at bottom, rgba(27,39,53,0.88) 0%, rgba(9,10,15,0.95) 74%),
+                rgba(10, 15, 26, 0.85) !important;
+        }
+        .piano-space-intro > :not(.piano-starfield) {
+            position: relative;
+            z-index: 2;
+        }
+        .piano-starfield {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: inherit;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .piano-starfield::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 18% 78%, rgba(49,130,246,0.24), transparent 24%),
+                radial-gradient(circle at 78% 20%, rgba(255,193,7,0.16), transparent 26%),
+                radial-gradient(circle at 50% 50%, rgba(139,92,246,0.18), transparent 34%);
+            filter: blur(18px);
+            opacity: 0.85;
+        }
+        .piano-shine-text {
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 22px rgba(49, 130, 246, 0.16);
+        }
+        .piano-shine-text .shine-pass {
+            display: inline-block;
+            color: rgba(229, 231, 235, 0.72);
+            background:
+                linear-gradient(100deg,
+                    rgba(229,231,235,0.72) 0%,
+                    rgba(229,231,235,0.72) 34%,
+                    #FFFFFF 45%,
+                    #93C5FD 50%,
+                    #FFFFFF 55%,
+                    rgba(229,231,235,0.72) 66%,
+                    rgba(229,231,235,0.72) 100%);
+            background-size: 260% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pianoTextShine 3.2s ease-in-out infinite;
+        }
+        @keyframes pianoTextShine {
+            0% { background-position: 130% 0; }
+            46% { background-position: -130% 0; }
+            100% { background-position: -130% 0; }
+        }
+        .space-stars {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 200%;
+            background-repeat: repeat;
+            will-change: transform;
+        }
+        #stars {
+            opacity: 0.9;
+            background-image:
+                radial-gradient(1px 1px at 12px 18px, #fff, transparent),
+                radial-gradient(1px 1px at 96px 76px, #fff, transparent),
+                radial-gradient(1px 1px at 172px 132px, #fff, transparent),
+                radial-gradient(1px 1px at 260px 42px, #fff, transparent),
+                radial-gradient(1px 1px at 340px 190px, #fff, transparent);
+            background-size: 360px 240px;
+            animation: animStar 50s linear infinite;
+        }
+        #stars2 {
+            opacity: 0.7;
+            background-image:
+                radial-gradient(1.6px 1.6px at 28px 48px, rgba(255,255,255,0.95), transparent),
+                radial-gradient(1.6px 1.6px at 150px 120px, rgba(191,219,254,0.95), transparent),
+                radial-gradient(1.6px 1.6px at 294px 28px, rgba(255,255,255,0.95), transparent),
+                radial-gradient(1.6px 1.6px at 420px 184px, rgba(221,214,254,0.95), transparent);
+            background-size: 460px 260px;
+            animation: animStar 100s linear infinite;
+        }
+        #stars3 {
+            opacity: 0.5;
+            background-image:
+                radial-gradient(2.4px 2.4px at 52px 90px, rgba(255,255,255,0.95), transparent),
+                radial-gradient(2.4px 2.4px at 240px 36px, rgba(255,244,190,0.9), transparent),
+                radial-gradient(2.4px 2.4px at 410px 170px, rgba(255,255,255,0.9), transparent);
+            background-size: 520px 300px;
+            animation: animStar 150s linear infinite;
+        }
+        @keyframes animStar {
+            from { transform: translateY(0); }
+            to { transform: translateY(-50%); }
+        }
+
+        .drum-neon-intro {
+            background:
+                radial-gradient(ellipse at center, rgba(255, 138, 0, 0.1) 0%, rgba(236, 72, 153, 0.09) 32%, rgba(6, 8, 18, 0.96) 74%),
+                rgba(10, 15, 26, 0.88) !important;
+        }
+        .drum-neon-intro > :not(.drum-neon-bg) {
+            position: relative;
+            z-index: 2;
+        }
+        .drum-neon-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: inherit;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .drum-neon-bg::before {
+            content: '';
+            position: absolute;
+            inset: -18%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(236, 72, 153, 0.22), transparent 22%),
+                radial-gradient(circle at 72% 24%, rgba(34, 211, 238, 0.2), transparent 25%),
+                radial-gradient(circle at 52% 72%, rgba(255, 138, 0, 0.24), transparent 28%);
+            filter: blur(26px);
+            animation: neonAura 6s ease-in-out infinite alternate;
+        }
+        .drum-neon-bg::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -34%;
+            width: 150%;
+            height: 70%;
+            transform: translateX(-50%) perspective(520px) rotateX(62deg);
+            transform-origin: bottom center;
+            background-image:
+                linear-gradient(rgba(34, 211, 238, 0.24) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(236, 72, 153, 0.22) 1px, transparent 1px);
+            background-size: 64px 42px;
+            box-shadow: 0 0 60px rgba(236, 72, 153, 0.16);
+            opacity: 0.7;
+            animation: neonGridMove 5.5s linear infinite;
+        }
+        .drum-neon-title {
+            color: #FDE8EF;
+            text-shadow:
+                0 0 20px #EC637B,
+                0 0 54px rgba(236, 99, 123, 0.72),
+                0 0 120px rgba(255, 138, 0, 0.58);
+        }
+        .drum-neon-title .neon-letter {
+            display: inline-block;
+            color: #FDE8EF;
+            text-shadow:
+                0 0 22px #EC637B,
+                0 0 64px rgba(236, 99, 123, 0.78),
+                0 0 140px rgba(255, 138, 0, 0.58);
+            transition: color 0.08s ease, text-shadow 0.08s ease, opacity 0.08s ease;
+        }
+        .drum-neon-title .neon-letter:nth-child(-n+5) {
+            color: #FFE1C0;
+            text-shadow:
+                0 0 20px #FF8A00,
+                0 0 70px rgba(255, 138, 0, 0.8),
+                0 0 140px rgba(236, 72, 153, 0.5);
+        }
+        .drum-neon-title .neon-letter.off {
+            color: rgba(82, 82, 94, 0.7);
+            opacity: 0.42;
+            text-shadow: 7px 7px 8px rgba(0, 0, 0, 0.55);
+        }
+        .drum-neon-subtitle {
+            color: rgba(236, 253, 255, 0.78);
+            text-shadow:
+                0 0 18px rgba(34, 211, 238, 0.46),
+                0 0 42px rgba(236, 72, 153, 0.28);
+        }
+        @keyframes neonAura {
+            from { transform: scale(1) rotate(0deg); opacity: 0.72; }
+            to { transform: scale(1.08) rotate(4deg); opacity: 1; }
+        }
+        @keyframes neonGridMove {
+            from { background-position: 0 0, 0 0; }
+            to { background-position: 0 42px, 64px 0; }
+        }
 
         .tag-wrap { display: flex; gap: 24px; margin-top: 18px; justify-content: center; margin-bottom: 44px;}
         .tag-wrap span { background: rgba(255, 255, 255, 0.05); color: #D1D5DB; font-size: 30px; font-weight: 500; padding: 12px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.08); }
@@ -215,6 +410,10 @@
             position: relative; /* 절대 위치 설명박스의 기준점 */
             padding-bottom: 0; /* 설명박스는 absolute 배치이므로 padding 불필요 */
         }
+        .piano-img-area:not(.compare-mode),
+        .drum-img-area:not(.compare-mode) {
+            justify-content: center;
+        }
 
         /* 각 컬럼 */
         .piano-col {
@@ -223,6 +422,7 @@
             gap: 0; /* 배지가 absolute이므로 gap 불필요 */
             min-width: 0;
             height: 100%;
+            aspect-ratio: 1792 / 1099;
             overflow: hidden;
             flex-shrink: 0;
             position: relative; /* 배지의 absolute 기준점 */
@@ -231,6 +431,11 @@
             width: 100%;
             transition: width 0.55s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: width;
+        }
+        .piano-img-area:not(.compare-mode) .piano-col-asis,
+        .drum-img-area:not(.compare-mode) .drum-col-asis {
+            width: auto;
+            max-width: 100%;
         }
         .piano-col-tobe {
             width: 0;
@@ -241,11 +446,22 @@
 
         /* 비교 상태일 때 가로 너비 분할 */
         .piano-img-area.compare-mode .piano-col-asis {
-            width: calc(50% - 6px);
+            width: auto;
+            max-width: calc(50% - 6px);
         }
         .piano-img-area.compare-mode .piano-col-tobe {
-            width: calc(50% - 6px);
+            width: auto;
+            max-width: calc(50% - 6px);
             opacity: 1;
+        }
+        .piano-img-area.compare-mode,
+        .drum-img-area.compare-mode {
+            flex: 0 0 auto !important;
+            height: min(calc(100vh - 218px), calc((100vw - 88px) * 0.30664 + 14px)) !important;
+            max-height: calc(100vh - 218px);
+            margin-top: 16px;
+            margin-bottom: 8px;
+            align-self: stretch;
         }
 
         /* 배지 — 이미지 위에 절대 오버레이 */
@@ -253,21 +469,22 @@
         .tobe-badge.piano-badge { left:auto; right:10px; }
         .asis-badge span { background:rgba(239,68,68,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(239,68,68,0.5); backdrop-filter:blur(4px); }
         .tobe-badge span { background:rgba(49,130,246,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(49,130,246,0.5); backdrop-filter:blur(4px); }
-        .piano-badge em { font-style:normal; font-size:12px; color:rgba(255,255,255,0.8); white-space:nowrap; }
+        .piano-badge em { display:none; }
 
         /* 이미지 래퍼 + 이미지 */
-        .piano-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:12px; position:relative; }
-        #pianoAsIsImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.2); }
-        #pianoToBeImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(49,130,246,0.35); border-radius:12px; box-shadow:0 0 32px rgba(49,130,246,0.2); background:rgba(0,0,0,0.1); min-width:160px; }
+        .piano-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:12px; position:relative; box-sizing:border-box; background:rgba(0,0,0,0.18); }
+        #pianoAsIsImg { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.2); }
+        #pianoToBeImg { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; border:1px solid rgba(49,130,246,0.35); border-radius:12px; box-shadow:0 0 32px rgba(49,130,246,0.2); background:rgba(0,0,0,0.1); min-width:160px; }
 
         /* 설명 텍스트 박스 */
         .piano-desc-box {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
             z-index: 100;
-            display: block !important;
+            display: none !important;
+            width: 100%;
             height: auto;
             min-height: unset;
             opacity: 0;
@@ -280,19 +497,91 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; text-align: left;
+            border-radius: 20px; text-align: center;
             box-sizing: border-box;
             padding: 16px 22px !important;
             animation: none !important;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
         .piano-desc-box.show-desc {
+            display: block !important;
             opacity: 1 !important;
             visibility: visible !important;
             transform: translateY(0) !important;
         }
-        .piano-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:6px; letter-spacing:0.2px; }
-        .piano-desc-body  { font-size:clamp(18px,1.55vw,26px); color:#E5E7EB; line-height:1.45; word-break:keep-all; }
+        .piano-desc-title { display:none; }
+        .piano-desc-body,
+        .drum-desc-body  {
+            display: block;
+            width: 100%;
+            text-align: center;
+            font-size:clamp(29px,2.46vw,43px);
+            color:#E5E7EB;
+            line-height:1.38;
+            word-break:keep-all;
+            font-weight:700;
+            letter-spacing:-0.2px;
+        }
+        .compare-key {
+            font-weight: 900;
+            text-shadow: none;
+        }
+        .compare-key-blue { color:#60A5FA; }
+        .compare-key-orange { color:#FDBA74; }
+        .compare-key-violet { color:#C4B5FD; }
+        .compare-key-yellow { color:#FACC15; }
+
+        .piano-change-list {
+            display: none;
+            width: 100%;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-rows: repeat(3, minmax(0, 1fr));
+            gap: clamp(8px, 1.2vh, 14px);
+            cursor: pointer;
+        }
+        .piano-change-card {
+            grid-column: span 2;
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 6px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(49,130,246,0.22);
+            overflow: hidden;
+        }
+        .piano-change-card img {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            object-fit: contain;
+            border-radius: 9px;
+            background: rgba(0,0,0,0.18);
+        }
+        .piano-change-card span {
+            display: none;
+        }
+        .piano-change-card:nth-child(-n + 2) {
+            grid-column: span 3;
+        }
+        .piano-compare-slide.summary-mode {
+            padding: 8px 12px !important;
+            gap: 0 !important;
+        }
+        .piano-compare-slide.summary-mode .piano-header {
+            display: none !important;
+        }
+        .piano-compare-slide.summary-mode .piano-img-area,
+        .piano-compare-slide.summary-mode .piano-desc-box {
+            display: none !important;
+        }
+        .piano-compare-slide.summary-mode .piano-change-list {
+            display: grid;
+        }
 
         /* 타이핑 자판 커서 효과 */
         .typing-cursor::after {
@@ -352,6 +641,7 @@
             gap: 0; /* 배지가 absolute이므로 gap 불필요 */
             min-width: 0;
             height: 100%;
+            aspect-ratio: 1792 / 1099;
             overflow: hidden;
             flex-shrink: 0;
             position: relative; /* 배지의 absolute 기준점 */
@@ -370,31 +660,34 @@
 
         /* 비교 상태일 때 가로 너비 분할 */
         .drum-img-area.compare-mode .drum-col-asis {
-            width: calc(50% - 6px);
+            width: auto;
+            max-width: calc(50% - 6px);
         }
         .drum-img-area.compare-mode .drum-col-tobe {
-            width: calc(50% - 6px);
+            width: auto;
+            max-width: calc(50% - 6px);
             opacity: 1;
         }
 
         /* 드럼 배지 — 이미지 위에 절대 오버레이 */
         .drum-badge { position:absolute; top:10px; left:10px; display:flex; align-items:center; gap:8px; flex-shrink:0; z-index:20; }
         .drum-badge.tobe-badge { left:auto; right:10px; }
-        .drum-badge em { font-style:normal; font-size:12px; color:rgba(255,255,255,0.8); white-space:nowrap; }
+        .drum-badge em { display:none; }
         .drum-badge.asis-badge span { background:rgba(239,68,68,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(239,68,68,0.5); backdrop-filter:blur(4px); }
         .drum-badge.tobe-badge span { background:rgba(255,138,0,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(255,138,0,0.5); backdrop-filter:blur(4px); }
 
-        .drum-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:12px; position:relative; }
-        #drumAsIsImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.2); }
-        #drumToBeImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(255,138,0,0.35); border-radius:12px; box-shadow:0 0 32px rgba(255,138,0,0.2); background:rgba(0,0,0,0.1); min-width:160px; }
+        .drum-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:12px; position:relative; box-sizing:border-box; background:rgba(0,0,0,0.18); }
+        #drumAsIsImg { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.2); }
+        #drumToBeImg { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; border:1px solid rgba(255,138,0,0.35); border-radius:12px; box-shadow:0 0 32px rgba(255,138,0,0.2); background:rgba(0,0,0,0.1); min-width:160px; }
 
         .drum-desc-box {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
             z-index: 100;
-            display: block !important;
+            display: none !important;
+            width: 100%;
             height: auto;
             min-height: unset;
             opacity: 0;
@@ -407,19 +700,70 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px; text-align: left;
+            border-radius: 20px; text-align: center;
             box-sizing: border-box;
             padding: 16px 22px !important;
             animation: none !important;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
         .drum-desc-box.show-desc {
+            display: block !important;
             opacity: 1 !important;
             visibility: visible !important;
             transform: translateY(0) !important;
         }
-        .drum-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:6px; letter-spacing:0.2px; }
-        .drum-desc-body  { font-size:clamp(18px,1.55vw,26px); color:#E5E7EB; line-height:1.45; word-break:keep-all; }
+        .drum-desc-title { display:none; }
+        .drum-change-list {
+            display: none;
+            width: 100%;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow: hidden;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-rows: repeat(3, minmax(0, 1fr));
+            gap: clamp(8px, 1.2vh, 14px);
+            cursor: pointer;
+        }
+        .drum-change-card {
+            grid-column: span 2;
+            min-width: 0;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 6px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.28);
+            border: 1px solid rgba(255,138,0,0.22);
+            overflow: hidden;
+        }
+        .drum-change-card img {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            object-fit: contain;
+            border-radius: 9px;
+            background: rgba(0,0,0,0.18);
+        }
+        .drum-change-card span {
+            display: none;
+        }
+        .drum-change-card:nth-child(-n + 4) {
+            grid-column: span 3;
+        }
+        .drum-compare-slide.summary-mode {
+            padding: 8px 12px !important;
+            gap: 0 !important;
+        }
+        .drum-compare-slide.summary-mode .drum-header {
+            display: none !important;
+        }
+        .drum-compare-slide.summary-mode .drum-img-area,
+        .drum-compare-slide.summary-mode .drum-desc-box {
+            display: none !important;
+        }
+        .drum-compare-slide.summary-mode .drum-change-list {
+            display: grid;
+        }
 
         .image-placeholder { width: 100%; max-width: 1000px; background: #0B0F19; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.2s ease; position: relative; z-index: 50; overflow: hidden; display: block; }
         .image-placeholder:hover { border-color: rgba(255, 255, 255, 0.3); transform: scale(1.02); }
@@ -632,6 +976,11 @@
         .logo-container { position: absolute; bottom: 40px; left: 0; right: 0; transform: none; margin: 0 auto; width: max-content; min-width: 160px; }
         .cover-slide .logo-container { display: flex; justify-content: center; align-items: center; width: 100%; min-width: 0; }
         .cover-slide .logo-container img { width: auto; max-width: 180px; height: 34px; object-position: center; }
+        .cover-slide.cover-loading .logo-container {
+            opacity: 0.5;
+            transform: translateY(6px) scale(0.96);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
 
         /* 강당 스크린 빔프로젝터용 — 모든 해상도에서 동일 크기 강제 고정 */
         @media (max-width: 1440px), (max-height: 860px) {
@@ -1064,6 +1413,84 @@
             font-weight: 700;
             color: rgba(255,255,255,0.5);
         }
+        .cover-loader {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
+        }
+        .cover-slide.cover-loading .cover-loader {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .cover-loader-percent {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(24px, 3.4vw, 48px);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: 0;
+            background: linear-gradient(120deg, #8B5CF6, #22D3EE, #FACC15, #FB7185);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.28));
+        }
+        .cover-beat-loader {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            width: min(460px, 56vw);
+            height: 70px;
+        }
+        .cover-beat-loader::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: min(620px, 72vw);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.26), transparent);
+            transform: translate(-50%, -50%);
+        }
+        .cover-beat-loader span {
+            position: relative;
+            z-index: 1;
+            width: 6px;
+            height: 12px;
+            border-radius: 999px;
+            background: var(--beat-color, #22D3EE);
+            box-shadow: 0 0 16px color-mix(in srgb, var(--beat-color, #22D3EE) 72%, transparent);
+            transform-origin: center;
+            animation: coverBeat 0.78s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.055s);
+        }
+        @keyframes coverBeat {
+            0%, 100% {
+                transform: scaleY(0.35);
+                opacity: 0.42;
+                filter: saturate(0.85) hue-rotate(0deg);
+            }
+            45% {
+                transform: scaleY(2.8);
+                opacity: 1;
+                filter: saturate(1.4) hue-rotate(35deg);
+            }
+            68% {
+                transform: scaleY(0.9);
+                opacity: 0.75;
+            }
+        }
         /* cover-reveal 기본 레이아웃 */
         .cover-reveal {
             display: flex;
@@ -1493,6 +1920,25 @@
                         <span class="cover-year" id="coverYearNum">2008</span>
                         <span class="cover-year-label">년</span>
                     </div>
+                    <div class="cover-loader" id="coverLoader" aria-hidden="true">
+                        <div class="cover-loader-percent" id="coverLoaderPercent">0%</div>
+                        <div class="cover-beat-loader">
+                            <span style="--i:0; --beat-color:#8B5CF6;"></span>
+                            <span style="--i:1; --beat-color:#22D3EE;"></span>
+                            <span style="--i:2; --beat-color:#2DD4BF;"></span>
+                            <span style="--i:3; --beat-color:#A3E635;"></span>
+                            <span style="--i:4; --beat-color:#FACC15;"></span>
+                            <span style="--i:5; --beat-color:#FB923C;"></span>
+                            <span style="--i:6; --beat-color:#FB7185;"></span>
+                            <span style="--i:7; --beat-color:#F472B6;"></span>
+                            <span style="--i:8; --beat-color:#818CF8;"></span>
+                            <span style="--i:9; --beat-color:#38BDF8;"></span>
+                            <span style="--i:10; --beat-color:#34D399;"></span>
+                            <span style="--i:11; --beat-color:#FDE047;"></span>
+                            <span style="--i:12; --beat-color:#F97316;"></span>
+                            <span style="--i:13; --beat-color:#EC4899;"></span>
+                        </div>
+                    </div>
                     <!-- 2026 도달 후 나타나는 나머지 요소 -->
                     <div class="cover-reveal" id="coverReveal">
                         <h1 id="typingTitle" data-text="서비스의 새로운 변화가 시작됩니다."></h1>
@@ -1537,10 +1983,15 @@
 
             <!-- 슬라이드 3: 피아노 표지 -->
             <div class="slide-wrapper">
-                <div class="slide-content">
+                <div class="slide-content piano-space-intro">
+                    <div class="piano-starfield" aria-hidden="true">
+                        <div id="stars" class="space-stars"></div>
+                        <div id="stars2" class="space-stars"></div>
+                        <div id="stars3" class="space-stars"></div>
+                    </div>
                     <div class="section-num">01</div>
                     <h2><span class="color-blue">스마트피아노</span> 리뉴얼</h2>
-                    <p>우주를 담은 새로운 게이미피케이션 디자인</p>
+                    <p class="piano-shine-text"><span class="shine-pass">우주를 담은 새로운 게이미피케이션 디자인</span></p>
                 </div>
             </div>
 
@@ -1550,12 +2001,16 @@
 
                     <!-- 헤더: 제목 + 탭 -->
                     <div class="piano-header">
-                        <h2 style="margin:0; font-size:clamp(18px,2.2vw,28px);">스마트피아노 <span class="color-blue">리뉴얼</span></h2>
-                        <div id="pianoTabs" style="display:flex; gap:6px;">
+                        <h2 id="pianoHeaderTitle" style="margin:0; font-size:clamp(18px,2.2vw,28px);">스마트피아노 <span class="color-blue">리뉴얼</span></h2>
+                        <div id="pianoTabs" style="display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px;">
                             <button class="ptab ptab-active" onclick="jumpPianoStep(0)">Intro</button>
                             <button class="ptab" onclick="jumpPianoStep(2)">Lesson Entry</button>
                             <button class="ptab" onclick="jumpPianoStep(4)">Content Library</button>
                             <button class="ptab" onclick="jumpPianoStep(6)">Focused Play</button>
+                            <button class="ptab" onclick="jumpPianoStep(8)">Practice</button>
+                            <button class="ptab" onclick="jumpPianoStep(10)">Progress</button>
+                            <button class="ptab" onclick="jumpPianoStep(12)">Mission</button>
+                            <button class="ptab" onclick="jumpPianoStep(14)">Reward</button>
                         </div>
                     </div>
 
@@ -1591,6 +2046,8 @@
                         </div>
                     </div>
 
+                    <div id="pianoChangeList" class="piano-change-list" aria-label="스마트피아노 변경 이미지 목록"></div>
+
                 </div>
             </div>
 
@@ -1600,20 +2057,21 @@
                     <h2>Key Design Features</h2>
                     <p>스마트피아노 리뉴얼 핵심 요약</p>
                     <div class="summary-grid">
-                        <div class="summary-card"><i class="fa-solid fa-rocket color-blue"></i><h3>Space Gamification</h3><p>우주 테마 기반의 친근하고 감성적인 게이미피케이션 스타일로 타겟층의 몰입도를 극대화합니다.</p></div>
-                        <div class="summary-card"><i class="fa-solid fa-layer-group color-blue"></i><h3>Soft & Flat UI</h3><p>부드러운 소프트 라운드 코너와 직관적인 플랫 아이콘을 적용하여 트렌디하고 편안한 사용성을 제공합니다.</p></div>
-                        <div class="summary-card"><i class="fa-solid fa-gamepad color-blue"></i><h3>Visual Balance</h3><p>트렌디함을 유지하면서 주요 타겟층이 흥미를 잃지 않도록 시각적 재미 요소를 균형 있게 배치했습니다.</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-rocket color-blue"></i><h3>Space Gamification</h3><p>우주 테마 게이미피케이션으로 몰입감 강화</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-layer-group color-blue"></i><h3>Soft & Flat UI</h3><p>소프트 라운드와 플랫 아이콘 중심의 편안한 UI</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-gamepad color-blue"></i><h3>Visual Balance</h3><p>타겟층에 맞춘 시각적 재미와 균형감</p></div>
                     </div>
-                    <div class="update-notice" style="background: rgba(49, 130, 246, 0.1); border: 1px solid rgba(49, 130, 246, 0.2); color: #3182F6;"><i class="fa-regular fa-calendar-check"></i> 올 3분기 적용 목표</div>
+                    <div class="update-notice" style="background: rgba(49, 130, 246, 0.1); border: 1px solid rgba(49, 130, 246, 0.2); color: #3182F6; font-size: 20px;"><i class="fa-regular fa-calendar-check"></i> 올 3분기 순차적 적용 예정</div>
                 </div>
             </div>
 
             <!-- 슬라이드 8: 드럼 표지 -->
             <div class="slide-wrapper">
-                <div class="slide-content">
+                <div class="slide-content drum-neon-intro">
+                    <div class="drum-neon-bg" aria-hidden="true"></div>
                     <div class="section-num">02</div>
-                    <h2><span class="color-orange">스마트드럼</span> 리뉴얼</h2>
-                    <p>비트에 반응하는 다이내믹 네온 인터페이스</p>
+                    <h2 id="drumNeonTitle" class="drum-neon-title" data-text="스마트드럼 리뉴얼">스마트드럼 리뉴얼</h2>
+                    <p class="drum-neon-subtitle">다이내믹 네온 인터페이스</p>
                 </div>
             </div>
 
@@ -1631,6 +2089,7 @@
                             <button class="dtab" onclick="jumpDrumStep(6)">Weekly Lesson</button>
                             <button class="dtab" onclick="jumpDrumStep(8)">List Page</button>
                             <button class="dtab" onclick="jumpDrumStep(10)">Play Screen</button>
+                            <button class="dtab" onclick="jumpDrumStep(12)">Rhythm Play</button>
                         </div>
                     </div>
 
@@ -1666,6 +2125,8 @@
                         </div>
                     </div>
 
+                    <div id="drumChangeList" class="drum-change-list" aria-label="스마트드럼 변경 이미지 목록"></div>
+
                 </div>
             </div>
 
@@ -1675,11 +2136,11 @@
                     <h2>Next-Gen UI/UX</h2>
                     <p>스마트드럼 리뉴얼 핵심 요약</p>
                     <div class="summary-grid">
-                        <div class="summary-card"><i class="fa-solid fa-bolt color-orange"></i><h3>Neon & Snowball</h3><p>화려한 네온 라이팅 배경과 고급스러운 스노우볼 콘셉트 오브제를 결합하여 역동적인 타격감을 시각화했습니다.</p></div>
-                        <div class="summary-card"><i class="fa-solid fa-table-cells-large color-orange"></i><h3>Clean Dashboard</h3><p>복잡했던 기존 레이아웃을 버리고, 가장 깔끔하고 정돈된 대시보드 및 리스트 UI를 새롭게 구축했습니다.</p></div>
-                        <div class="summary-card"><i class="fa-solid fa-music color-orange"></i><h3>Rhythmic Identity</h3><p>리드미컬한 컬러 코딩과 연령별 캐릭터 변주를 통해 웰메이드 타악기 전용 앱의 정체성을 완벽히 확립했습니다.</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-bolt color-orange"></i><h3>Neon & Snowball</h3><p>네온 라이팅과 3D 오브젝트로 역동성 강화</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-table-cells-large color-orange"></i><h3>Clean Dashboard</h3><p>대시보드와 리스트 구조를 단순하고 명확하게 정리</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-music color-orange"></i><h3>Rhythmic Identity</h3><p>컬러 코딩과 캐릭터 변주로 타악기 앱 정체성 강화</p></div>
                     </div>
-                    <div class="update-notice" style="background: rgba(255, 138, 0, 0.1); border: 1px solid rgba(255, 138, 0, 0.2); color: #FF8A00;"><i class="fa-regular fa-calendar-check"></i> 7월 중 적용 목표</div>
+                    <div class="update-notice" style="background: rgba(255, 138, 0, 0.1); border: 1px solid rgba(255, 138, 0, 0.2); color: #FF8A00; font-size: 20px;"><i class="fa-regular fa-calendar-check"></i> 7월 중 적용 목표</div>
                 </div>
             </div>
 
@@ -1700,7 +2161,7 @@
                     <p>대대적인 기능 개편 및 서비스 통합 로드맵</p>
                     <div class="roadmap-container">
                         <div class="roadmap-line"></div>
-                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-server"></i></div><div class="roadmap-content"><h3>01. 서버이전</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">최적화의 시작</p></div></div>
+                        <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-server"></i></div><div class="roadmap-content"><h3>01. 서버 이전</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">최적화의 시작</p></div></div>
                         <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-user-plus"></i></div><div class="roadmap-content"><h3>02. 학생 등록</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">평가 시스템 기반</p></div></div>
                         <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-trophy"></i></div><div class="roadmap-content"><h3>03. 랭킹 시스템</h3><div class="roadmap-date">7월 중</div><p class="roadmap-desc">전국 학습 경쟁</p></div></div>
                         <div class="roadmap-step"><div class="roadmap-dot"><i class="fa-solid fa-file-pen"></i></div><div class="roadmap-content"><h3>04. 평가 시스템</h3><div class="roadmap-date">9월 초</div><p class="roadmap-desc">E-Learning 고도화</p></div></div>
@@ -1718,15 +2179,14 @@
                         <div class="detail-text">
                             <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 01</span>
                             <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 7월 중</div>
-                            <h2>안정적인 서버 이전</h2>
+                            <h2>서버 이전</h2>
                             <ul>
-                                <li><i class="fa-solid fa-check"></i> AWS 클라우드 기반 인프라 확장을 통한 서비스 안정성 확보</li>
-                                <li><i class="fa-solid fa-check"></i> 기존 대비 10배 이상의 트래픽 처리 및 데이터 로딩 속도 최적화</li>
-                                <li><i class="fa-solid fa-check"></i> 신규 대규모 기능 업데이트를 위한 유연한 시스템 환경 구축</li>
+                                <li><i class="fa-solid fa-check"></i> 접속·전환 속도 최적화</li>
+                                <li><i class="fa-solid fa-check"></i> 신규 기능 대응 인프라 확장</li>
                             </ul>
                         </div>
                         <div class="detail-visual detail-img-wrap">
-                            <img src="202606-images/jueunssam-001.png" alt="안정적인 서버 이전" class="detail-img">
+                            <img src="202606-images/jueunssam-001.png" alt="서버 이전" class="detail-img">
                         </div>
                     </div>
                 </div>
@@ -1743,8 +2203,8 @@
                             <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 7월 중</div>
                             <h2>학생 등록 관리</h2>
                             <ul>
-                                <li><i class="fa-solid fa-check"></i> 학생별 고유 식별 번호 부여를 통한 체계적인 학습 데이터 누적</li>
-                                <li><i class="fa-solid fa-check"></i> 랭킹 및 성취도 평가 시스템 구축을 위한 가장 핵심적인 기본 DB 설계</li>
+                                <li><i class="fa-solid fa-check"></i> 학생 ID 기반 학습 이력 관리</li>
+                                <li><i class="fa-solid fa-check"></i> 평가·랭킹 연동 데이터베이스 구축</li>
                             </ul>
                         </div>
                     </div>
@@ -1757,11 +2217,11 @@
                         <div class="detail-text">
                             <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 03</span>
                             <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 7월 중</div>
-                            <h2>웹학습 랭킹 대시보드</h2>
+                            <h2>웹학습 랭킹 페이지</h2>
                             <ul>
-                                <li><i class="fa-solid fa-check"></i> 학원 내, 지역별, 전국 단위 실시간 웹학습 랭킹 대시보드 도입</li>
-                                <li><i class="fa-solid fa-check"></i> 랭킹 데이터를 활용하여 학원 자체 이벤트 기획 및 운영 가능</li>
-                                <li><i class="fa-solid fa-check"></i> <div>학원 정책에 따라 대시보드 노출 ON/OFF 설정 가능<br><span style="font-size: 18px; color: #8B95A1;">(단, 웹학습 자체 랭킹 화면은 유지됨)</span></div></li>
+                                <li><i class="fa-solid fa-check"></i> 학원·지역·전국 랭킹 실시간 제공</li>
+                                <li><i class="fa-solid fa-check"></i> 랭킹 기반 학원 이벤트 운영</li>
+                                <li><i class="fa-solid fa-check"></i> 정책별 랭킹 페이지 노출 제어</li>
                             </ul>
                         </div>
                         <!-- ====== 랭킹 대시보드 ====== -->
@@ -2147,9 +2607,9 @@
                             <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 9월 초</div>
                             <h2>오프라인 교재의<br>E-Learning</h2>
                             <ul>
-                                <li><i class="fa-solid fa-check"></i> 기존 종이 교재의 한계를 넘는 완벽한 인터랙티브 E-Learning 전환</li>
-                                <li><i class="fa-solid fa-check"></i> 실시간 자동 채점 및 취약 부분 집중 복습 시스템 구축</li>
-                                <li><i class="fa-solid fa-check"></i> 채점 결과를 기반으로 한 맞춤형 분석 리포트 제공</li>
+                                <li><i class="fa-solid fa-check"></i> 종이 교재의 인터랙티브 학습 전환</li>
+                                <li><i class="fa-solid fa-check"></i> 실시간 채점 및 취약 영역 복습</li>
+                                <li><i class="fa-solid fa-check"></i> 결과 기반 맞춤 분석 리포트</li>
                             </ul>
                         </div>
                     </div>
@@ -2162,13 +2622,14 @@
                         <div class="detail-text">
                             <span class="color-yellow" style="font-weight: 700; letter-spacing: 2px;">STEP 05</span>
                             <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 9월 초</div>
-                            <h2>B2B 분석 리포트 고도화</h2>
+                            <h2>학생 분석 리포트 제공</h2>
                             <ul>
-                                <li><i class="fa-solid fa-check"></i> 누적 학습 데이터를 기반으로 한 정밀한 성취도 분석 알고리즘</li>
-                                <li><i class="fa-solid fa-check"></i> 학원 운영 및 상담에 즉시 활용 가능한 비주얼 리포트 생성</li>
+                                <li><i class="fa-solid fa-check"></i> 누적 데이터 기반 성취도 분석</li>
+                                <li><i class="fa-solid fa-check"></i> 학원 운영용 리포트 제공</li>
+                                <li><i class="fa-solid fa-check"></i> 상담용 시각 리포트 제공</li>
                             </ul>
                         </div>
-                        <!-- ====== B2B 분석 리포트 고도화 데모 ====== -->
+                        <!-- ====== 학생 분석 리포트 제공 데모 ====== -->
                         <div class="b2b-demo" id="b2bDemo">
                             <!-- 헤더: 학생 정보 -->
                             <div class="b2b-header">
@@ -2281,9 +2742,9 @@
                             <div class="step-date-badge"><i class="fa-regular fa-calendar-check"></i> 11월 중</div>
                             <h2>음악 기반 헬스케어</h2>
                             <ul>
-                                <li><i class="fa-solid fa-check"></i> 아동의 인지 발달부터 시니어의 치매 예방까지 전 연령을 아우르는 솔루션</li>
-                                <li><i class="fa-solid fa-check"></i> 피아노, 드럼 연주를 연동한 인지 기능 및 집중력 향상 프로그램</li>
-                                <li><i class="fa-solid fa-check"></i> 전문 임상 논문 로직 기반의 인지 기능 측정 및 분석 시스템 도입</li>
+                                <li><i class="fa-solid fa-check"></i> 전 연령 인지·집중 훈련 솔루션</li>
+                                <li><i class="fa-solid fa-check"></i> 연주 연동 인지 기능 강화 프로그램</li>
+                                <li><i class="fa-solid fa-check"></i> 임상 로직 기반 측정·분석 시스템</li>
                             </ul>
                         </div>
                     </div>
@@ -2332,6 +2793,7 @@
             const sliderTrack = document.getElementById('sliderTrack');
             const coverSlide = document.getElementById('coverSlide');
             const navControls = document.getElementById('navControls');
+            const coverLoaderPercent = document.getElementById('coverLoaderPercent');
             let isScrolling = false;
 
             function revealNavControls() {
@@ -2353,15 +2815,50 @@
                 });
             }
 
-            function startCoverIntro() {
-                if (currentSlideIndex !== 0) return false;
-                if (window._coverAnimationStarted) return false;
+            function beginCoverYearAnimation() {
+                window._coverLoadingStarted = false;
                 window._coverAnimationStarted = true;
-                if (coverSlide) coverSlide.classList.remove('cover-waiting');
+                if (coverSlide) coverSlide.classList.remove('cover-waiting', 'cover-loading');
                 revealNavControls();
                 if (typeof window.startCoverAnimation === 'function') {
                     window.startCoverAnimation();
                 }
+            }
+
+            function startCoverIntro() {
+                if (currentSlideIndex !== 0) return false;
+                if (window._coverLoadingStarted) return true;
+                if (window._coverAnimationStarted) return false;
+
+                window._coverLoadingStarted = true;
+                if (coverSlide) coverSlide.classList.add('cover-loading');
+                if (coverLoaderPercent) coverLoaderPercent.textContent = '0%';
+
+                const duration = 5600;
+                const start = performance.now();
+                const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+                function updateLoader(now) {
+                    if (currentSlideIndex !== 0) {
+                        window._coverLoadingStarted = false;
+                        if (coverSlide) coverSlide.classList.remove('cover-loading');
+                        return;
+                    }
+
+                    const progress = Math.min((now - start) / duration, 1);
+                    const percent = Math.min(100, Math.floor(easeOutCubic(progress) * 100));
+                    if (coverLoaderPercent) coverLoaderPercent.textContent = `${percent}%`;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(updateLoader);
+                        return;
+                    }
+
+                    if (coverLoaderPercent) coverLoaderPercent.textContent = '100%';
+                    setTimeout(beginCoverYearAnimation, 320);
+                }
+
+                requestAnimationFrame(updateLoader);
                 return true;
             }
 
@@ -2380,14 +2877,14 @@
             window.nextSlide = function() {
                 if (startCoverIntro()) return;
 
-                // 피아노 비교 슬라이드(index 3): 스텝 0~7 순환, 8에서 다음 슬라이드
+                // 피아노 비교 슬라이드(index 3): 스텝 0~15 비교, 16 목록, 이후 다음 슬라이드
                 if (currentSlideIndex === 3) {
                     const step = window._pianoStep || 0;
-                    if (step < 7) {
+                    if (step < 16) {
                         if (typeof window.openPianoCompare === 'function') window.openPianoCompare();
                         return;
                     }
-                    // 마지막 스텝(7) 완료 → 다음 슬라이드로, 스텝 리셋
+                    // 목록 화면 완료 → 다음 슬라이드로, 스텝 리셋
                     window._pianoStep = 0;
                     if (typeof window.jumpPianoStep === 'function') {
                         // 리셋 후 다음 슬라이드
@@ -2397,14 +2894,14 @@
                     }
                 }
 
-                // 스마트드럼 비교 슬라이드(index 6): 스텝 0~11 순환, 12에서 다음 슬라이드
+                // 스마트드럼 비교 슬라이드(index 6): 스텝 0~13 비교, 14 목록, 이후 다음 슬라이드
                 if (currentSlideIndex === 6) {
                     const step = window._drumStep || 0;
-                    if (step < 11) {
+                    if (step < 14) {
                         if (typeof window.openDrumCompare === 'function') window.openDrumCompare();
                         return;
                     }
-                    // 마지막 스텝(11) 완료 → 다음 슬라이드로, 스텝 리셋
+                    // 목록 화면 완료 → 다음 슬라이드로, 스텝 리셋
                     window._drumStep = 0;
                     if (typeof window.jumpDrumStep === 'function') {
                         // 리셋 후 다음 슬라이드
@@ -2463,6 +2960,50 @@
                 if (initSlide >= 0 && initSlide < totalSlides) {
                     goToSlide(initSlide);
                 }
+            }
+
+            (function initDrumNeonFlicker() {
+                const title = document.getElementById('drumNeonTitle');
+                if (!title) return;
+
+                const text = title.dataset.text || title.textContent || '';
+                title.innerHTML = Array.from(text).map((char) => {
+                    const output = char === ' ' ? '&nbsp;' : char;
+                    return `<span class="neon-letter">${output}</span>`;
+                }).join('');
+
+                const letters = Array.from(title.querySelectorAll('.neon-letter'));
+                const flickers = [5, 7, 9, 11, 13, 15, 17];
+
+                function randomFromInterval(from, to) {
+                    return Math.floor(Math.random() * (to - from + 1) + from);
+                }
+
+                function flickerLetter(letter, flickerNumber, counter = 0) {
+                    if (!letter || counter === flickerNumber) {
+                        if (letter) letter.classList.remove('off');
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        letter.classList.toggle('off');
+                        flickerLetter(letter, flickerNumber, counter + 1);
+                    }, 30);
+                }
+
+                (function loop() {
+                    const rand = randomFromInterval(500, 3000);
+                    setTimeout(() => {
+                        const randomLetter = letters[randomFromInterval(0, letters.length - 1)];
+                        const flickerNumber = flickers[randomFromInterval(0, flickers.length - 1)];
+                        flickerLetter(randomLetter, flickerNumber);
+                        loop();
+                    }, rand);
+                })();
+            })();
+
+            if (currentSlideIndex === 0) {
+                setTimeout(startCoverIntro, 450);
             }
         });
 
@@ -2633,33 +3174,116 @@
         // 피아노 비교 — 단계별 스텝 시스템
         // Step 0: AS-IS[0] 전체  →  Step 1: 비교[0]+설명
         // Step 2: AS-IS[1] 전체  →  Step 3: 비교[1]+설명
-        // Step 4~7: 동일, Step 8에서 다음 슬라이드
+        // Step 4~15: 동일, Step 16에서 변경 이미지 목록
         // ====================================================
+        function formatCompareCopy(text, theme) {
+            const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+            const accent = theme === 'drum' ? 'compare-key-orange' : 'compare-key-blue';
+            const secondary = theme === 'drum' ? 'compare-key-violet' : 'compare-key-yellow';
+            const terms = theme === 'drum'
+                ? [
+                    ['네온 라이팅', accent],
+                    ['3D 드럼 오브젝트', accent],
+                    ['캐릭터 카드', secondary],
+                    ['컬러 구분', accent],
+                    ['스노우볼형 3D 메뉴', accent],
+                    ['주차별 수업 흐름', secondary],
+                    ['콘텐츠 구분', accent],
+                    ['검색 기능', secondary],
+                    ['난이도 구분', accent],
+                    ['악보', secondary],
+                    ['드럼 연동', accent],
+                    ['컬러 드럼 패드', accent],
+                    ['네온 노트', accent],
+                    ['타격감', secondary],
+                    ['가독성', secondary]
+                ]
+                : [
+                    ['피아노 선율', accent],
+                    ['3D 캐릭터', accent],
+                    ['카드형 UI', accent],
+                    ['등원 요일', secondary],
+                    ['3D 카드', accent],
+                    ['슬라이드형 배치', secondary],
+                    ['별 오브젝트', secondary],
+                    ['오선형 동선', accent],
+                    ['악보 중심', accent],
+                    ['놀이형 오브젝트', secondary],
+                    ['카테고리 중심', accent],
+                    ['아이콘', secondary],
+                    ['정돈된 디자인', accent],
+                    ['검색창', secondary],
+                    ['시각적 정보 정리', accent]
+                ];
+
+            let html = escapeHtml(text);
+            terms
+                .sort((a, b) => b[0].length - a[0].length)
+                .forEach(([term, className]) => {
+                    const escapedTerm = escapeHtml(term);
+                    html = html.replace(
+                        new RegExp(escapedTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+                        `<span class="compare-key ${className}">${escapedTerm}</span>`
+                    );
+                });
+            return html;
+        }
+
         (function() {
             const pianoData = [
                 {
                     asis:  '202606-images/piano-001.webp',
                     tobe:  '202606-images/piano-001-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Intro Page',
-                    body:  '기존의 우주 테마와 친근한 캐릭터 감성은 유지하면서, 3D 오브젝트와 피아노 기반의 게임형 구성을 더해<br>아이들이 더 쉽고 즐겁게 몰입할 수 있는 인트로 화면으로 개선했습니다.'
+                    body:  '피아노 선율과 3D 캐릭터가 어우러진 몰입형 비주얼 구성'
                 },
                 {
                     asis:  '202606-images/piano-002.webp',
                     tobe:  '202606-images/piano-002-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Lesson Entry Experience',
-                    body:  '학생 목록을 단순히 나열하는 방식에서 벗어나, 레슨 정보와 캐릭터 배지를 함께 보여주는 구조로 개선했습니다.<br>선생님은 정보를 빠르게 확인하고, 아이들은 자연스럽게 게임형 학습에 몰입할 수 있습니다.'
+                    body:  '카드형 UI와 등원 요일 표기를 중심으로 정리한 직관적 학생 선택 구성'
                 },
                 {
                     asis:  '202606-images/piano-003.webp',
                     tobe:  '202606-images/piano-003-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Content Library Experience',
-                    body:  '교재를 단순히 선택하는 화면에서 벗어나, 학습 콘텐츠를 탐색하는 라이브러리형 화면으로 개선했습니다.<br>큰 표지와 명확한 액션 버튼으로 아이들이 스스로 콘텐츠를 고르고 학습을 시작합니다.'
+                    body:  '교재 중심의 3D 카드와 슬라이드형 배치를 강조한 직관적 교재 선택 UI'
                 },
                 {
                     asis:  '202606-images/piano-004.webp',
                     tobe:  '202606-images/piano-004-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Focused Play Experience',
-                    body:  '다양한 기능이 혼재되어 있던 기존 화면을 정리하고, 악보와 연주 흐름에 집중할 수 있는 구조로 개선했습니다.<br>학습자는 더 쉽게 악보를 읽고 자연스럽게 연주에 몰입할 수 있습니다.'
+                    body:  '별 오브젝트와 오선형 동선을 결합한 감성적 레슨 진도 구성'
+                },
+                {
+                    asis:  '202606-images/piano-005.webp',
+                    tobe:  '202606-images/piano-005-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Practice Experience',
+                    body:  '연주에 필요한 핵심 기능을 직관적으로 정리한 악보 중심 화면 구성'
+                },
+                {
+                    asis:  '202606-images/piano-006.webp',
+                    tobe:  '202606-images/piano-006-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Progress Experience',
+                    body:  '놀이형 오브젝트와 카테고리 중심 배치로 직관성을 강화'
+                },
+                {
+                    asis:  '202606-images/piano-007.webp',
+                    tobe:  '202606-images/piano-007-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Mission Experience',
+                    body:  '낮은 가독성을 아이콘과 정돈된 디자인으로 개선한 음악이론 화면'
+                },
+                {
+                    asis:  '202606-images/piano-008.webp',
+                    tobe:  '202606-images/piano-008-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Reward Experience',
+                    body:  '검색창과 시각적 정보 정리로 탐색 편의성을 높인 리스트 화면'
                 }
             ];
 
@@ -2668,7 +3292,24 @@
 
             function applyPianoStep(step) {
                 window._pianoStep = step;
-                const itemIdx = Math.min(Math.floor(step / 2), 3);
+                const slide = document.querySelector('.piano-compare-slide');
+                const isSummary = step >= pianoData.length * 2;
+                const headerTitle = document.getElementById('pianoHeaderTitle');
+                if (slide) slide.classList.toggle('summary-mode', isSummary);
+                if (headerTitle) {
+                    headerTitle.innerHTML = isSummary
+                        ? '스마트피아노 <span class="color-blue">변경 이미지 목록</span>'
+                        : '스마트피아노 <span class="color-blue">리뉴얼</span>';
+                }
+
+                if (isSummary) {
+                    document.querySelectorAll('.ptab').forEach((t) => {
+                        t.classList.remove('ptab-active');
+                    });
+                    return;
+                }
+
+                const itemIdx = Math.min(Math.floor(step / 2), pianoData.length - 1);
                 const isCmp   = (step % 2 === 1);
                 const d = pianoData[itemIdx];
 
@@ -2686,7 +3327,7 @@
                 const descTitle = document.getElementById('pianoDescTitle');
                 const descBody  = document.getElementById('pianoDescBody');
                 if (descTitle) descTitle.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp; ' + d.title;
-                if (descBody)  descBody.innerHTML  = d.body;
+                if (descBody)  descBody.innerHTML  = formatCompareCopy(d.body, 'piano');
 
                 const area = document.getElementById('pianoImgArea');
                 const desc = document.getElementById('pianoDesc');
@@ -2710,6 +3351,30 @@
                 applyPianoStep(window._pianoStep + 1);
             };
 
+            const changeList = document.getElementById('pianoChangeList');
+            if (changeList) {
+                changeList.innerHTML = pianoData.map((item, index) => `
+                    <div class="piano-change-card">
+                        <img src="${item.tobe}" alt="TO-BE ${String(index + 1).padStart(3, '0')}">
+                    </div>
+                `).join('');
+                changeList.addEventListener('click', (evt) => {
+                    evt.stopPropagation();
+                    window._pianoStep = pianoData.length * 2;
+                    if (typeof window.nextSlide === 'function') window.nextSlide();
+                });
+            }
+
+            const pianoSlide = document.querySelector('.piano-compare-slide');
+            if (pianoSlide) {
+                pianoSlide.addEventListener('click', (evt) => {
+                    if (!pianoSlide.classList.contains('summary-mode')) return;
+                    if (evt.target.closest('.ptab')) return;
+                    window._pianoStep = pianoData.length * 2;
+                    if (typeof window.nextSlide === 'function') window.nextSlide();
+                });
+            }
+
             // 초기 상태 적용
             applyPianoStep(0);
 
@@ -2719,7 +3384,7 @@
         // 드럼 비교 — 단계별 스텝 시스템
         // Step 0: AS-IS[0] 전체  →  Step 1: 비교[0]+설명
         // Step 2: AS-IS[1] 전체  →  Step 3: 비교[1]+설명
-        // ... Step 10~11, Step 12에서 다음 슬라이드
+        // ... Step 12~13, Step 14에서 변경 이미지 목록
         // ====================================================
         (function() {
             const drumData = [
@@ -2727,37 +3392,43 @@
                     asis:  '202606-images/drum-001.webp',
                     tobe:  '202606-images/drum-001-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Intro Page Renewal',
-                    body:  '기존의 캐릭터 중심 인트로 화면을 정리하고 네온 무드의 배경과 입체적인 오브제를 더해<br>드럼만의 역동적인 에너지와 브랜드 정체성이 더욱 선명하게 전달되는 시작 화면으로 개선했습니다.'
+                    body:  '네온 라이팅과 3D 드럼 오브젝트로 완성한 역동적 인트로 화면'
                 },
                 {
                     asis:  '202606-images/drum-002.webp',
                     tobe:  '202606-images/drum-002-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Age Selection Renewal',
-                    body:  '기존의 단순한 연령 선택 화면을 캐릭터 중심의 카드형 UI로 재구성했습니다.<br>유아·초등·중등별 컬러와 캐릭터를 구분해 각 단계의 특징을 직관적으로 전달하고 더 쉽고 자연스럽게 진입할 수 있도록 개선했습니다.'
+                    body:  '캐릭터 카드와 컬러 구분으로 직관성을 높인 연령 선택 화면'
                 },
                 {
                     asis:  '202606-images/drum-003.webp',
                     tobe:  '202606-images/drum-003-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Class Menu Renewal',
-                    body:  '기존의 기능 중심 메뉴를 스노우볼 오브제 기반의 카드형 UI로 개선했습니다.<br>각 콘텐츠의 특징을 직관적으로 보여주고, 더 밝고 정돈된 초등 드럼 메뉴 화면으로 리뉴얼했습니다.'
+                    body:  '스노우볼형 3D 메뉴로 직관성을 높인 학습 선택 화면'
                 },
                 {
                     asis:  '202606-images/drum-004.webp',
                     tobe:  '202606-images/drum-004-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Weekly Lesson Renewal',
-                    body:  '기존의 복잡한 수업 구조를 주차별 리스트 중심의 깔끔한 UI로 정리했습니다.<br>자료·악기·연습 항목을 한 화면에서 쉽게 구분하고, 수업 흐름을 더 직관적으로 확인할 수 있도록 개선했습니다.'
+                    body:  '주차별 수업 흐름과 콘텐츠 구분을 명확히 정리한 리스트형 수업 화면'
                 },
                 {
                     asis:  '202606-images/drum-005.webp',
                     tobe:  '202606-images/drum-005-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; List Page Renewal',
-                    body:  '기존의 어두운 곡 목록 화면을 밝고 정돈된 리스트형 UI로 개선했습니다.<br>난이도 버튼과 검색 기능을 명확하게 배치해 곡 선택과 연습 진입이 더 쉽도록 리뉴얼했습니다.'
+                    body:  '검색 기능과 난이도 구분을 강화한 직관적 곡 리스트 구성'
                 },
                 {
                     asis:  '202606-images/drum-006.webp',
                     tobe:  '202606-images/drum-006-01.webp',
                     title: 'AS-IS / TO-BE &nbsp;·&nbsp; Play Screen Renewal',
-                    body:  '복잡했던 연주 화면을 정리하고, 악보와 드럼 연주에 집중할 수 있도록 개선했습니다.<br>진행 상태와 주요 버튼을 명확하게 배치해 학습자가 더 쉽게 연주 흐름에 몰입할 수 있도록 리뉴얼했습니다.'
+                    body:  '악보와 드럼 연동에 집중한 직관적 플레이 화면'
+                },
+                {
+                    asis:  '202606-images/drum-007.webp',
+                    tobe:  '202606-images/drum-007-01.webp',
+                    title: 'AS-IS / TO-BE &nbsp;·&nbsp; Rhythm Play Renewal',
+                    body:  '컬러 드럼 패드와 네온 노트로 타격감과 가독성을 높인 리듬 플레이 화면'
                 }
             ];
 
@@ -2766,7 +3437,24 @@
 
             function applyDrumStep(step) {
                 window._drumStep = step;
-                const itemIdx = Math.min(Math.floor(step / 2), 5);
+                const slide = document.querySelector('.drum-compare-slide');
+                const isSummary = step >= drumData.length * 2;
+                const headerTitle = document.querySelector('.drum-header h2');
+                if (slide) slide.classList.toggle('summary-mode', isSummary);
+                if (headerTitle) {
+                    headerTitle.innerHTML = isSummary
+                        ? '스마트드럼 <span class="color-orange">변경 이미지 목록</span>'
+                        : '스마트드럼 <span class="color-orange">리뉴얼</span>';
+                }
+
+                if (isSummary) {
+                    document.querySelectorAll('.dtab').forEach((t) => {
+                        t.classList.remove('dtab-active');
+                    });
+                    return;
+                }
+
+                const itemIdx = Math.min(Math.floor(step / 2), drumData.length - 1);
                 const isCmp   = (step % 2 === 1);
                 const d = drumData[itemIdx];
 
@@ -2784,7 +3472,7 @@
                 const descTitle = document.getElementById('drumDescTitle');
                 const descBody  = document.getElementById('drumDescBody');
                 if (descTitle) descTitle.innerHTML = '<i class="fa-solid fa-arrow-right-arrow-left"></i>&nbsp; ' + d.title;
-                if (descBody)  descBody.innerHTML  = d.body;
+                if (descBody)  descBody.innerHTML  = formatCompareCopy(d.body, 'drum');
 
                 const area = document.getElementById('drumImgArea');
                 const desc = document.getElementById('drumDesc');
@@ -2807,6 +3495,30 @@
             window.openDrumCompare = function() {
                 applyDrumStep(window._drumStep + 1);
             };
+
+            const drumChangeList = document.getElementById('drumChangeList');
+            if (drumChangeList) {
+                drumChangeList.innerHTML = drumData.map((item, index) => `
+                    <div class="drum-change-card">
+                        <img src="${item.tobe}" alt="TO-BE ${String(index + 1).padStart(3, '0')}">
+                    </div>
+                `).join('');
+                drumChangeList.addEventListener('click', (evt) => {
+                    evt.stopPropagation();
+                    window._drumStep = drumData.length * 2;
+                    if (typeof window.nextSlide === 'function') window.nextSlide();
+                });
+            }
+
+            const drumSlide = document.querySelector('.drum-compare-slide');
+            if (drumSlide) {
+                drumSlide.addEventListener('click', (evt) => {
+                    if (!drumSlide.classList.contains('summary-mode')) return;
+                    if (evt.target.closest('.dtab')) return;
+                    window._drumStep = drumData.length * 2;
+                    if (typeof window.nextSlide === 'function') window.nextSlide();
+                });
+            }
 
             // 초기 상태 적용
             applyDrumStep(0);
