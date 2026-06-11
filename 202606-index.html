@@ -29,7 +29,7 @@
 
         /* 배경 조명 효과 */
         .bg-glow {
-            position: absolute;
+            position: fixed;
             border-radius: 50%;
             filter: blur(150px);
             opacity: 0.2;
@@ -45,7 +45,8 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            position: relative;
+            position: fixed;
+            inset: 0;
             z-index: 10;
         }
 
@@ -66,19 +67,20 @@
             position: relative;
         }
 
-        /* 3. 메인 콘텐츠 카드 (강제 중앙 정렬 적용) */
+        /* 3. 메인 콘텐츠 카드 (강당용 극대화 마진) */
         .slide-content {
-            width: min(1280px, calc(100vw - 40px), calc((100vh - 40px) * 1.7778));
-            aspect-ratio: 16 / 9;
-            min-height: min(720px, calc(100vh - 40px));
-            background: rgba(255, 255, 255, 0.02);
+            width: calc(100vw - 24px) !important;
+            height: calc(100vh - 24px) !important;
+            min-height: unset !important;
+            aspect-ratio: unset !important;
+            background: rgba(10, 15, 26, 0.85) !important;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
             border-radius: 36px;
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
             position: relative;
-            padding: clamp(36px, 5vw, 80px);
+            padding: 32px 50px !important;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -88,87 +90,142 @@
         }
         /* 표지 슬라이드는 박스 없이 투명하게 */
         .cover-slide .slide-content {
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
             overflow: visible;
         }
+        .cover-slide.cover-waiting .cover-year-wrap {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none;
+            animation: none !important;
+        }
 
-        /* 4. 타이포그래피 */
-        h1 { font-size: 56px; font-weight: 800; line-height: 1.4; letter-spacing: -1.5px; margin-bottom: 30px; color: #FFFFFF; }
-        h2 { font-size: 48px; font-weight: 800; line-height: 1.3; letter-spacing: -1px; margin-bottom: 16px; color: #FFFFFF; }
-        p { font-size: 22px; color: #A1A1AA; line-height: 1.6; word-break: keep-all; font-weight: 400; }
+        /* 4. 타이포그래피 (강당 PT용 초대형 폰트) */
+        h1 { font-size: 100px; font-weight: 800; line-height: 1.3; letter-spacing: -1.5px; margin-bottom: 30px; color: #FFFFFF; }
+        h2 { font-size: 96px; font-weight: 800; line-height: 1.25; letter-spacing: -1px; margin-bottom: 20px; color: #FFFFFF; }
+        p { font-size: 44px; color: #A1A1AA; line-height: 1.5; word-break: keep-all; font-weight: 400; }
+
+        /* 표지 슬라이드 전용 h1: 한 줄에 맞게 크기 조정 */
+        .cover-slide h1 {
+            font-size: clamp(32px, 5vw, 64px) !important;
+            line-height: 1.2 !important;
+            white-space: nowrap !important;
+            letter-spacing: -1px !important;
+            margin-bottom: 0 !important;
+        }
         
         .color-blue { color: #3182F6 !important; }
         .color-orange { color: #FF8A00 !important; }
         .color-yellow { color: #FFC107 !important; }
 
-        .badge { background: rgba(255, 138, 0, 0.15); color: #FF8A00; padding: 10px 24px; border-radius: 100px; font-weight: 700; font-size: 18px; margin-bottom: 24px; display: inline-block; letter-spacing: 2px; border: 1px solid rgba(255, 138, 0, 0.2); }
-        .presenter-info { margin-top: 20px; font-size: 15px; color: #8B95A1; font-weight: 400; letter-spacing: 0.5px; }
+        .badge { background: rgba(255, 138, 0, 0.15); color: #FF8A00; padding: 16px 40px; border-radius: 100px; font-weight: 700; font-size: 30px; margin-bottom: 24px; display: inline-block; letter-spacing: 2px; border: 1px solid rgba(255, 138, 0, 0.2); }
+        .presenter-info { margin-top: 18px; font-size: 20px; color: #8B95A1; font-weight: 400; letter-spacing: 0.2px; }
 
         /* 5. 레이아웃 콤포넌트 */
-        .agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-width: 900px; margin-top: 50px; }
-        .agenda-item { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 36px 40px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; text-align: left; border: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s; }
+        .agenda-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 50px; width: 100%; max-width: 100%; margin-top: 50px; }
+        .agenda-item { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 56px 72px; display: flex; flex-direction: column; gap: 24px; align-items: flex-start; text-align: left; border: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s; }
         .agenda-item:hover { border-color: #3182F6; background: rgba(49, 130, 246, 0.05); }
-        .agenda-item .num { font-family: 'Poppins'; font-size: 32px; font-weight: 800; color: #3182F6; }
-        .agenda-item .desc { font-size: 26px; font-weight: 700; color: #F9FAFB; }
+        .agenda-item .num { font-family: 'Poppins'; font-size: 64px; font-weight: 800; color: #3182F6; }
+        .agenda-item .desc { font-size: 48px; font-weight: 700; color: #F9FAFB; }
+        .overview-slide {
+            padding: clamp(14px, 2.1vh, 24px) clamp(38px, 3.8vw, 72px) !important;
+            justify-content: flex-start !important;
+            gap: clamp(6px, 1.1vh, 12px);
+        }
+        .overview-slide h2 {
+            font-size: clamp(40px, 6vh, 64px) !important;
+            line-height: 1.02 !important;
+            margin-bottom: clamp(4px, 0.8vh, 10px) !important;
+        }
+        .overview-slide > p {
+            font-size: clamp(20px, 3.2vh, 32px) !important;
+            line-height: 1.18 !important;
+            margin-bottom: 0 !important;
+        }
+        .overview-slide .agenda-grid {
+            flex: 1 1 auto;
+            min-height: 0;
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            gap: clamp(14px, 2.2vh, 24px) clamp(24px, 3.2vw, 48px);
+            margin-top: clamp(10px, 1.8vh, 22px);
+        }
+        .overview-slide .agenda-item {
+            min-height: 0;
+            padding: clamp(22px, 4vh, 42px) clamp(38px, 4vw, 64px);
+            gap: clamp(8px, 1.5vh, 16px);
+            justify-content: center;
+        }
+        .overview-slide .agenda-item .num {
+            font-size: clamp(34px, 6vh, 56px);
+            line-height: 1;
+        }
+        .overview-slide .agenda-item .desc {
+            font-size: clamp(26px, 4.4vh, 42px);
+            line-height: 1.14;
+        }
 
-        .section-num { font-family: 'Poppins'; font-size: 120px; font-weight: 900; color: rgba(255,255,255,0.05); margin-bottom: -20px; line-height: 1; }
+        .section-num { font-family: 'Poppins'; font-size: 200px; font-weight: 900; color: rgba(255,255,255,0.05); margin-bottom: -10px; line-height: 1; }
 
-        .tag-wrap { display: flex; gap: 10px; margin-top: 10px; justify-content: center; margin-bottom: 30px;}
-        .tag-wrap span { background: rgba(255, 255, 255, 0.05); color: #D1D5DB; font-size: 15px; font-weight: 500; padding: 6px 20px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .tag-wrap { display: flex; gap: 24px; margin-top: 18px; justify-content: center; margin-bottom: 44px;}
+        .tag-wrap span { background: rgba(255, 255, 255, 0.05); color: #D1D5DB; font-size: 30px; font-weight: 500; padding: 12px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.08); }
 
         /* ================================================
            피아노 비교 슬라이드 전용 스타일
            ================================================ */
 
-        /* 탭 버튼 */
-        .ptab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#6B7280; font-size:11px; font-weight:600; padding:5px 13px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; white-space:nowrap; }
+        /* 탭 버튼 — 비교 슬라이드 상단 UI는 소형 유지 */
+        .ptab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#6B7280; font-size:13px; font-weight:600; padding:6px 12px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; white-space:nowrap; }
         .ptab:hover { color:#D1D5DB; border-color:rgba(255,255,255,0.2); }
         .ptab.ptab-active { background:rgba(49,130,246,0.15); border-color:rgba(49,130,246,0.4); color:#3182F6; }
 
         /* 슬라이드 컨테이너: 16:9 비율 해제, 화면 전체 활용 */
         .piano-compare-slide {
             aspect-ratio: unset !important;
-            width: calc(100vw - 40px) !important;         /* 세 번째 min() 제약 해제 */
+            width: calc(100vw - 12px) !important;
             max-width: none !important;
-            height: calc(100vh - 40px) !important;
+            height: calc(100vh - 12px) !important;
             min-height: unset !important;
             overflow: hidden !important;
             justify-content: flex-start !important;
             align-items: flex-start !important;
-            padding: 20px 28px !important;                /* 좌우 여백 최소화 */
-            gap: 10px !important;
+            padding: 18px 24px !important;
+            gap: 14px !important;
             box-sizing: border-box !important;
         }
 
         /* 헤더 행 */
         .piano-header {
             display: flex; align-items: center; justify-content: space-between;
-            width: 100%; flex-shrink: 0;
+            width: 100%; flex-shrink: 0; min-height: 34px; gap: 12px;
         }
 
         /* 이미지 영역: 남은 공간 모두 차지 */
         .piano-img-area {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             width: 100%;
-            flex: 1;
+            height: 0;
+            flex: 1 1 0% !important;
             min-height: 0;
             overflow: hidden;
+            position: relative; /* 절대 위치 설명박스의 기준점 */
+            padding-bottom: 0; /* 설명박스는 absolute 배치이므로 padding 불필요 */
         }
 
         /* 각 컬럼 */
         .piano-col {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0; /* 배지가 absolute이므로 gap 불필요 */
             min-width: 0;
             height: 100%;
             overflow: hidden;
             flex-shrink: 0;
+            position: relative; /* 배지의 absolute 기준점 */
         }
         .piano-col-asis {
             width: 100%;
@@ -184,48 +241,58 @@
 
         /* 비교 상태일 때 가로 너비 분할 */
         .piano-img-area.compare-mode .piano-col-asis {
-            width: calc(50% - 8px);
+            width: calc(50% - 6px);
         }
         .piano-img-area.compare-mode .piano-col-tobe {
-            width: calc(50% - 8px);
+            width: calc(50% - 6px);
             opacity: 1;
         }
 
-        /* 배지 */
-        .piano-badge { display:flex; align-items:center; gap:6px; flex-shrink:0; }
-        .asis-badge span { background:rgba(239,68,68,0.15); color:#EF4444; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(239,68,68,0.3); }
-        .tobe-badge span { background:rgba(49,130,246,0.15); color:#3182F6; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(49,130,246,0.3); }
-        .piano-badge em { font-style:normal; font-size:11px; color:#6B7280; white-space:nowrap; }
+        /* 배지 — 이미지 위에 절대 오버레이 */
+        .piano-badge { position:absolute; top:10px; left:10px; display:flex; align-items:center; gap:8px; flex-shrink:0; z-index:20; }
+        .tobe-badge.piano-badge { left:auto; right:10px; }
+        .asis-badge span { background:rgba(239,68,68,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(239,68,68,0.5); backdrop-filter:blur(4px); }
+        .tobe-badge span { background:rgba(49,130,246,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(49,130,246,0.5); backdrop-filter:blur(4px); }
+        .piano-badge em { font-style:normal; font-size:12px; color:rgba(255,255,255,0.8); white-space:nowrap; }
 
         /* 이미지 래퍼 + 이미지 */
-        .piano-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:14px; }
-        #pianoAsIsImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.2); }
-        #pianoToBeImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(49,130,246,0.35); border-radius:14px; box-shadow:0 0 32px rgba(49,130,246,0.2); background:rgba(0,0,0,0.1); min-width:200px; }
+        .piano-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:12px; position:relative; }
+        #pianoAsIsImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.2); }
+        #pianoToBeImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(49,130,246,0.35); border-radius:12px; box-shadow:0 0 32px rgba(49,130,246,0.2); background:rgba(0,0,0,0.1); min-width:160px; }
 
         /* 설명 텍스트 박스 */
         .piano-desc-box {
-            display: block !important; width: 100%; flex-shrink: 0;
-            height: 140px; /* 고정 공간을 유지하여 이미지 영역의 레이아웃 시프트를 방지 */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: block !important;
+            height: auto;
+            min-height: unset;
             opacity: 0;
             visibility: hidden;
             transform: translateY(12px);
             transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
                         transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
                         visibility 0.45s;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.09);
-            border-radius: 12px; text-align: left;
+            background: rgba(10, 15, 26, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; text-align: left;
             box-sizing: border-box;
-            padding: 12px 22px !important;
+            padding: 16px 22px !important;
             animation: none !important;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
         .piano-desc-box.show-desc {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
         }
-        .piano-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:8px; letter-spacing:0.5px; }
-        .piano-desc-body  { font-size:22px; color:#E5E7EB; line-height:1.8; word-break:keep-all; }
+        .piano-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:6px; letter-spacing:0.2px; }
+        .piano-desc-body  { font-size:clamp(18px,1.55vw,26px); color:#E5E7EB; line-height:1.45; word-break:keep-all; }
 
         /* 타이핑 자판 커서 효과 */
         .typing-cursor::after {
@@ -245,44 +312,49 @@
            ================================================ */
         .drum-compare-slide {
             aspect-ratio: unset !important;
-            width: calc(100vw - 40px) !important;
+            width: calc(100vw - 12px) !important;
             max-width: none !important;
-            height: calc(100vh - 40px) !important;
+            height: calc(100vh - 12px) !important;
             min-height: unset !important;
             overflow: hidden !important;
             justify-content: flex-start !important;
             align-items: flex-start !important;
-            padding: 20px 28px !important;
-            gap: 10px !important;
+            padding: 18px 24px !important;
+            gap: 14px !important;
             box-sizing: border-box !important;
         }
 
         .drum-header {
             display: flex; align-items: center; justify-content: space-between;
-            width: 100%; flex-shrink: 0;
+            width: 100%; flex-shrink: 0; min-height: 34px; gap: 12px;
         }
 
-        .dtab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#6B7280; font-size:11px; font-weight:600; padding:5px 13px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; white-space:nowrap; }
+        /* 드럼 탭 버튼 — 상단 UI 소형 유지 */
+        .dtab { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); color:#6B7280; font-size:13px; font-weight:600; padding:6px 12px; border-radius:100px; cursor:pointer; transition:all 0.2s ease; white-space:nowrap; }
         .dtab:hover { color:#D1D5DB; border-color:rgba(255,255,255,0.2); }
         .dtab.dtab-active { background:rgba(255,138,0,0.15); border-color:rgba(255,138,0,0.4); color:#FF8A00; }
 
         .drum-img-area {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             width: 100%;
-            flex: 1;
+            height: 0;
+            flex: 1 1 0% !important;
             min-height: 0;
             overflow: hidden;
+            position: relative; /* 절대 위치 설명박스의 기준점 */
+            padding-bottom: 0; /* 설명박스는 absolute 배치이므로 padding 불필요 */
         }
 
         .drum-col {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0; /* 배지가 absolute이므로 gap 불필요 */
             min-width: 0;
             height: 100%;
             overflow: hidden;
             flex-shrink: 0;
+            position: relative; /* 배지의 absolute 기준점 */
         }
         .drum-col-asis {
             width: 100%;
@@ -298,84 +370,95 @@
 
         /* 비교 상태일 때 가로 너비 분할 */
         .drum-img-area.compare-mode .drum-col-asis {
-            width: calc(50% - 8px);
+            width: calc(50% - 6px);
         }
         .drum-img-area.compare-mode .drum-col-tobe {
-            width: calc(50% - 8px);
+            width: calc(50% - 6px);
             opacity: 1;
         }
 
-        .drum-badge { display:flex; align-items:center; gap:6px; flex-shrink:0; }
-        .drum-badge em { font-style:normal; font-size:11px; color:#6B7280; white-space:nowrap; }
-        .drum-badge.asis-badge span { background:rgba(239,68,68,0.15); color:#EF4444; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(239,68,68,0.3); }
-        .drum-badge.tobe-badge span { background:rgba(255,138,0,0.15); color:#FF8A00; font-size:11px; font-weight:800; padding:3px 13px; border-radius:100px; border:1px solid rgba(255,138,0,0.3); }
+        /* 드럼 배지 — 이미지 위에 절대 오버레이 */
+        .drum-badge { position:absolute; top:10px; left:10px; display:flex; align-items:center; gap:8px; flex-shrink:0; z-index:20; }
+        .drum-badge.tobe-badge { left:auto; right:10px; }
+        .drum-badge em { font-style:normal; font-size:12px; color:rgba(255,255,255,0.8); white-space:nowrap; }
+        .drum-badge.asis-badge span { background:rgba(239,68,68,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(239,68,68,0.5); backdrop-filter:blur(4px); }
+        .drum-badge.tobe-badge span { background:rgba(255,138,0,0.85); color:#FFF; font-size:14px; font-weight:800; padding:5px 14px; border-radius:100px; border:1px solid rgba(255,138,0,0.5); backdrop-filter:blur(4px); }
 
-        .drum-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:14px; }
-        #drumAsIsImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.2); }
-        #drumToBeImg { width:100%; height:100%; object-fit:contain; display:block; border:1px solid rgba(255,138,0,0.35); border-radius:14px; box-shadow:0 0 32px rgba(255,138,0,0.2); background:rgba(0,0,0,0.1); min-width:200px; }
+        .drum-img-wrap { flex:1; min-height:0; overflow:hidden; border-radius:12px; position:relative; }
+        #drumAsIsImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(255,255,255,0.1); border-radius:12px; background:rgba(0,0,0,0.2); }
+        #drumToBeImg { width:100%; height:100%; object-fit:contain; object-position:center; display:block; border:1px solid rgba(255,138,0,0.35); border-radius:12px; box-shadow:0 0 32px rgba(255,138,0,0.2); background:rgba(0,0,0,0.1); min-width:160px; }
 
         .drum-desc-box {
-            display: block !important; width: 100%; flex-shrink: 0;
-            height: 140px; /* 고정 공간을 유지하여 이미지 영역의 레이아웃 시프트를 방지 */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: block !important;
+            height: auto;
+            min-height: unset;
             opacity: 0;
             visibility: hidden;
             transform: translateY(12px);
             transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1),
                         transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
                         visibility 0.45s;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.09);
-            border-radius: 12px; text-align: left;
+            background: rgba(10, 15, 26, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; text-align: left;
             box-sizing: border-box;
-            padding: 12px 22px !important;
+            padding: 16px 22px !important;
             animation: none !important;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
         .drum-desc-box.show-desc {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
         }
-        .drum-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:8px; letter-spacing:0.5px; }
-        .drum-desc-body  { font-size:22px; color:#E5E7EB; line-height:1.8; word-break:keep-all; }
+        .drum-desc-title { font-size:18px; font-weight:800; color:#FFC107; margin-bottom:6px; letter-spacing:0.2px; }
+        .drum-desc-body  { font-size:clamp(18px,1.55vw,26px); color:#E5E7EB; line-height:1.45; word-break:keep-all; }
 
-        .image-placeholder { width: 100%; max-width: 800px; background: #0B0F19; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.2s ease; position: relative; z-index: 50; overflow: hidden; display: block; }
+        .image-placeholder { width: 100%; max-width: 1000px; background: #0B0F19; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.2s ease; position: relative; z-index: 50; overflow: hidden; display: block; }
         .image-placeholder:hover { border-color: rgba(255, 255, 255, 0.3); transform: scale(1.02); }
 
-        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 1100px; margin-top: 40px; }
-        .summary-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 40px 30px; text-align: left; display: flex; flex-direction: column; gap: 16px; }
-        .summary-card i { font-size: 40px; }
-        .summary-card h3 { font-size: 24px; color: #FFF; font-weight: 700; line-height: 1.3;}
-        .summary-card p { font-size: 16px; color: #A1A1AA; line-height: 1.6; word-break: keep-all;}
-        .update-notice { margin-top: 40px; padding: 14px 32px; border-radius: 100px; font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
+        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; width: 100%; max-width: 100%; margin-top: 30px; }
+        .summary-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; padding: 60px 48px; text-align: left; display: flex; flex-direction: column; gap: 28px; }
+        .summary-card i { font-size: 84px; }
+        .summary-card h3 { font-size: 44px; color: #FFF; font-weight: 700; line-height: 1.3;}
+        .summary-card p { font-size: 28px; color: #A1A1AA; line-height: 1.6; word-break: keep-all;}
+        .update-notice { margin-top: 30px; padding: 20px 48px; border-radius: 100px; font-size: 26px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
 
         /* 외부 링크 버튼 (주은쌤 2.0) */
         .btn-external-link {
-            display: inline-flex; align-items: center; gap: 12px;
+            display: inline-flex; align-items: center; gap: 20px;
             background: linear-gradient(135deg, #FFC107 0%, #FF8A00 100%);
-            color: #191F28; font-size: 20px; font-weight: 800;
-            padding: 20px 48px; border-radius: 100px; text-decoration: none;
+            color: #191F28; font-size: 34px; font-weight: 800;
+            padding: 28px 80px; border-radius: 100px; text-decoration: none;
             box-shadow: 0 20px 40px rgba(255, 193, 7, 0.3); transition: all 0.3s ease;
-            margin-top: 50px;
+            margin-top: 60px;
         }
         .btn-external-link:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(255, 193, 7, 0.5); color: #000; }
 
-        /* 로드맵 */
-        .roadmap-container { width: 100%; max-width: 1100px; position: relative; margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start; }
-        .roadmap-line { position: absolute; top: 45px; left: 5%; right: 5%; height: 2px; background: linear-gradient(90deg, #3182F6 0%, #FFC107 100%); opacity: 0.3; z-index: 1; }
-        .roadmap-step { position: relative; z-index: 2; width: 15%; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .roadmap-dot { width: 90px; height: 90px; border-radius: 50%; background: #0B0F19; border: 3px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #FFF; transition: all 0.3s; }
+        /* 로드맵 (초대형 강당 PT용) */
+        .roadmap-container { width: 100%; max-width: 100%; position: relative; margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .roadmap-line { position: absolute; top: 80px; left: 5%; right: 5%; height: 6px; background: linear-gradient(90deg, #3182F6 0%, #FFC107 100%); opacity: 0.3; z-index: 1; }
+        .roadmap-step { position: relative; z-index: 2; width: 16%; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+        .roadmap-dot { width: 160px; height: 160px; border-radius: 50%; background: #0B0F19; border: 3px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 56px; color: #FFF; transition: all 0.3s; }
         .roadmap-step:hover .roadmap-dot { border-color: #FFC107; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 193, 7, 0.2); }
-        .roadmap-content h3 { font-size: 18px; color: #FFF; margin-bottom: 8px; font-weight: 700; }
-        .roadmap-content p { font-size: 14px; color: #8B95A1; line-height: 1.4; }
+        .roadmap-content h3 { font-size: 34px; color: #FFF; margin-bottom: 10px; font-weight: 700; }
+        .roadmap-content p { font-size: 26px; color: #8B95A1; line-height: 1.4; }
 
         /* 상세 페이지 레이아웃 */
-        .detail-layout { display: flex; gap: 60px; width: 100%; max-width: 1100px; align-items: center; text-align: left; }
-        .detail-text { flex: 1.2; }
-        .detail-text h2 { font-size: 56px; margin-bottom: 24px; color: #FFC107; }
-        .detail-text ul { list-style: none; display: flex; flex-direction: column; gap: 20px; }
-        .detail-text li { font-size: 20px; color: #D1D5DB; display: flex; align-items: flex-start; gap: 15px; }
-        .detail-text li i { color: #FFC107; margin-top: 5px; }
-        .detail-visual { flex: 1; background: rgba(255,255,255,0.03); border-radius: 30px; aspect-ratio: 1; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 120px; color: rgba(255,193,7,0.1); }
+        .detail-layout { display: flex; gap: 100px; width: 100%; max-width: 1500px; align-items: center; text-align: left; }
+        .detail-text { flex: 1.3; }
+        .detail-text h2 { font-size: 84px; margin-bottom: 30px; color: #FFC107; }
+        .detail-text ul { list-style: none; display: flex; flex-direction: column; gap: 30px; }
+        .detail-text li { font-size: 34px; color: #D1D5DB; display: flex; align-items: flex-start; gap: 20px; line-height: 1.6; }
+        .detail-text li i { color: #FFC107; margin-top: 10px; font-size: 30px; }
+        .detail-visual { flex: 1; background: rgba(255,255,255,0.03); border-radius: 30px; aspect-ratio: 1.2; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 120px; color: rgba(255,193,7,0.1); }
         /* 이미지 사용 시 래퍼 오버라이드 */
         .detail-img-wrap { padding: 0; overflow: hidden; background: transparent; border-color: rgba(255,255,255,0.08); }
         .detail-img { width: 100%; height: 100%; object-fit: cover; border-radius: 30px; display: block; }
@@ -483,7 +566,7 @@
 
         /* 로드맵 전용 애니메이션 */
         .roadmap-slide .slide-content { overflow: hidden; }
-        .roadmap-title-kicker { font-family: 'Poppins'; font-size: 14px; color: #FFC107; letter-spacing: 4px; font-weight: 800; margin-bottom: 12px; }
+        .roadmap-title-kicker { font-family: 'Poppins'; font-size: 20px; color: #FFC107; letter-spacing: 4px; font-weight: 800; margin-bottom: 16px; }
         .roadmap-line { transform-origin: left center; transform: scaleX(0); opacity: 0; }
         .roadmap-step { opacity: 0; transform: translateY(28px) scale(0.94); }
         .roadmap-date {
@@ -491,19 +574,19 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 6px 12px;
+            padding: 8px 18px;
             border-radius: 999px;
             background: rgba(255, 193, 7, 0.12);
             border: 1px solid rgba(255, 193, 7, 0.22);
             color: #FFC107;
-            font-size: 13px;
+            font-size: 18px;
             font-weight: 800;
             letter-spacing: -0.2px;
         }
-        .roadmap-content .roadmap-desc { margin-top: 6px; color: #8B95A1; }
+        .roadmap-content .roadmap-desc { margin-top: 8px; color: #8B95A1; }
         .roadmap-notice {
-            margin-top: 26px;
-            font-size: 13px;
+            margin-top: 30px;
+            font-size: 18px;
             color: rgba(255, 255, 255, 0.45);
             letter-spacing: -0.2px;
         }
@@ -526,76 +609,141 @@
         .step-date-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            margin: 10px 0 18px;
-            padding: 9px 18px;
+            gap: 10px;
+            margin: 10px 0 20px;
+            padding: 12px 24px;
             border-radius: 999px;
             background: rgba(255, 193, 7, 0.12);
             border: 1px solid rgba(255, 193, 7, 0.24);
             color: #FFC107;
-            font-size: 16px;
+            font-size: 22px;
             font-weight: 800;
             letter-spacing: -0.2px;
         }
 
         /* 6. 내비게이션 및 로고 (클릭 방해 차단) */
-        .nav-controls { position: fixed; bottom: 40px; right: 40px; display: flex; gap: 16px; z-index: 99999; }
-        .btn-nav { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: #FFF; font-size: 20px; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.2s ease; }
-        .btn-nav:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .nav-controls { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 99999; }
+        .nav-controls.nav-hidden { opacity: 0; pointer-events: none; transform: translateY(8px); }
+        .btn-nav { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); color: #FFF; font-size: 12px; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: all 0.2s ease; }
+        .nav-controls:hover .btn-nav { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); }
         .btn-nav.disabled { opacity: 0.3; pointer-events: none; }
 
         /* 로고: 마우스 이벤트 완전히 무시, 이미지 에러시 숨김 처리 */
-        .logo-container { position: absolute; bottom: 52px; left: 0; right: 0; transform: none; margin: 0 auto; width: max-content; min-width: 160px; }
+        .logo-container { position: absolute; bottom: 40px; left: 0; right: 0; transform: none; margin: 0 auto; width: max-content; min-width: 160px; }
         .cover-slide .logo-container { display: flex; justify-content: center; align-items: center; width: 100%; min-width: 0; }
         .cover-slide .logo-container img { width: auto; max-width: 180px; height: 34px; object-position: center; }
 
-        /* 노트북/PC 해상도 최적화 */
+        /* 강당 스크린 빔프로젝터용 — 모든 해상도에서 동일 크기 강제 고정 */
         @media (max-width: 1440px), (max-height: 860px) {
-            h1 { font-size: clamp(42px, 4.3vw, 56px); }
-            h2 { font-size: clamp(36px, 3.4vw, 48px); }
-            p { font-size: clamp(18px, 1.6vw, 22px); }
-            .section-num { font-size: clamp(84px, 9vw, 120px); }
-            .agenda-item { padding: 28px 28px; }
-            .agenda-item .desc { font-size: clamp(20px, 2vw, 26px); }
-            .summary-card { padding: 28px 24px; }
-            .summary-card h3 { font-size: clamp(20px, 2vw, 24px); }
-            .detail-layout { gap: 36px; }
-            .detail-text h2 { font-size: clamp(42px, 4vw, 56px); }
-            .detail-text li { font-size: clamp(17px, 1.5vw, 20px); }
-            .roadmap-container { max-width: 100%; gap: 10px; }
+            .slide-content {
+                width: calc(100vw - 24px) !important;
+                height: calc(100vh - 24px) !important;
+                padding: 32px 50px !important;
+            }
+            h1 { font-size: 72px; margin-bottom: 20px; }
+            h2 { font-size: 68px; margin-bottom: 14px; }
+            p { font-size: 32px; line-height: 1.42; }
+            .agenda-grid { gap: 28px; margin-top: 28px; }
+            .agenda-item { padding: 36px 46px; gap: 14px; }
+            .agenda-item .num { font-size: 48px; }
+            .agenda-item .desc { font-size: 34px; }
+            .summary-grid { gap: 26px; margin-top: 22px; }
+            .summary-card { padding: 34px 30px; gap: 16px; }
+            .summary-card i { font-size: 58px; }
+            .summary-card h3 { font-size: 30px; }
+            .summary-card p { font-size: 21px; line-height: 1.48; }
+            .update-notice { margin-top: 20px; padding: 14px 32px; font-size: 20px; }
+            .detail-layout { gap: 54px; max-width: 1320px; }
+            .detail-text h2 { font-size: 58px; margin-bottom: 20px; }
+            .detail-text ul { gap: 20px; }
+            .detail-text li { font-size: 25px; line-height: 1.48; }
+            .roadmap-container { max-width: 100%; }
             .roadmap-step { width: 16%; }
-            .roadmap-dot { width: 78px; height: 78px; font-size: 24px; }
-            .roadmap-line { top: 39px; }
-            .nav-controls { bottom: 22px; right: 22px; }
+            .roadmap-dot { width: 160px; height: 160px; font-size: 56px; }
+            .roadmap-line { top: 80px; height: 6px; }
+            .piano-compare-slide,
+            .drum-compare-slide {
+                width: calc(100vw - 12px) !important;
+                height: calc(100vh - 12px) !important;
+                padding: 18px 24px !important;
+            }
         }
-
         @media (max-width: 1280px), (max-height: 760px) {
-            .slide-content { width: min(1220px, calc(100vw - 28px), calc((100vh - 28px) * 1.7778)); padding: clamp(28px, 4vw, 56px); border-radius: 28px; }
-            .agenda-grid, .summary-grid { gap: 16px; }
-            .tag-wrap { gap: 8px; margin-bottom: 22px; }
-            .image-placeholder { max-width: 720px; }
-            .detail-layout { gap: 26px; }
-            .detail-visual { border-radius: 24px; font-size: 100px; }
-            .roadmap-content h3 { font-size: 16px; }
-            .roadmap-content p { font-size: 13px; }
-            .roadmap-date { font-size: 12px; padding: 5px 10px; }
-            .logo-container { bottom: 34px; }
-            .cover-slide .logo-container img { max-width: 160px; height: 30px; }
-        }
-
-        @media (max-width: 1100px), (max-height: 680px) {
-            .slide-content { width: min(1080px, calc(100vw - 24px), calc((100vh - 24px) * 1.7778)); padding: 24px 28px; }
-            .agenda-item { padding: 22px 20px; border-radius: 18px; }
-            .summary-card { padding: 22px 18px; border-radius: 18px; }
-            .summary-card p { font-size: 14px; }
-            .update-notice, .step-date-badge { font-size: 14px; padding: 8px 14px; }
-            .detail-layout { gap: 20px; }
+            .slide-content {
+                width: calc(100vw - 24px) !important;
+                height: calc(100vh - 24px) !important;
+                padding: 32px 50px !important;
+            }
+            h1 { font-size: 58px; margin-bottom: 14px; }
+            h2 { font-size: 54px; margin-bottom: 10px; }
+            p { font-size: 26px; line-height: 1.38; }
+            .agenda-grid { gap: 22px; margin-top: 20px; }
+            .agenda-item { padding: 28px 36px; gap: 10px; }
+            .agenda-item .num { font-size: 40px; }
+            .agenda-item .desc { font-size: 29px; }
+            .summary-grid { gap: 18px; margin-top: 18px; }
+            .summary-card { padding: 26px 24px; gap: 12px; }
+            .summary-card i { font-size: 48px; }
+            .summary-card h3 { font-size: 25px; }
+            .summary-card p { font-size: 18px; line-height: 1.42; }
+            .update-notice { margin-top: 16px; padding: 12px 26px; font-size: 18px; }
+            .detail-layout { gap: 40px; max-width: 1180px; }
+            .detail-text h2 { font-size: 48px; margin-bottom: 16px; }
             .detail-text ul { gap: 14px; }
-            .detail-text li { gap: 10px; }
-            .roadmap-container { margin-top: 26px; }
-            .roadmap-dot { width: 68px; height: 68px; font-size: 21px; }
-            .roadmap-line { top: 34px; }
-            .btn-nav { width: 48px; height: 48px; font-size: 18px; }
+            .detail-text li { font-size: 21px; line-height: 1.4; gap: 12px; }
+            .detail-text li i { font-size: 20px; margin-top: 6px; }
+            .roadmap-container { max-width: 100%; }
+            .roadmap-step { width: 16%; }
+            .roadmap-dot { width: 160px; height: 160px; font-size: 56px; }
+            .roadmap-line { top: 80px; height: 6px; }
+            .piano-compare-slide,
+            .drum-compare-slide {
+                width: calc(100vw - 12px) !important;
+                height: calc(100vh - 12px) !important;
+                padding: 16px 20px !important;
+            }
+        }
+        @media (max-width: 1100px), (max-height: 680px) {
+            .slide-content {
+                width: calc(100vw - 24px) !important;
+                height: calc(100vh - 24px) !important;
+                padding: 28px 40px !important;
+            }
+            h1 { font-size: 48px; }
+            h2 { font-size: 44px; }
+            p { font-size: 22px; }
+            .agenda-grid { gap: 16px; margin-top: 16px; }
+            .agenda-item { padding: 22px 28px; border-radius: 18px; }
+            .agenda-item .num { font-size: 34px; }
+            .agenda-item .desc { font-size: 25px; }
+            .summary-grid { gap: 14px; }
+            .summary-card { padding: 22px 20px; border-radius: 18px; }
+            .summary-card i { font-size: 40px; }
+            .summary-card h3 { font-size: 22px; }
+            .summary-card p { font-size: 16px; }
+            .detail-text h2 { font-size: 42px; }
+            .detail-text li { font-size: 18px; }
+            .roadmap-container { max-width: 100%; }
+            .roadmap-step { width: 16%; }
+            .roadmap-dot { width: 140px; height: 140px; font-size: 48px; }
+            .roadmap-line { top: 70px; height: 5px; }
+            .piano-compare-slide,
+            .drum-compare-slide {
+                width: calc(100vw - 12px) !important;
+                height: calc(100vh - 12px) !important;
+                padding: 14px 16px !important;
+                gap: 10px !important;
+            }
+            .piano-header,
+            .drum-header { min-height: 28px; }
+            .ptab,
+            .dtab { font-size: 11px; padding: 5px 9px; }
+            .piano-desc-title,
+            .drum-desc-title { font-size: 14px; }
+            .piano-desc-body,
+            .drum-desc-body { font-size: 16px; line-height: 1.35; }
+            .piano-desc-box,
+            .drum-desc-box { padding: 10px 14px !important; }
         }
 
         /* 7. 모달 (피아노/드럼 전용) */
@@ -702,37 +850,37 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 18px;
             background: rgba(255,255,255,0.025);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 24px;
-            padding: 20px 24px 22px;
+            padding: 24px 28px;
             min-width: 0;
         }
 
         /* 탭 */
         .rank-tabs {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             background: rgba(0,0,0,0.3);
             border-radius: 100px;
-            padding: 4px;
+            padding: 6px;
         }
         .rank-tab {
             flex: 1;
             background: transparent;
             border: none;
             color: #8B95A1;
-            font-size: 13px;
+            font-size: 16px;
             font-weight: 600;
-            padding: 8px 10px;
+            padding: 10px 14px;
             border-radius: 100px;
             cursor: pointer;
             transition: all 0.25s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             white-space: nowrap;
         }
         .rank-tab.active {
@@ -743,65 +891,65 @@
         .rank-tab:not(.active):hover { color: #FFF; }
 
         /* 패널 */
-        .rank-panel { display: none; flex-direction: column; gap: 0; height: 298px; overflow: hidden; }
+        .rank-panel { display: none; flex-direction: column; gap: 0; height: 380px; overflow: hidden; }
         .rank-panel.active { display: flex; }
         /* 학원 순위 히어로 카드 */
         .rank-hero {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             background: linear-gradient(135deg, rgba(255,193,7,0.1) 0%, rgba(255,138,0,0.06) 100%);
             border: 1px solid rgba(255,193,7,0.2);
-            border-radius: 14px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 12px;
             flex-shrink: 0;
         }
-        .rank-hero-crown { font-size: 22px; flex-shrink: 0; }
+        .rank-hero-crown { font-size: 28px; flex-shrink: 0; }
         .rank-hero-info { flex: 1; min-width: 0; }
-        .rank-hero-label { font-size: 10px; color: #8B95A1; letter-spacing: 1px; font-weight: 600; }
-        .rank-hero-name { font-size: 14px; font-weight: 700; color: #F3F4F6; }
+        .rank-hero-label { font-size: 14px; color: #8B95A1; letter-spacing: 1px; font-weight: 600; }
+        .rank-hero-name { font-size: 18px; font-weight: 700; color: #F3F4F6; }
         .rank-hero-rank-num {
             font-family: 'Poppins', sans-serif;
-            font-size: 28px;
+            font-size: 36px;
             font-weight: 800;
             line-height: 1;
             color: #FFC107;
             flex-shrink: 0;
         }
-        .rank-hero-rank-num small { font-size: 13px; font-weight: 500; color: #8B95A1; }
+        .rank-hero-rank-num small { font-size: 16px; font-weight: 500; color: #8B95A1; }
         /* 섹션 라벨 */
         .rank-section-label {
-            font-size: 11px;
+            font-size: 14px;
             color: #8B95A1;
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin-bottom: 6px;
-            padding: 0 2px;
+            gap: 6px;
+            margin-bottom: 10px;
+            padding: 0 4px;
             flex-shrink: 0;
         }
         /* 등수 표시 (20등, 114등) */
         .rank-place {
             font-family: 'Poppins', sans-serif;
-            font-size: 13px;
+            font-size: 17px;
             font-weight: 700;
             color: #D1D5DB;
             text-align: right;
             flex-shrink: 0;
-            min-width: 34px;
+            min-width: 44px;
         }
-        .rank-place-unit { font-size: 11px; color: #8B95A1; flex-shrink: 0; margin-right: 2px; }
+        .rank-place-unit { font-size: 14px; color: #8B95A1; flex-shrink: 0; margin-right: 4px; }
 
 
         /* 랭킹 리스트 */
-        .rank-list { display: flex; flex-direction: column; gap: 7px; }
+        .rank-list { display: flex; flex-direction: column; gap: 10px; }
         .rank-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 12px;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 14px;
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.04);
             transition: background 0.2s;
@@ -821,14 +969,14 @@
         .rank-item:nth-child(4) { animation-delay: 0.29s; }
         .rank-item:nth-child(5) { animation-delay: 0.37s; }
 
-        .rank-pos { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
-        .rank-num { font-size: 13px; font-weight: 700; color: #8B95A1; }
+        .rank-pos { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+        .rank-num { font-size: 16px; font-weight: 700; color: #8B95A1; }
 
         .rank-name {
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 600;
             color: #E5E7EB;
-            width: 90px;
+            width: 110px;
             flex-shrink: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -836,8 +984,8 @@
         }
         .rank-name small {
             display: inline-block;
-            margin-left: 5px;
-            font-size: 10px;
+            margin-left: 6px;
+            font-size: 13px;
             color: #8B95A1;
             font-weight: 400;
         }
@@ -912,46 +1060,43 @@
         }
         .cover-year-label {
             font-family: 'Noto Sans KR', sans-serif;
-            font-size: clamp(28px, 4vw, 56px);
+            font-size: clamp(32px, 5vw, 64px);
             font-weight: 700;
             color: rgba(255,255,255,0.5);
         }
-        /* cover-reveal 기본 레이아웃 (숨김은 위의 !important 오버라이드가 담당) */
+        /* cover-reveal 기본 레이아웃 */
         .cover-reveal {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            gap: 18px;
             opacity: 0;
             transform: translateY(24px);
             pointer-events: none;
-            margin-top: 28px;
+            margin-top: 36px;
         }
         @keyframes revealContent {
             from { opacity: 0; transform: translateY(24px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
-          /* ======================================================
-             음악 이론 E-Learning 데모 컴포넌트 (태블릿 스타일 화이트 테마)
-             ====================================================== */
           .elearn-demo {
               flex: 1;
               background: #FFFFFF;
-              border: 1.5px solid #E5E8EB;
+              border: 2px solid #E5E8EB;
               border-radius: 28px;
               padding: 0;
               position: relative;
               overflow: hidden;
-              min-height: 380px;
+              min-height: 520px;
               align-self: stretch;
               box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
           }
           .elearn-phase {
               position: absolute;
               top: 0; left: 0; width: 100%; height: 100%;
-              padding: 22px 24px;
-              display: flex; flex-direction: column; gap: 12px;
+              padding: 28px 32px;
+              display: flex; flex-direction: column; gap: 16px;
               opacity: 0;
               transform: scale(0.96) translateY(10px);
               pointer-events: none;
@@ -969,40 +1114,40 @@
           /* 헤더 */
           .elearn-header {
               display: flex; justify-content: space-between; align-items: center;
-              border-bottom: 1.5px solid #F2F4F6;
-              padding-bottom: 10px;
+              border-bottom: 2px solid #F2F4F6;
+              padding-bottom: 12px;
               margin-bottom: 4px;
           }
           .elearn-badge {
               background: rgba(49, 130, 246, 0.08); color: #3182F6;
-              font-size: 12px; font-weight: 700; padding: 5px 12px;
-              border-radius: 100px; border: 1.5px solid rgba(49, 130, 246, 0.15);
-              display: flex; align-items: center; gap: 6px;
+              font-size: 18px; font-weight: 700; padding: 8px 18px;
+              border-radius: 100px; border: 2px solid rgba(49, 130, 246, 0.15);
+              display: flex; align-items: center; gap: 8px;
           }
-          .elearn-qnum { font-size: 12px; color: #8B95A1; font-weight: 700; }
+          .elearn-qnum { font-size: 18px; color: #8B95A1; font-weight: 700; }
           /* 문제 */
           .elearn-question {
-              font-size: 15px; color: #191F28; line-height: 1.6;
+              font-size: 24px; color: #191F28; line-height: 1.6;
               font-weight: 700;
               text-align: left;
           }
           .elearn-staff {
-              margin-top: 10px;
+              margin-top: 12px;
               background: #F8F9FA;
-              border-radius: 14px; padding: 10px;
-              border: 1.5px solid #E5E8EB;
+              border-radius: 14px; padding: 12px;
+              border: 2px solid #E5E8EB;
           }
           /* 보기 */
           .elearn-options {
-              display: flex; flex-direction: column; gap: 8px;
-              margin-top: 4px;
+              display: flex; flex-direction: column; gap: 12px;
+              margin-top: 6px;
           }
           .elearn-opt {
               background: #FFFFFF;
-              border: 1.5px solid #E5E8EB;
-              border-radius: 12px; padding: 10px 16px;
-              font-size: 13.5px; color: #333D4B; cursor: pointer;
-              display: flex; align-items: center; gap: 10px;
+              border: 2px solid #E5E8EB;
+              border-radius: 14px; padding: 14px 20px;
+              font-size: 19px; color: #333D4B; cursor: pointer;
+              display: flex; align-items: center; gap: 12px;
               transition: all 0.2s ease;
               font-weight: 500;
               text-align: left;
@@ -1012,7 +1157,7 @@
               border-color: #3182F6;
               color: #FFFFFF;
               font-weight: 700;
-              box-shadow: 0 4px 12px rgba(49, 130, 246, 0.25);
+              box-shadow: 0 6px 18px rgba(49, 130, 246, 0.3);
               transform: scale(0.98);
           }
           .elearn-opt.elearn-selected .opt-sub {
@@ -1022,14 +1167,14 @@
               background: #F2F4F6;
               border-color: #D1D5DB;
           }
-          .opt-sub { margin-left: auto; font-size: 11px; color: #8B95A1; }
+          .opt-sub { margin-left: auto; font-size: 15px; color: #8B95A1; }
           /* 채점 로딩 */
           .elearn-grading {
-              display: flex; gap: 8px; justify-content: center;
-              align-items: center; margin-top: 12px;
+              display: flex; gap: 10px; justify-content: center;
+              align-items: center; margin-top: 16px;
           }
           .grading-dot {
-              width: 10px; height: 10px; border-radius: 50%;
+              width: 14px; height: 14px; border-radius: 50%;
               background: #3182F6;
               animation: dotPulse 1s infinite ease-in-out;
           }
@@ -1046,92 +1191,92 @@
           }
           .elearn-result-wrap {
               display: flex; flex-direction: column; align-items: center;
-              gap: 10px; text-align: center; width: 100%;
+              gap: 12px; text-align: center; width: 100%;
           }
           .elearn-result-icon {
-              font-size: 56px; line-height: 1;
+              font-size: 72px; line-height: 1;
               filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.25));
               animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
           }
           .elearn-result-icon.correct { color: #2DCA73; }
           .elearn-result-icon.wrong   { color: #EF4444; }
           .elearn-result-label {
-              font-size: 26px; font-weight: 900; color: #2DCA73;
+              font-size: 34px; font-weight: 900; color: #2DCA73;
               letter-spacing: -0.5px;
           }
           .elearn-result-answer {
-              font-size: 15px; color: #3182F6; font-weight: 700;
-              background: rgba(49,130,246,0.08); border: 1.5px solid rgba(49,130,246,0.18);
-              border-radius: 10px; padding: 8px 20px;
+              font-size: 20px; color: #3182F6; font-weight: 700;
+              background: rgba(49,130,246,0.08); border: 2px solid rgba(49,130,246,0.18);
+              border-radius: 12px; padding: 10px 24px;
           }
           .elearn-result-exp {
-              font-size: 13px; color: #4E5968; line-height: 1.6;
+              font-size: 18px; color: #4E5968; line-height: 1.6;
               background: #F8F9FA;
-              border-radius: 12px; padding: 12px 18px;
-              border: 1.5px solid #E5E8EB;
+              border-radius: 14px; padding: 16px 24px;
+              border: 2px solid #E5E8EB;
               width: 100%;
               text-align: left;
           }
           .elearn-score-row {
-              display: flex; gap: 8px; justify-content: center;
+              display: flex; gap: 10px; justify-content: center;
               width: 100%;
           }
           .elearn-score-pill {
-              font-size: 12.5px; font-weight: 700; padding: 6px 16px;
-              border-radius: 100px; display: inline-flex; align-items: center; gap: 6px;
+              font-size: 16px; font-weight: 700; padding: 8px 20px;
+              border-radius: 100px; display: inline-flex; align-items: center; gap: 8px;
           }
-          .elearn-score-pill.correct { background: rgba(34,197,94,0.08); color: #22C55E; border: 1.5px solid rgba(34,197,94,0.18); }
-          .elearn-score-pill.wrong   { background: rgba(239,68,68,0.08);  color: #EF4444; border: 1.5px solid rgba(239,68,68,0.18); }
-          .elearn-score-pill.total   { background: rgba(255,193,7,0.08);  color: #B7791F; border: 1.5px solid rgba(255,193,7,0.18); }
+          .elearn-score-pill.correct { background: rgba(34,197,94,0.08); color: #22C55E; border: 2px solid rgba(34,197,94,0.18); }
+          .elearn-score-pill.wrong   { background: rgba(239,68,68,0.08);  color: #EF4444; border: 2px solid rgba(239,68,68,0.18); }
+          .elearn-score-pill.total   { background: rgba(255,193,7,0.08);  color: #B7791F; border: 2px solid rgba(255,193,7,0.18); }
 
           /* 결과 페이지 하단 피드백 추가 영역 */
           .elearn-feedback-card {
               background: #F0F6FF;
-              border: 1.5px solid rgba(49, 130, 246, 0.15);
-              border-radius: 14px;
-              padding: 10px 16px;
+              border: 2px solid rgba(49, 130, 246, 0.15);
+              border-radius: 16px;
+              padding: 14px 20px;
               display: flex;
               align-items: center;
-              gap: 12px;
+              gap: 16px;
               text-align: left;
               width: 100%;
               box-sizing: border-box;
           }
           .elearn-feedback-card img {
-              width: 40px; height: 40px;
+              width: 56px; height: 56px;
               border-radius: 50%;
               background: #fff;
-              border: 1.5px solid rgba(49, 130, 246, 0.1);
+              border: 2px solid rgba(49, 130, 246, 0.1);
               object-fit: cover;
               flex-shrink: 0;
           }
           .elearn-feedback-text { flex: 1; min-width: 0; }
           .elearn-feedback-text h4 {
-              font-size: 12.5px; font-weight: 700; color: #191F28; margin-bottom: 2px;
+              font-size: 18px; font-weight: 700; color: #191F28; margin-bottom: 4px;
           }
           .elearn-feedback-text p {
-              font-size: 11.5px; color: #4E5968; line-height: 1.4;
+              font-size: 16px; color: #4E5968; line-height: 1.4;
           }
           .elearn-reward-row {
               display: flex; justify-content: space-between; align-items: center;
-              background: #FFF9E6; border: 1.5px solid rgba(255, 193, 7, 0.25);
-              border-radius: 14px; padding: 10px 16px; width: 100%;
+              background: #FFF9E6; border: 2px solid rgba(255, 193, 7, 0.25);
+              border-radius: 16px; padding: 14px 20px; width: 100%;
               box-sizing: border-box;
           }
           .elearn-reward-badge {
-              font-size: 12px; font-weight: 800; color: #B7791F;
-              display: flex; align-items: center; gap: 6px;
+              font-size: 17px; font-weight: 800; color: #B7791F;
+              display: flex; align-items: center; gap: 8px;
           }
           .elearn-reward-point {
-              font-family: 'Poppins'; font-size: 14px; font-weight: 800; color: #FF8A00;
-              display: flex; align-items: center; gap: 4px;
+              font-family: 'Poppins'; font-size: 20px; font-weight: 800; color: #FF8A00;
+              display: flex; align-items: center; gap: 6px;
           }
           .elearn-next-btn {
               background: linear-gradient(135deg, #3182F6 0%, #1d4ed8 100%);
-              color: #FFFFFF; font-size: 14px; font-weight: 800;
-              padding: 12px 24px; border-radius: 12px; border: none;
+              color: #FFFFFF; font-size: 20px; font-weight: 800;
+              padding: 16px 32px; border-radius: 14px; border: none;
               cursor: pointer; display: flex; align-items: center; justify-content: center;
-              gap: 8px; width: 100%; box-shadow: 0 4px 12px rgba(49, 130, 246, 0.2);
+              gap: 10px; width: 100%; box-shadow: 0 4px 12px rgba(49, 130, 246, 0.2);
               transition: all 0.2s;
               box-sizing: border-box;
           }
@@ -1142,53 +1287,53 @@
 
           /* B2B 보고서 PHASE4 업그레이드 */
           .elearn-report-header {
-              font-size: 14px; font-weight: 800; color: #191F28;
-              display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px;
-              border-bottom: 1.5px solid #F2F4F6;
-              padding-bottom: 10px;
+              font-size: 20px; font-weight: 800; color: #191F28;
+              display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px;
+              border-bottom: 2px solid #F2F4F6;
+              padding-bottom: 12px;
           }
-          .report-row { display: flex; align-items: center; gap: 10px; }
-          .report-label { font-size: 12px; color: #4E5968; font-weight: 700; width: 52px; flex-shrink: 0; }
-          .report-bar-wrap { flex: 1; height: 8px; background: #E5E8EB; border-radius: 100px; overflow: hidden; position: relative; }
+          .report-row { display: flex; align-items: center; gap: 14px; }
+          .report-label { font-size: 17px; color: #4E5968; font-weight: 700; width: 80px; flex-shrink: 0; }
+          .report-bar-wrap { flex: 1; height: 12px; background: #E5E8EB; border-radius: 100px; overflow: hidden; position: relative; }
           .report-bar {
               height: 100%; width: 0; border-radius: 100px;
               background: var(--rc, #3182F6);
               transition: width 1s cubic-bezier(0.16,1,0.3,1);
           }
           .report-bar.animated { width: var(--rw, 0); }
-          .report-pct { font-size: 11px; color: #4E5968; font-weight: 700; width: 30px; text-align: right; flex-shrink: 0; }
+          .report-pct { font-size: 16px; color: #4E5968; font-weight: 700; width: 40px; text-align: right; flex-shrink: 0; }
           .report-pct.rpt-warn   { color: #FF8A00; font-weight: 800; }
           .report-pct.rpt-danger { color: #EF4444; font-weight: 800; }
           
           .elearn-report-tip {
-              font-size: 11.5px; color: #4E5968;
+              font-size: 16px; color: #4E5968;
               background: #F8F9FA;
-              border: 1.5px solid #E5E8EB;
-              border-radius: 12px; padding: 10px 14px;
-              display: flex; gap: 8px; align-items: flex-start; line-height: 1.5;
+              border: 2px solid #E5E8EB;
+              border-radius: 14px; padding: 14px 20px;
+              display: flex; gap: 10px; align-items: flex-start; line-height: 1.5;
               text-align: left;
               box-sizing: border-box;
           }
-          .elearn-report-tip i { color: #FF8A00; flex-shrink: 0; margin-top: 2px; }
+          .elearn-report-tip i { color: #FF8A00; flex-shrink: 0; margin-top: 4px; font-size: 18px; }
 
           /* 리포트 하단 추천 학습 영역 추가 */
           .elearn-recom-title {
-              font-size: 12px; font-weight: 800; color: #191F28;
-              text-align: left; margin-top: 6px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px;
+              font-size: 18px; font-weight: 800; color: #191F28;
+              text-align: left; margin-top: 10px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
           }
           .elearn-recom-list {
-              display: flex; flex-direction: column; gap: 6px; width: 100%;
+              display: flex; flex-direction: column; gap: 8px; width: 100%;
           }
           .elearn-recom-item {
-              background: #F8F9FA; border: 1.5px solid #E5E8EB;
-              border-radius: 10px; padding: 8px 12px;
+              background: #F8F9FA; border: 2px solid #E5E8EB;
+              border-radius: 12px; padding: 12px 16px;
               display: flex; align-items: center; justify-content: space-between;
-              font-size: 11.5px; color: #333D4B;
+              font-size: 16px; color: #333D4B;
               text-align: left;
               box-sizing: border-box;
           }
           .elearn-recom-tag {
-              font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+              font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px;
               white-space: nowrap;
           }
           .elearn-recom-tag.review { background: rgba(239,68,68,0.08); color: #EF4444; border: 1px solid rgba(239,68,68,0.18); }
@@ -1196,74 +1341,106 @@
           
           .elearn-calendar-row {
               display: flex; justify-content: space-between; align-items: center;
-              background: #F8F9FA; border: 1px solid #E5E8EB;
-              border-radius: 12px; padding: 8px 12px; width: 100%;
+              background: #F8F9FA; border: 2px solid #E5E8EB;
+              border-radius: 14px; padding: 12px 16px; width: 100%;
               box-sizing: border-box;
-              margin-top: 4px;
+              margin-top: 6px;
           }
           .elearn-calendar-days {
-              display: flex; gap: 5px;
+              display: flex; gap: 8px;
           }
           .elearn-day-dot {
-              width: 18px; height: 18px; border-radius: 50%;
-              background: #E5E8EB; font-size: 9.5px; font-weight: 800; color: #8B95A1;
+              width: 24px; height: 24px; border-radius: 50%;
+              background: #E5E8EB; font-size: 13px; font-weight: 800; color: #8B95A1;
               display: flex; align-items: center; justify-content: center;
           }
           .elearn-day-dot.active {
               background: #3182F6; color: #fff;
           }
 
-         /* ====== B2B 분석 리포트 데모 (STEP 05) ====== */
+         /* ====== B2B 분석 리포트 데모 (STEP 05 - 강당용 스케일업) ====== */
          .b2b-demo {
              flex: 1; background: rgba(8,12,24,0.9);
              border: 1px solid rgba(255,255,255,0.1);
              border-radius: 24px; overflow: hidden;
              display: flex; flex-direction: column;
-             position: relative; min-height: 300px;
+             position: relative; min-height: 420px;
              align-self: stretch;
          }
          .b2b-header {
              background: linear-gradient(135deg, rgba(49,130,246,0.15) 0%, rgba(255,193,7,0.06) 100%);
              border-bottom: 1px solid rgba(255,255,255,0.07);
-             padding: 12px 16px;
+             padding: 16px 24px;
              display: flex; justify-content: space-between; align-items: center;
              flex-shrink: 0;
          }
          .b2b-student-name {
-             font-size: 14px; font-weight: 800; color: #F3F4F6;
-             display: flex; align-items: center; gap: 8px;
+             font-size: 18px; font-weight: 800; color: #F3F4F6;
+             display: flex; align-items: center; gap: 10px;
          }
-         .b2b-student-name i { color: #3182F6; font-size: 12px; }
+         .b2b-student-name i { color: #3182F6; font-size: 16px; }
          .b2b-level-badge {
-             font-size: 10px; font-weight: 700;
+             font-size: 14px; font-weight: 700;
              background: rgba(255,193,7,0.15); color: #FFC107;
              border: 1px solid rgba(255,193,7,0.3);
-             border-radius: 100px; padding: 3px 10px;
+             border-radius: 100px; padding: 4px 12px;
          }
          .b2b-body {
              flex: 1; display: flex; gap: 0; overflow: hidden;
          }
          /* 좌측: 주간/월간 상승 차트 */
          .b2b-left {
-             flex: 1; padding: 12px 14px;
+             flex: 1; padding: 16px 20px;
              border-right: 1px solid rgba(255,255,255,0.06);
-             display: flex; flex-direction: column; gap: 8px;
+             display: flex; flex-direction: column; gap: 12px;
          }
          .b2b-chart-label {
-             font-size: 10px; font-weight: 700; color: #8B95A1;
+             font-size: 14px; font-weight: 700; color: #8B95A1;
              letter-spacing: 0.5px; text-transform: uppercase;
          }
-         .b2b-line-chart { position: relative; height: 80px; }
-         .b2b-line-chart canvas { width: 100% !important; height: 80px !important; }
+         .b2b-line-chart { position: relative; height: 120px; }
+         .b2b-line-chart canvas { width: 100% !important; height: 120px !important; }
          .b2b-legend {
-             display: flex; gap: 12px;
+             display: flex; gap: 16px;
          }
          .b2b-legend-item {
-             display: flex; align-items: center; gap: 5px;
-             font-size: 10px; color: #8B95A1;
+             display: flex; align-items: center; gap: 6px;
+             font-size: 13px; color: #8B95A1;
          }
          .b2b-legend-dot {
-             width: 8px; height: 3px; border-radius: 100px;
+             width: 10px; height: 4px; border-radius: 100px;
+         }
+         /* 우측: 방사형 그래프 */
+         .b2b-right {
+             width: 180px; flex-shrink: 0;
+             padding: 16px 14px;
+             display: flex; flex-direction: column; align-items: center; gap: 8px;
+         }
+         .b2b-radar-label {
+             font-size: 14px; font-weight: 700; color: #8B95A1;
+             letter-spacing: 0.5px; text-transform: uppercase;
+         }
+         .b2b-radar-wrap { position: relative; }
+         .b2b-radar-wrap svg { overflow: visible; width: 140px; height: 140px; }
+         /* 하단: 요약 지표종목 */
+         .b2b-stats {
+             display: flex; gap: 0;
+             border-top: 1px solid rgba(255,255,255,0.06);
+             flex-shrink: 0;
+         }
+         .b2b-stat-item {
+             flex: 1; padding: 12px 14px; text-align: center;
+             border-right: 1px solid rgba(255,255,255,0.06);
+         }
+         .b2b-stat-item:last-child { border-right: none; }
+         .b2b-stat-val {
+             font-family: 'Poppins', sans-serif;
+             font-size: 22px; font-weight: 800; color: #F3F4F6;
+             line-height: 1;
+         }
+         .b2b-stat-val.up { color: #22C55E; }
+         .b2b-stat-val.warn { color: #FF8A00; }
+         .b2b-stat-key { font-size: 13px; color: #6B7280; margin-top: 4px; };
          }
          /* 우측: 방사형 그래프 */
          .b2b-right {
@@ -1309,7 +1486,7 @@
         <div class="slider-track" id="sliderTrack">
             
             <!-- 슬라이드 1: 표지 -->
-            <div class="slide-wrapper cover-slide" id="coverSlide">
+            <div class="slide-wrapper cover-slide cover-waiting" id="coverSlide">
                 <div class="slide-content cover-content">
                     <!-- 연도 카운터 -->
                     <div class="cover-year-wrap">
@@ -1330,7 +1507,7 @@
 
             <!-- 슬라이드 2: 목차 -->
             <div class="slide-wrapper">
-                <div class="slide-content">
+                <div class="slide-content overview-slide">
                     <h2>Session Overview</h2>
                     <p>이번 워크샵에서 확인할 핵심 변화 4가지</p>
                     <div class="agenda-grid">
@@ -1339,17 +1516,17 @@
                             <div class="desc">스마트피아노 리뉴얼</div>
                             <div style="font-size:13px;color:#3182F6;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
                         </div>
-                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(4)">
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(5)">
                             <div class="num color-orange">02</div>
                             <div class="desc">스마트드럼 리뉴얼</div>
                             <div style="font-size:13px;color:#FF8A00;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
                         </div>
-                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(7)">
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(8)">
                             <div class="num color-yellow">03</div>
                             <div class="desc">주은쌤 플랫폼 고도화</div>
                             <div style="font-size:13px;color:#FFC107;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
                         </div>
-                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(19)">
+                        <div class="agenda-item" style="cursor:pointer;" onclick="goToSlide(16)">
                             <div class="num" style="color:#8B95A1;">04</div>
                             <div class="desc">Live Demo &amp; 리뷰</div>
                             <div style="font-size:13px;color:#8B95A1;margin-top:2px;font-weight:600;"><i class="fa-solid fa-arrow-right"></i> 바로 이동</div>
@@ -1414,6 +1591,20 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+
+            <!-- 슬라이드 5: 피아노 요약 -->
+            <div class="slide-wrapper">
+                <div class="slide-content">
+                    <h2>Key Design Features</h2>
+                    <p>스마트피아노 리뉴얼 핵심 요약</p>
+                    <div class="summary-grid">
+                        <div class="summary-card"><i class="fa-solid fa-rocket color-blue"></i><h3>Space Gamification</h3><p>우주 테마 기반의 친근하고 감성적인 게이미피케이션 스타일로 타겟층의 몰입도를 극대화합니다.</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-layer-group color-blue"></i><h3>Soft & Flat UI</h3><p>부드러운 소프트 라운드 코너와 직관적인 플랫 아이콘을 적용하여 트렌디하고 편안한 사용성을 제공합니다.</p></div>
+                        <div class="summary-card"><i class="fa-solid fa-gamepad color-blue"></i><h3>Visual Balance</h3><p>트렌디함을 유지하면서 주요 타겟층이 흥미를 잃지 않도록 시각적 재미 요소를 균형 있게 배치했습니다.</p></div>
+                    </div>
+                    <div class="update-notice" style="background: rgba(49, 130, 246, 0.1); border: 1px solid rgba(49, 130, 246, 0.2); color: #3182F6;"><i class="fa-regular fa-calendar-check"></i> 올 3분기 적용 목표</div>
                 </div>
             </div>
 
@@ -2126,7 +2317,7 @@
         </div>
 
         <!-- 글로벌 버튼 컨트롤러 -->
-        <div class="nav-controls">
+        <div class="nav-controls nav-hidden" id="navControls">
             <button class="btn-nav" id="btnPrev" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
             <button class="btn-nav" id="btnNext" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
@@ -2139,7 +2330,13 @@
             const totalSlides = 18; // 슬라이드 18장 (피아노 비교 단일 슬라이드로 연개)
             let currentSlideIndex = 0;
             const sliderTrack = document.getElementById('sliderTrack');
+            const coverSlide = document.getElementById('coverSlide');
+            const navControls = document.getElementById('navControls');
             let isScrolling = false;
+
+            function revealNavControls() {
+                if (navControls) navControls.classList.remove('nav-hidden');
+            }
 
             function updateNavButtons() {
                 const btnPrev = document.getElementById('btnPrev');
@@ -2156,10 +2353,23 @@
                 });
             }
 
+            function startCoverIntro() {
+                if (currentSlideIndex !== 0) return false;
+                if (window._coverAnimationStarted) return false;
+                window._coverAnimationStarted = true;
+                if (coverSlide) coverSlide.classList.remove('cover-waiting');
+                revealNavControls();
+                if (typeof window.startCoverAnimation === 'function') {
+                    window.startCoverAnimation();
+                }
+                return true;
+            }
+
             // 전역 스코프 함수 선언 (HTML onclick 연결을 위함)
             window.goToSlide = function(index) {
                 if (index < 0 || index >= totalSlides) return;
                 currentSlideIndex = index;
+                if (currentSlideIndex > 0) revealNavControls();
                 sliderTrack.style.transform = `translateX(-${currentSlideIndex * 100}vw)`;
                 updateNavButtons();
                 updateActiveSlide();
@@ -2168,6 +2378,8 @@
             };
 
             window.nextSlide = function() {
+                if (startCoverIntro()) return;
+
                 // 피아노 비교 슬라이드(index 3): 스텝 0~7 순환, 8에서 다음 슬라이드
                 if (currentSlideIndex === 3) {
                     const step = window._pianoStep || 0;
@@ -2185,8 +2397,8 @@
                     }
                 }
 
-                // 스마트드럼 비교 슬라이드(index 5): 스텝 0~11 순환, 12에서 다음 슬라이드
-                if (currentSlideIndex === 5) {
+                // 스마트드럼 비교 슬라이드(index 6): 스텝 0~11 순환, 12에서 다음 슬라이드
+                if (currentSlideIndex === 6) {
                     const step = window._drumStep || 0;
                     if (step < 11) {
                         if (typeof window.openDrumCompare === 'function') window.openDrumCompare();
@@ -2209,7 +2421,7 @@
                 if (currentSlideIndex > 0) goToSlide(currentSlideIndex - 1); 
                 // 이전 슬라이드로 갈 때 드럼/피아노 비교 스텝 상태도 0으로 복원
                 if (currentSlideIndex === 3) window.jumpPianoStep(0);
-                if (currentSlideIndex === 5) window.jumpDrumStep(0);
+                if (currentSlideIndex === 6) window.jumpDrumStep(0);
             };
 
 
@@ -2221,6 +2433,12 @@
                 if (evt.deltaY > 50) nextSlide();
                 else if (evt.deltaY < -50) prevSlide();
             });
+
+            if (coverSlide) {
+                coverSlide.addEventListener('click', () => {
+                    startCoverIntro();
+                });
+            }
 
             // 키보드 방향키 통합 제어
             window.addEventListener('keydown', (evt) => {
@@ -2237,6 +2455,15 @@
 
             updateNavButtons();
             updateActiveSlide();
+
+            // URL 해시로 초기 슬라이드 설정 지원 (#slide=3 형식)
+            const hashMatch = window.location.hash.match(/slide=(\d+)/);
+            if (hashMatch) {
+                const initSlide = parseInt(hashMatch[1], 10);
+                if (initSlide >= 0 && initSlide < totalSlides) {
+                    goToSlide(initSlide);
+                }
+            }
         });
 
 
@@ -2326,12 +2553,12 @@
             const START_YEAR  = 2008;
             const END_YEAR    = 2026;
             const TOTAL_YEARS = END_YEAR - START_YEAR; // 18단계
-            const START_DELAY = 900;   // 페이지 로드 후 시작 대기 (ms)
             const STEP_FAST   = 60;    // 초반 빠른 속도 (ms/step)
             const STEP_SLOW   = 180;   // 후반 느린 속도 (ms/step)
             const SLOWDOWN_AT = 5;     // 마지막 N개는 느리게
 
             let current = START_YEAR;
+            let hasRun = false;
 
             function getDelay(remaining) {
                 return remaining <= SLOWDOWN_AT ? STEP_SLOW : STEP_FAST;
@@ -2389,8 +2616,14 @@
                 setTimeout(tick, getDelay(remaining));
             }
 
-            // 페이지 로드 후 딜레이 뒤에 시작
-            setTimeout(tick, START_DELAY);
+            window.startCoverAnimation = function() {
+                if (hasRun) return;
+                hasRun = true;
+                current = START_YEAR;
+                yearEl.textContent = START_YEAR;
+                yearEl.classList.remove('reached');
+                tick();
+            };
         })();
 
         /* ========================================================
